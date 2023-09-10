@@ -1,9 +1,6 @@
-#include "YSS Compiler/Parser.h"
+#pragma once
 
-#include "FileReader.h"
+#include <SDL.h>
 
-int main()
-{
-	auto FileContent = getFileContents("C:\\dev\\Yeastem\\Yeastem\\Yeastem\\Yeastem\\Test\\YeastScript.ys");
-	ParseProgram(Tokenize(FileContent));
-}
+#include "EntryPoint.h"
+int main(int argc, char* argv[]) { return Yeastem::EntryPoint(argc, argv); }
