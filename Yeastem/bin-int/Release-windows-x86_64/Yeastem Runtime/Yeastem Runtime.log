@@ -1,0 +1,2 @@
+﻿raylib.lib(rcore.obj) : error LNK2005: CloseWindow already defined in user32.lib(USER32.dll)
+C:\dev\Yeastem\Yeastem\Yeastem\bin\Release-windows-x86_64\Yeastem Runtime\Yeastem Runtime.exe : fatal error LNK1169: one or more multiply defined symbols found

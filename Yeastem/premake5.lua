@@ -1,3 +1,5 @@
+-- Note to Self: ADD LUA FILES --
+
 workspace "Yeastem"
 	architecture "x64"
 
@@ -13,10 +15,75 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- include dirs relative to the root (solution) directory
 IncludeDir = {}
 IncludeDir["SDL2"] = "Dependancies/SDL2/include"
+IncludeDir["raylib"] = "Dependancies/raylib/src"
 IncludeDir["Glad"] = "Dependancies/Glad/include"
 
-project "Yeastem"
-	location "Yeastem"
+LibraryDir = {}
+LibraryDir["SDL2"] = "Dependancies/SDL2/lib/"
+LibraryDir["raylib"] = "Dependancies/raylib/lib/"
+LibraryDir["Glad"] = "Dependancies/Glad/lib/"
+
+include "Dependancies"
+
+project "Yeastem Editor"
+	local m_Location = "Yeastem/Editor"
+	location ( m_Location )
+
+	language "C++"
+
+	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		m_Location .. "/src/**.h",
+		m_Location .. "/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"$(SolutionDir)" .. m_Location .. "/src", 
+		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.Glad}", 
+		"$(SolutionDir)Dependancies/Glad/src"
+	}
+
+	libdirs
+	{
+		"$(SolutionDir)%{LibraryDir.SDL2}x64", 
+		"$(SolutionDir)%{LibraryDir.Glad}x64"
+	}
+
+	links 
+	{
+		"SDL2.lib", 
+		"SDL2main.lib", 
+		"Glad.lib"
+	}
+
+	filter "system:windows"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+
+	filter "configurations:Debug"
+		kind "ConsoleApp"
+		defines "YST_DEBUG"
+		symbols "On"
+
+	filter "configurations:Release"
+		kind "ConsoleApp"
+		defines "YST_RELEASE"
+		optimize "On"
+
+	filter "configurations:Dist"
+		kind "WindowedApp"
+		defines "YST_DIST"
+		optimize "On"
+
+project "Yeastem Runtime"
+	local m_Location = "Yeastem/Runtime"
+	location ( m_Location)
 	kind "ConsoleApp"
 	language "C++"
 
@@ -25,29 +92,21 @@ project "Yeastem"
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		m_Location .. "/src/**.h",
+		m_Location .. "/src/**.cpp"
 	}
 
 	includedirs
 	{
-		"$(SolutionDir)%{prj.name}/src", 
-		"$(SolutionDir)%{IncludeDir.SDL2}", 
-		"$(SolutionDir)%{IncludeDir.Glad}", 
-		"$(SolutionDir)Dependancies/Glad/src"
+		"$(SolutionDir)" .. m_Location .. "/src", 
+		"$(SolutionDir)%{IncludeDir.raylib}"
 	}
 
-	libdirs
-	{
-		"$(SolutionDir)Dependancies/SDL2/lib/x64", 
-		"$(SolutionDir)Dependancies/Glad/lib/x64"
-	}
+	ignoredefaultlibraries { "MSVCRT" }
 
 	links 
 	{
-		"SDL2.lib", 
-		"SDL2main.lib", 
-		"Glad.lib"
+		"raylib"
 	}
 
 	filter "system:windows"
@@ -68,17 +127,25 @@ project "Yeastem"
 		optimize "On"
 
 project "YSS Compiler"
-	location "YSS Compiler"
+	local m_Location = "Yeastem/Compiler"
+	location ( m_Location )
+
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		m_Location .. "/src/**.ys",
+		m_Location .. "/src/**.h",
+		m_Location .. "/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"$(SolutionDir)" .. m_Location .. "/src", 
 	}
 
 	filter "system:windows"

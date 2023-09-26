@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Test">
+      <UniqueIdentifier>{45DC8C7C-3113-8E0D-DAFF-7310C6150A0F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="YSS Compiler">
+      <UniqueIdentifier>{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\FileReader.h" />
+    <ClInclude Include="src\YSS Compiler\Parser.h">
+      <Filter>YSS Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\YSS Compiler\Resolving.h">
+      <Filter>YSS Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\YSS Compiler\Tokenizer.h">
+      <Filter>YSS Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="src\YSS Compiler\Tokens.h">
+      <Filter>YSS Compiler</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Test\YeastScript.ys">
+      <Filter>Test</Filter>
+    </None>
+  </ItemGroup>
+</Project>
