@@ -14,7 +14,12 @@ project "Lua"
 		"src/*.c"
 	}
 
-	removefiles "src/luac.c"
+	removefiles
+	{
+		"src/lua.c", 
+		"src/lua.h", 
+		"src/luac.c"
+	}
 	
 	filter "system:windows"
 		cppdialect "C++17"

@@ -1,0 +1,4 @@
+[submodule "Yeastem/Dependancies/ImGui"]
+	path = Yeastem/Dependancies/ImGui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking

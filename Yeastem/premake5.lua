@@ -1,5 +1,3 @@
--- Note to Self: ADD LUA FILES --
-
 workspace "Yeastem"
 	architecture "x64"
 
@@ -15,13 +13,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- include dirs relative to the root (solution) directory
 IncludeDir = {}
 IncludeDir["SDL2"] = "Dependancies/SDL2/include"
-IncludeDir["raylib"] = "Dependancies/raylib/src"
 IncludeDir["Glad"] = "Dependancies/Glad/include"
+IncludeDir["Lua"] = "Dependancies/Lua/src"
+IncludeDir["ImGui"] = "Dependancies/ImGui/src"
 
 LibraryDir = {}
 LibraryDir["SDL2"] = "Dependancies/SDL2/lib/"
-LibraryDir["raylib"] = "Dependancies/raylib/lib/"
-LibraryDir["Glad"] = "Dependancies/Glad/lib/"
 
 include "Dependancies"
 
@@ -34,6 +31,9 @@ project "Yeastem Editor"
 	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "yst_pch.h"
+	pchsource (m_Location .. "/src/yst_pch.cpp")
+
 	files
 	{
 		m_Location .. "/src/**.h",
@@ -44,21 +44,27 @@ project "Yeastem Editor"
 	{
 		"$(SolutionDir)" .. m_Location .. "/src", 
 		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.Lua}", 
 		"$(SolutionDir)%{IncludeDir.Glad}", 
-		"$(SolutionDir)Dependancies/Glad/src"
+		"$(SolutionDir)Dependancies/Glad/src", 
+		"$(SolutionDir)%{IncludeDir.ImGui}", 
+		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
 	}
-
+	 
 	libdirs
 	{
-		"$(SolutionDir)%{LibraryDir.SDL2}x64", 
-		"$(SolutionDir)%{LibraryDir.Glad}x64"
+		"$(SolutionDir)%{LibraryDir.SDL2}x64"
 	}
 
 	links 
 	{
+		-- SDL Libraries
 		"SDL2.lib", 
 		"SDL2main.lib", 
-		"Glad.lib"
+		-- Projects
+		"Glad", 
+		"Lua", 
+		"ImGui"
 	}
 
 	filter "system:windows"
@@ -99,15 +105,24 @@ project "Yeastem Runtime"
 	includedirs
 	{
 		"$(SolutionDir)" .. m_Location .. "/src", 
-		"$(SolutionDir)%{IncludeDir.raylib}"
+		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.Glad}", 
+		"$(SolutionDir)Dependancies/Glad/src"
 	}
 
-	ignoredefaultlibraries { "MSVCRT" }
+	libdirs
+	{
+		"$(SolutionDir)%{LibraryDir.SDL2}x64"
+	}
 
 	links 
 	{
-		"raylib"
+		"SDL2.lib", 
+		"SDL2main.lib", 
+		"Dependancies/Glad"
 	}
+
+	ignoredefaultlibraries { "MSVCRT" }
 
 	filter "system:windows"
 		cppdialect "C++17"

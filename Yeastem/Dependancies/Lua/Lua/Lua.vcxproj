@@ -148,7 +148,6 @@
     <ClInclude Include="..\src\lstring.h" />
     <ClInclude Include="..\src\ltable.h" />
     <ClInclude Include="..\src\ltm.h" />
-    <ClInclude Include="..\src\lua.h" />
     <ClInclude Include="..\src\luaconf.h" />
     <ClInclude Include="..\src\lualib.h" />
     <ClInclude Include="..\src\lundump.h" />
@@ -184,7 +183,6 @@
     <ClCompile Include="..\src\ltable.c" />
     <ClCompile Include="..\src\ltablib.c" />
     <ClCompile Include="..\src\ltm.c" />
-    <ClCompile Include="..\src\lua.c" />
     <ClCompile Include="..\src\lundump.c" />
     <ClCompile Include="..\src\lutf8lib.c" />
     <ClCompile Include="..\src\lvm.c" />

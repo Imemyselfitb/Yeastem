@@ -77,10 +77,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>YST_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -89,16 +90,17 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;Glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;$(SolutionDir)Dependancies\Glad\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>YST_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -111,16 +113,17 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;Glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;$(SolutionDir)Dependancies\Glad\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>YST_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -133,19 +136,52 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;Glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;$(SolutionDir)Dependancies\Glad\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\Core\Application.h" />
+    <ClInclude Include="src\Core\EntryPoint.h" />
+    <ClInclude Include="src\Core\ImGuiAPI.h" />
+    <ClInclude Include="src\Core\ImGuiWindow.h" />
+    <ClInclude Include="src\Core\KeyCodeCollection.h" />
+    <ClInclude Include="src\Core\KeyCodeGroup.h" />
+    <ClInclude Include="src\Core\OpenGL\Include.h" />
+    <ClInclude Include="src\Core\OpenGL\IndexBuffer.h" />
+    <ClInclude Include="src\Core\OpenGL\Renderer.h" />
+    <ClInclude Include="src\Core\OpenGL\Shader.h" />
+    <ClInclude Include="src\Core\OpenGL\VertexBuffer.h" />
+    <ClInclude Include="src\FileIO\FileIO.h" />
+    <ClInclude Include="src\LuaAPI\Lua.h" />
+    <ClInclude Include="src\LuaAPI\LuaState.h" />
     <ClInclude Include="src\Macros.h" />
-    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\yst_pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\ImGuiAPI.cpp" />
+    <ClCompile Include="src\Core\main.cpp" />
+    <ClCompile Include="src\Core\OpenGL\IndexBuffer.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Renderer.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
+    <ClCompile Include="src\Core\OpenGL\VertexBuffer.cpp" />
+    <ClCompile Include="src\FileIO\FileReading.cpp" />
+    <ClCompile Include="src\LuaAPI\LuaState.cpp" />
+    <ClCompile Include="src\yst_pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Dependancies\Glad\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dependancies\Lua\Lua\Lua.vcxproj">
+      <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dependancies\ImGui\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
