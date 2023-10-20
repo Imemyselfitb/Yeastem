@@ -1,4 +1,5 @@
-﻿  ImGuiAPI.cpp
-  main.cpp
+﻿  IndexBuffer.cpp
+  Shader.cpp
+  VertexBuffer.cpp
   Generating Code...
   Yeastem Editor.vcxproj -> C:\dev\Yeastem\Yeastem\Yeastem\bin\Release-windows-x86_64\Yeastem Editor\Yeastem Editor.exe

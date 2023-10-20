@@ -19,7 +19,7 @@ void Shader::DeleteShader()
 {
 	if (this->m_Shader == NULL) return;
 	glDeleteShader(this->m_Shader);
-	std::cout << "Shader Deleted!" << std::endl;
+	std::cout << "Yestem: Graphics: Shader Deleted!" << std::endl;
 }
 
 unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
@@ -60,7 +60,7 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 
 unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
-	std::cout << "Shader Created!" << std::endl;
+	std::cout << "Yestem: Graphics: Shader Created!" << std::endl;
 
 	// Create program and Vertex + Fragment Shaders
 	unsigned int program = glCreateProgram();

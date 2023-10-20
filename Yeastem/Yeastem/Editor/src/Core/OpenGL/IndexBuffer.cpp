@@ -10,12 +10,12 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 	glGenBuffers(1, &this->m_glID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_glID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
-	std::cout << "Index Buffer Created!" << std::endl;
+	std::cout << "Yestem: Graphics: Index Buffer Created!" << std::endl;
 }
 
 IndexBuffer::~IndexBuffer()
 {
-	std::cout << "Index Buffer Deleted!" << std::endl;
+	std::cout << "Yestem: Graphics: Index Buffer Deleted!" << std::endl;
 	glDeleteBuffers(1, &this->m_glID);
 }
 

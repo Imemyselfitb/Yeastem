@@ -10,12 +10,12 @@ VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 	glBindBuffer(GL_ARRAY_BUFFER, this->m_glID);
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 
-	std::cout << "Vertex Buffer Created!" << std::endl;
+	std::cout << "Yestem: Graphics: Vertex Buffer Created!" << std::endl;
 }
 
 VertexBuffer::~VertexBuffer()
 {
-	std::cout << "Vertex Buffer Deleted!" << std::endl;
+	std::cout << "Yestem: Graphics: Vertex Buffer Deleted!" << std::endl;
 	glDeleteBuffers(1, &this->m_glID);
 }
 
