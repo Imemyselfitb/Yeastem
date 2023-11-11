@@ -34,6 +34,7 @@ void Texture::LoadTexture(const std::string& path)
 
 	stbi_image_free(data);
 
+	std::cout << "Yestem: Graphics: Texture `" << path << "` Created!" << std::endl;
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -68,6 +69,7 @@ Texture::Texture(const Texture& other)
 
 Texture::~Texture()
 {
+	std::cout << "Yestem: Graphics: Texture `" << this->m_FilePath << "` Deleted!" << std::endl;
 	glDeleteTextures(1, &this->m_glID);
 }
 

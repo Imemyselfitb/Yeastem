@@ -31,9 +31,7 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, 0);
 
-	std::cout << "1: " << glGetError() << std::endl;
 	glCompileShader(id);
-	std::cout << "2: " << glGetError() << std::endl;
 
 	// Error Handling
 	int result = 0;
