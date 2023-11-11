@@ -28,6 +28,7 @@ public:
 	void HandleEvents(SDL_Event& m_events) const;
 public:
 	static bool s_IsRunning;
+	static SDL_Renderer* s_Renderer;
 
 public:
 	struct PosData { int x, y; } m_WindowPosition;
@@ -53,6 +54,9 @@ private:
 private:
 	std::unique_ptr<Yeastem::ImGuiAPI> m_ImGuiLayer;
 	Yeastem::Renderer m_Renderer;
+
+public:
+	uint64_t CurrentTime;
 
 private:
 	static bool s_GLInitialized;

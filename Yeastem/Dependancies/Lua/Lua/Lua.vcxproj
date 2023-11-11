@@ -55,20 +55,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\lib\x64\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86_64\Lua\</IntDir>
+    <OutDir>..\lib\x64\Debug\</OutDir>
+    <IntDir>..\bin-int\Debug\</IntDir>
     <TargetName>Lua</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\lib\x64\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86_64\Lua\</IntDir>
+    <OutDir>..\lib\x64\Release\</OutDir>
+    <IntDir>..\bin-int\Release\</IntDir>
     <TargetName>Lua</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
-    <OutDir>..\lib\x64\</OutDir>
-    <IntDir>..\bin-int\Dist-windows-x86_64\Lua\</IntDir>
+    <OutDir>..\lib\x64\Dist\</OutDir>
+    <IntDir>..\bin-int\Dist\</IntDir>
     <TargetName>Lua</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>

@@ -29,11 +29,14 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 
 	// Compile the Source Code inside the Shader
 	const char* src = source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
+	glShaderSource(id, 1, &src, 0);
+
+	std::cout << "1: " << glGetError() << std::endl;
 	glCompileShader(id);
+	std::cout << "2: " << glGetError() << std::endl;
 
 	// Error Handling
-	int result;
+	int result = 0;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 
 	if (result == GL_FALSE)
@@ -43,12 +46,12 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &err_length);
 
 		// Stack allocate a buffer of memeory, where the message will live
-		char* info = (char*)alloca(err_length * sizeof(char));
-		glGetShaderInfoLog(id, err_length, &err_length, info);
+		std::vector<GLchar> infoLog(err_length);
+		glGetShaderInfoLog(id, err_length, &err_length, &infoLog[0]);
 
 		// Print out the message using <iostream>
 		std::cout << "ERROR: Error Compiling " << (type == GL_VERTEX_SHADER ? "Vertex " : "Fragment ");
-		std::cout << "Shader! \n" << info << std::endl;
+		std::cout << "Shader! \n" << *(&infoLog[0]) << std::endl;
 
 		// Delete Shader and Exit
 		glDeleteShader(id);
@@ -96,6 +99,45 @@ void Shader::AssignShaderFromFiles(const std::string& vertexShader, const std::s
 {
 	this->DeleteShader();
 	this->m_Shader = CreateShaderFromFiles(vertexShader, fragmentShader);
+}
+
+int Shader::GetUniformLocation(const std::string& name)
+{
+	if (this->m_UniformsCache.find(name) != this->m_UniformsCache.end())
+		return this->m_UniformsCache[name];
+	
+	int location = glGetUniformLocation(this->m_Shader, name.c_str());
+	if (location == -1)
+	{
+		YEASTEM_WARNING("uniform `" + name + "` does not exist! ");
+	}
+
+	m_UniformsCache[name] = location;
+	return location;
+}
+
+void Shader::SetUniform1f(const std::string& name, float v0)
+{
+	int loc = this->GetUniformLocation(name);
+	if (loc != -1) glUniform1f(loc, v0);
+}
+
+void Shader::SetUniform1i(const std::string& name, int v0)
+{
+	int loc = this->GetUniformLocation(name);
+	if (loc != -1) glUniform1i(loc, v0);
+}
+
+void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
+{
+	int loc = this->GetUniformLocation(name);
+	if (loc != -1) glUniform4f(loc, v0, v1, v2, v3);
+}
+
+void Shader::SetUniform4i(const std::string& name, int v0, int v1, int v2, int v3)
+{
+	int loc = this->GetUniformLocation(name);
+	if (loc != -1) glUniform4i(loc, v0, v1, v2, v3);
 }
 
 YEASTEM_END

@@ -5,8 +5,8 @@ project "Lua"
 	kind "StaticLib"
 	language "C"
 
-	targetdir ("lib/x64/")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}/")
+	targetdir "lib/x64/%{cfg.buildcfg}/"
+	objdir "bin-int/"
 
 	files
 	{

@@ -2,10 +2,16 @@
 
 layout(location = 0) out vec4 glColour;
 
-uniform vec4 u_Colour;
+in vec2 v_TexCoord;
+
+uniform float u_Time;
 
 void main()
 {
-	glColour = u_Colour;
-	// glColour = vec4(1.0, gl_FragCoord.y / 480.0, 0.0, 1.0);
+	float r = 0.5f * sin(u_Time) + 0.5f;
+	float g = 1.0f - r;
+	float b = sin(r * 3.1415926535897932384626433832795);
+	vec4 col = vec4(r, g, b, 1.0f);
+
+	glColour = col;
 }

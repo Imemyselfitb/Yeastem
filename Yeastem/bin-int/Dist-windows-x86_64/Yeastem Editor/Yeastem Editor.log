@@ -1,12 +1,7 @@
-﻿  yst_pch.cpp
-  Application.cpp
+﻿  Application.cpp
   ImGuiAPI.cpp
-  main.cpp
-  IndexBuffer.cpp
   Renderer.cpp
-  Shader.cpp
-  VertexBuffer.cpp
-  FileReading.cpp
-  LuaState.cpp
+  Texture.cpp
+  main.cpp
   Generating Code...
   Yeastem Editor.vcxproj -> C:\dev\Yeastem\Yeastem\Yeastem\bin\Dist-windows-x86_64\Yeastem Editor\Yeastem Editor.exe

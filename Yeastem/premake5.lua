@@ -13,6 +13,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- include dirs relative to the root (solution) directory
 IncludeDir = {}
 IncludeDir["SDL2"] = "Dependancies/SDL2/include"
+IncludeDir["stb_image"] = "Dependancies/stb_image/include"
 IncludeDir["Glad"] = "Dependancies/Glad/include"
 IncludeDir["Lua"] = "Dependancies/Lua/src"
 IncludeDir["ImGui"] = "Dependancies/ImGui/src"
@@ -44,6 +45,7 @@ project "Yeastem Editor"
 	{
 		"$(SolutionDir)" .. m_Location .. "/src", 
 		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.stb_image}", 
 		"$(SolutionDir)%{IncludeDir.Lua}", 
 		"$(SolutionDir)%{IncludeDir.Glad}", 
 		"$(SolutionDir)Dependancies/Glad/src", 
@@ -61,6 +63,9 @@ project "Yeastem Editor"
 		-- SDL Libraries
 		"SDL2.lib", 
 		"SDL2main.lib", 
+		-- SDL Projects
+		"stb_image", 
+
 		-- Projects
 		"Glad", 
 		"Lua", 

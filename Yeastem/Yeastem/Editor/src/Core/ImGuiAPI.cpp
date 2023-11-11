@@ -25,18 +25,6 @@ void ImGuiAPI::Init()
 ImGuiAPI::ImGuiAPI(SDL_Window* window, SDL_GLContext* context)
 	:m_window(*window), m_context(*context)
 {
-	/*
-	KeycodeListener::AttachKeycodeFunction(
-		{ ImGuiKey::ImGuiMod_Ctrl, ImGuiKey::ImGuiKey_N }, []() {
-		std::cout << "NEW!!!!" << '\n';
-	});
-
-	KeycodeListener::AttachKeycodeFunction(ImGuiKey::ImGuiKey_K, []() {
-		std::cout << "K pressed" << '\n';
-	});
-	*/
-
-	// this->m_guiWindows.emplace_back([]() { ImGui::ShowDemoWindow(NULL); });
 	this->m_guiWindows.emplace_back([]() {
 		if (ImGui::BeginMainMenuBar())
 		{

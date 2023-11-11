@@ -3,7 +3,7 @@ project "Glad"
 	language "C"
 	kind "StaticLib"
 
-	targetdir "lib/x64/"
+	targetdir "lib/x64/%{cfg.buildcfg}/"
 	objdir "bin-int/"
 
 	files

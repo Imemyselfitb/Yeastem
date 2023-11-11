@@ -4,11 +4,17 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\OpenGL">
+      <UniqueIdentifier>{A21D028B-0ED3-7A80-97C7-7457037C7184}</UniqueIdentifier>
+    </Filter>
     <Filter Include="FileIO">
       <UniqueIdentifier>{FD1DD1B2-E9BF-FB88-D27A-0FDDBEBB82D9}</UniqueIdentifier>
     </Filter>
     <Filter Include="LuaAPI">
       <UniqueIdentifier>{6197A2C1-4D39-CD97-36F4-E0EB223554E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureMesh">
+      <UniqueIdentifier>{836EC32D-EF23-3C23-7818-36FAE4CC3227}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -16,6 +22,27 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\EntryPoint.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\ImGuiAPI.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\ImGuiWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\Include.h">
+      <Filter>Core\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\Renderer.h">
+      <Filter>Core\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\Shader.h">
+      <Filter>Core\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\Texture.h">
+      <Filter>Core\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Timestep.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\FileIO\FileIO.h">
@@ -28,24 +55,34 @@
       <Filter>LuaAPI</Filter>
     </ClInclude>
     <ClInclude Include="src\Macros.h" />
+    <ClInclude Include="src\TextureMesh\Point.h">
+      <Filter>TextureMesh</Filter>
+    </ClInclude>
     <ClInclude Include="src\yst_pch.h" />
-    <ClInclude Include="src\Core\ImGuiAPI.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h">
+      <Filter>Core\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\ImGuiWindow.h" />
-    <ClInclude Include="src\Core\KeyCodeGroup.h" />
-    <ClInclude Include="src\Core\KeyCodeCollection.h" />
-    <ClInclude Include="src\Core\OpenGL\Shader.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="src\Core\OpenGL\Buffers\VertexArray.h" />
+    <ClInclude Include="src\Core\OpenGL\Buffers\VertexBuffer.h">
+      <Filter>Core\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\OpenGL\Renderer.h" />
-    <ClInclude Include="src\Core\OpenGL\VertexBuffer.h" />
-    <ClInclude Include="src\Core\OpenGL\IndexBuffer.h" />
-    <ClInclude Include="src\Core\OpenGL\Include.h" />
+    <ClInclude Include="src\Core\OpenGL\Buffers\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\ImGuiAPI.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\Renderer.cpp">
+      <Filter>Core\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\Shader.cpp">
+      <Filter>Core\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\Texture.cpp">
+      <Filter>Core\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\main.cpp">
       <Filter>Core</Filter>
@@ -56,13 +93,19 @@
     <ClCompile Include="src\LuaAPI\LuaState.cpp">
       <Filter>LuaAPI</Filter>
     </ClCompile>
-    <ClCompile Include="src\yst_pch.cpp" />
-    <ClCompile Include="src\Core\ImGuiAPI.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="src\TextureMesh\Point.cpp">
+      <Filter>TextureMesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Renderer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\VertexBuffer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\IndexBuffer.cpp" />
+    <ClCompile Include="src\yst_pch.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp">
+      <Filter>Core\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\Buffers\VertexArray.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp">
+      <Filter>Core\OpenGL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Shaders\Texture.frag" />
   </ItemGroup>
 </Project>
