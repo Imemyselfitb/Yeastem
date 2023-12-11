@@ -49,7 +49,7 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 
 		// Print out the message using <iostream>
 		std::cout << "ERROR: Error Compiling " << (type == GL_VERTEX_SHADER ? "Vertex " : "Fragment ");
-		std::cout << "Shader! \n" << *(&infoLog[0]) << std::endl;
+		std::cout << "Shader! \n" << std::string(&infoLog[0]) << std::endl;
 
 		// Delete Shader and Exit
 		glDeleteShader(id);
@@ -77,6 +77,8 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 	// Delete the 'intermediate' Shaders
 	glDeleteShader(vert);
 	glDeleteShader(frag);
+
+	glUseProgram(0);
 
 	return program;
 }
@@ -116,26 +118,34 @@ int Shader::GetUniformLocation(const std::string& name)
 
 void Shader::SetUniform1f(const std::string& name, float v0)
 {
+	this->Bind();
 	int loc = this->GetUniformLocation(name);
 	if (loc != -1) glUniform1f(loc, v0);
+	this->Unbind();
 }
 
 void Shader::SetUniform1i(const std::string& name, int v0)
 {
+	this->Bind();
 	int loc = this->GetUniformLocation(name);
 	if (loc != -1) glUniform1i(loc, v0);
+	this->Unbind();
 }
 
 void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 {
+	this->Bind();
 	int loc = this->GetUniformLocation(name);
 	if (loc != -1) glUniform4f(loc, v0, v1, v2, v3);
+	this->Unbind();
 }
 
 void Shader::SetUniform4i(const std::string& name, int v0, int v1, int v2, int v3)
 {
+	this->Bind();
 	int loc = this->GetUniformLocation(name);
 	if (loc != -1) glUniform4i(loc, v0, v1, v2, v3);
+	this->Unbind();
 }
 
 YEASTEM_END

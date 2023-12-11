@@ -30,12 +30,12 @@ void VertexArray::AddBuffer(
 	}
 }
 
-void VertexArray::Bind()
+void VertexArray::Bind() const
 {
 	glBindVertexArray(this->m_glID);
 }
 
-void VertexArray::Unbind()
+void VertexArray::Unbind() const
 {
 	glBindVertexArray(0);
 }

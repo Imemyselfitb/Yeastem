@@ -46,19 +46,15 @@ void Texture::SetupGLFlags()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 }
 
-void Texture::Bind(unsigned int slot) 
+void Texture::Bind(unsigned int slot) const
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, this->m_glID);
-	this->m_CurrentSlot = slot;
 }
 
-void Texture::Unbind()
+void Texture::Unbind() const
 {
-	glActiveTexture(GL_TEXTURE0 + this->m_CurrentSlot);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	this->m_CurrentSlot = 0;
 }
 
 Texture::Texture(const Texture& other)

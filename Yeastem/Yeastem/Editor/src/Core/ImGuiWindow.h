@@ -24,7 +24,7 @@ public:
 	}
 	
 private:
-	ShowFunction m_Show_function;
+	ShowFunction m_Show_function = ShowFunction();
 };
 
 YEASTEM_END

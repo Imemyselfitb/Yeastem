@@ -15,8 +15,8 @@ public:
 		const VertexBuffer&, const VertexBufferLayout&
 	);
 
-	void Bind();
-	void Unbind();
+	void Bind() const;
+	void Unbind() const;
 
 public:
 	unsigned int m_glID = 0;

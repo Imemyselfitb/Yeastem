@@ -31,11 +31,11 @@ public:
 	static SDL_Renderer* s_Renderer;
 
 public:
-	struct PosData { int x, y; } m_WindowPosition;
-	struct SizeData { int w, h; } m_WindowSize;
+	struct PosData { int x, y; } m_WindowPosition = {0, 0};
+	struct SizeData { int w, h; } m_WindowSize = {0, 0};
 
-	SDL_Window* m_window;
-	SDL_GLContext m_context;
+	SDL_Window* m_window = nullptr;
+	SDL_GLContext m_context = 0;
 
 private:
 	void setupGlFlags() const;
@@ -56,7 +56,7 @@ private:
 	Yeastem::Renderer m_Renderer;
 
 public:
-	uint64_t CurrentTime;
+	uint64_t CurrentTime = 0;
 
 private:
 	static bool s_GLInitialized;

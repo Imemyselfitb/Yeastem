@@ -15,7 +15,9 @@ public:
 
 private:
 	unsigned int m_glID;
-	unsigned int m_Count;
+
+public:
+	unsigned int size;
 };
 
 YEASTEM_END

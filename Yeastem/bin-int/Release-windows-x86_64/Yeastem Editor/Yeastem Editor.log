@@ -1,8 +1,0 @@
-﻿  Application.cpp
-  ImGuiAPI.cpp
-  VertexArray.cpp
-c:\dev\yeastem\yeastem\yeastem\yeastem\editor\src\core\opengl\buffers\vertexarray.cpp(28): warning C4312: 'type cast': conversion from 'unsigned int' to 'const void *' of greater size
-  Renderer.cpp
-  main.cpp
-  Generating Code...
-  Yeastem Editor.vcxproj -> C:\dev\Yeastem\Yeastem\Yeastem\bin\Release-windows-x86_64\Yeastem Editor\Yeastem Editor.exe

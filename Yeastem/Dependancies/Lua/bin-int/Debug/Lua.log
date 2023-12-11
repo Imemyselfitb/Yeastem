@@ -33,4 +33,4 @@
   lvm.c
   lzio.c
   Generating Code...
-  Lua.vcxproj -> C:\dev\Yeastem\Yeastem\Yeastem\Dependancies\Lua\Lua\..\lib\x64\Debug\Lua.lib
+  Lua.vcxproj -> C:\dev\Code\C++\Yeastem\Yeastem\Dependancies\Lua\lib\x64\Debug\Lua.lib
