@@ -57,26 +57,15 @@ void Application::HandleEvents(SDL_Event& m_events) const
 	}
 }
 
-Renderable Object1;
-Renderable Object2;
+Shape Object1;
+Shape Object2;
 void Application::SetupRender()
 {
-	unsigned int vertDim = 4; // Attributes Per Vertex
-	unsigned int vertexCount = 4; // Total Count of Vertices
-	
-	// vert x, vert y, texture x, texture y
-	float vertices1[] = {
-		-0.5f, -0.5f, 0.0f, 0.0f,
-		-0.02f, -0.5f, 1.0f, 0.0f,
-		-0.02f,  0.5f, 1.0f, 1.0f,
-		-0.5f,  0.5f, 0.0f, 1.0f
-	};
-
-	float vertices2[] = {
-		 0.02f, -0.5f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 1.0f, 0.0f,
-		 0.5f,  0.5f, 1.0f, 1.0f,
-		 0.02f,  0.5f, 0.0f, 1.0f
+	std::vector<Vertex> squareVerts = {
+		{ { -125.0f, -125.0f }, { 0.0f, 0.0f } },
+		{ {  125.0f, -125.0f }, { 1.0f, 0.0f } },
+		{ {  125.0f,  125.0f }, { 1.0f, 1.0f } },
+		{ { -125.0f,  125.0f }, { 0.0f, 1.0f } }
 	};
 
 	unsigned int _indexCount = 6; // Length of indices Buffer. 
@@ -85,10 +74,18 @@ void Application::SetupRender()
 		2, 3, 0
 	};
 
-	Object1.AssignVertexBuffer(vertices1, vertexCount * vertDim * sizeof(float));
-	Object2.AssignVertexBuffer(vertices2, vertexCount * vertDim * sizeof(float));
+	Object1.Init();
+	Object2.Init();
+
+	Object1.AssignVertices(squareVerts);
+	Object2.AssignVertices(squareVerts);
 	Object1.AssignIndexBuffer(indices, _indexCount);
 	Object2.AssignIndexBuffer(indices, _indexCount);
+
+	for (PointMass& pt : Object1.GetPoints())
+		pt.Position += Vector2(250.0f, 200.0f);
+	for (PointMass& pt : Object2.GetPoints())
+		pt.Position += Vector2(750.0f, 250.0f);
 
 	VertexBufferLayout vbl;
 	vbl.Push<float>(2);
@@ -105,8 +102,6 @@ void Application::SetupRender()
 		"src/Shaders/Texture.frag"
 	);
 
-	//CreateTexture("test/PNG_Texture.png", tex0);
-	//CreateTexture("test/MyTexture.png", tex0);
 	Object1.ReserveTextures(2);
 	Object2.ReserveTextures(2);
 
@@ -115,30 +110,63 @@ void Application::SetupRender()
 
 	Object2.AddTexture("test/OnlyFrame.png");
 	Object2.AddTexture("test/Scenery.png");
+
+	const Renderable& objRend1 = Object1;
+	const Renderable& objRend2 = Object1;
 }
 
+int seed = 0;
+int pseudo_rand()
+{
+	seed = (seed - 1) * (seed ^ 0x02468) * 3;
+	return seed;
+}
+
+float deltaTime;
+float accTime;
 
 void Application::render_frame()
 {
 	SDL_GetWindowPosition(m_window, &m_WindowPosition.x, &m_WindowPosition.y);
 	SDL_GetWindowSize(m_window, &m_WindowSize.w, &m_WindowSize.h);
 
+	int Mouse_X, Mouse_Y;
+	SDL_GetMouseState(&Mouse_X, &Mouse_Y);
+
+	{
+		for (PointMass& pt : Object1.GetPoints())
+		{
+			pt.Position.x += cos(accTime * 5) * 500.0f * deltaTime;
+			pt.Position.y += sin(accTime * 5) * 300.0f * deltaTime;
+		}
+	}
+
+	{
+		Vector2 centre = Object2.GetCentre();
+		for (PointMass& pt : Object2.GetPoints())
+			pt.Position.Rotate(deltaTime, centre);
+	}
+
+	Object1.UpdateVertices(m_WindowSize.w, m_WindowSize.h);
+	Object2.UpdateVertices(m_WindowSize.w, m_WindowSize.h);
+
 	glViewport(0, 0, m_WindowSize.w, m_WindowSize.h);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	Object1.shader.SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
-	Object2.shader.SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
-
-	Object1.shader.SetUniform1i("u_ShapeID", 1);
-	Object2.shader.SetUniform1i("u_ShapeID", 2);
-
+	Object1.shader->SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
+	Object1.shader->SetUniform1i("u_ShapeID", 1);
 	this->m_Renderer.Render(Object1);
+
+	Object2.shader->SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
+	Object2.shader->SetUniform1i("u_ShapeID", 2);
 	this->m_Renderer.Render(Object2);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	SDL_GL_SwapWindow(m_window);
+
+	accTime += deltaTime;
 }
 
 void Application::initImGui()
@@ -156,10 +184,14 @@ void Application::run()
 	s_IsRunning = true;
 
 	SDL_Event m_events;
+	unsigned long long previous_time = 0;
 	while (s_IsRunning)
 	{
 		this->HandleEvents(m_events);
 		this->CurrentTime = SDL_GetTicks64();
+		deltaTime = (this->CurrentTime - previous_time) / 1000.0f;
+		deltaTime = SDL_min(deltaTime, 0.004f);
+		previous_time = this->CurrentTime;
 
 		this->m_ImGuiLayer->Update();
 		this->render_frame();
@@ -173,4 +205,4 @@ void Application::run()
 	SDL_DestroyRenderer(s_Renderer);
 }
 
-YEASTEM_END
+YEASTEM_END	

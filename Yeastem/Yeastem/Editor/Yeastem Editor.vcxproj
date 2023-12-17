@@ -84,7 +84,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -107,7 +107,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -131,7 +131,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -143,39 +143,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Core\ImGuiAPI.h" />
     <ClInclude Include="src\Core\ImGuiWindow.h" />
+    <ClInclude Include="src\Core\Math\Point.h" />
+    <ClInclude Include="src\Core\Math\Vector2.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexArray.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Core\OpenGL\Include.h" />
+    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h" />
+    <ClInclude Include="src\Core\OpenGL\RenderAPI\Shape.h" />
     <ClInclude Include="src\Core\OpenGL\Shader.h" />
+    <ClInclude Include="src\Core\OpenGL\ShaderContainer.h" />
     <ClInclude Include="src\Core\OpenGL\Texture.h" />
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\FileIO\FileIO.h" />
     <ClInclude Include="src\LuaAPI\Lua.h" />
     <ClInclude Include="src\LuaAPI\LuaState.h" />
     <ClInclude Include="src\Macros.h" />
-    <ClInclude Include="src\TextureMesh\Point.h" />
     <ClInclude Include="src\yst_pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\ImGuiAPI.cpp" />
+    <ClCompile Include="src\Core\Math\Point.cpp" />
+    <ClCompile Include="src\Core\Math\Vector2.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp" />
+    <ClCompile Include="src\Core\OpenGL\RenderAPI\Shape.cpp" />
     <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
+    <ClCompile Include="src\Core\OpenGL\ShaderContainer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\FileIO\FileReading.cpp" />
     <ClCompile Include="src\LuaAPI\LuaState.cpp" />
-    <ClCompile Include="src\TextureMesh\Point.cpp" />
     <ClCompile Include="src\yst_pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

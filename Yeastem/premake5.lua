@@ -73,7 +73,7 @@ project "Yeastem Editor"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
+		cppdialect "C++latest"
 		staticruntime "On"
 		systemversion "latest"
 
@@ -130,7 +130,7 @@ project "Yeastem Runtime"
 	ignoredefaultlibraries { "MSVCRT" }
 
 	filter "system:windows"
-		cppdialect "C++17"
+		cppdialect "C++latest"
 		staticruntime "On"
 		systemversion "latest"
 
@@ -169,7 +169,7 @@ project "YSS Compiler"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
+		cppdialect "C++latest"
 		staticruntime "On"
 		systemversion "latest"
 

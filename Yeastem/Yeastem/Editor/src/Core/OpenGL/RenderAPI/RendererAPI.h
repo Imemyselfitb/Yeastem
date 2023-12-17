@@ -7,7 +7,14 @@
 #include "Core/OpenGL/Shader.h"
 #include "Core/OpenGL/Texture.h"
 
+#include "Core/Math/Vector2.h"
+
 YEASTEM_BEGIN
+
+struct Vertex
+{
+	Vector2 position = {}, texture = {};
+};
 
 class Renderable
 {
@@ -17,6 +24,7 @@ public:
 
 public:
 	void AssignVertexBuffer(const void* data, unsigned int size);
+	void AssignVertices(const std::vector<Vertex>& vertexList);
 	void AssignIndexBuffer(const unsigned int* data, unsigned int count);
 	void AddVertexBufferLayout(const VertexBufferLayout& layout);
 	void AssignShaderFromFiles(const std::string& VertexShader, const std::string& FragmentShader);
@@ -24,12 +32,15 @@ public:
 	void ReserveTextures(unsigned int count);
 	void AddTexture(const std::string& path);
 
+	void ReloadVertices();
+
 public:
+	std::vector<Vertex> VertexList;
 	std::unique_ptr<VertexBuffer> vertices;
 	std::unique_ptr<IndexBuffer> indices;
 	std::unique_ptr<VertexArray> layout;
 	
-	Shader shader;
+	std::shared_ptr<Shader> shader;
 	std::vector<Texture> textures;
 };
 

@@ -19,7 +19,7 @@ void main()
 		return;
 	}
 
-	vec2 texCoord1 = 0.5 - ((0.5 - v_TexCoord) * 1.5);
+	vec2 texCoord1 = 0.5 - ((0.5 - v_TexCoord) * 1.3);
 	vec4 texCol1 = texture(u_tex1, texCoord1);
 
 	if(texCol0.x + texCol0.y + texCol0.z > 1.0) {

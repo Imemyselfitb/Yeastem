@@ -11,9 +11,11 @@ public:
 public:
 	void Bind() const;
 	void Unbind() const;
+	void UpdateBuffer(const void* data) const;
 
 private:
 	unsigned int m_glID;
+	unsigned int m_Size;
 };
 
 YEASTEM_END

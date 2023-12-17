@@ -4,20 +4,23 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{C7E5BF15-3350-748C-7C8E-2532E83752E1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\OpenGL">
       <UniqueIdentifier>{A21D028B-0ED3-7A80-97C7-7457037C7184}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\OpenGL\Buffers">
       <UniqueIdentifier>{1E5F838D-8AC0-609B-132E-A74D7F8E975A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\OpenGL\RenderAPI">
+      <UniqueIdentifier>{4B2BA8E2-B797-63DD-808B-FB3AECB68545}</UniqueIdentifier>
+    </Filter>
     <Filter Include="FileIO">
       <UniqueIdentifier>{FD1DD1B2-E9BF-FB88-D27A-0FDDBEBB82D9}</UniqueIdentifier>
     </Filter>
     <Filter Include="LuaAPI">
       <UniqueIdentifier>{6197A2C1-4D39-CD97-36F4-E0EB223554E8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="TextureMesh">
-      <UniqueIdentifier>{836EC32D-EF23-3C23-7818-36FAE4CC3227}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +35,12 @@
     </ClInclude>
     <ClInclude Include="src\Core\ImGuiWindow.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Math\Point.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Math\Vector2.h">
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h">
       <Filter>Core\OpenGL\Buffers</Filter>
@@ -48,7 +57,16 @@
     <ClInclude Include="src\Core\OpenGL\Include.h">
       <Filter>Core\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h">
+      <Filter>Core\OpenGL\RenderAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\RenderAPI\Shape.h">
+      <Filter>Core\OpenGL\RenderAPI</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\OpenGL\Shader.h">
+      <Filter>Core\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\ShaderContainer.h">
       <Filter>Core\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\OpenGL\Texture.h">
@@ -67,11 +85,7 @@
       <Filter>LuaAPI</Filter>
     </ClInclude>
     <ClInclude Include="src\Macros.h" />
-    <ClInclude Include="src\TextureMesh\Point.h">
-      <Filter>TextureMesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\yst_pch.h" />
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -79,6 +93,12 @@
     </ClCompile>
     <ClCompile Include="src\Core\ImGuiAPI.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Point.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Vector2.cpp">
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp">
       <Filter>Core\OpenGL\Buffers</Filter>
@@ -89,7 +109,16 @@
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp">
       <Filter>Core\OpenGL\Buffers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp">
+      <Filter>Core\OpenGL\RenderAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\RenderAPI\Shape.cpp">
+      <Filter>Core\OpenGL\RenderAPI</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\OpenGL\Shader.cpp">
+      <Filter>Core\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\ShaderContainer.cpp">
       <Filter>Core\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\OpenGL\Texture.cpp">
@@ -104,10 +133,6 @@
     <ClCompile Include="src\LuaAPI\LuaState.cpp">
       <Filter>LuaAPI</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextureMesh\Point.cpp">
-      <Filter>TextureMesh</Filter>
-    </ClCompile>
     <ClCompile Include="src\yst_pch.cpp" />
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp" />
   </ItemGroup>
 </Project>

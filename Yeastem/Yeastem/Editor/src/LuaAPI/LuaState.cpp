@@ -11,7 +11,7 @@ bool LuaState::executeScriptFromFile(const std::string& file)
 	if (ID == LUA_OK) ID = luaL_loadstring(this->m_State, cStr);
 	if (ID == LUA_OK) return true;
 
-	const char *msg = lua_tostring(this->m_State, -1);
+	const char* msg = lua_tostring(this->m_State, -1);
 	lua_writestringerror("%s: ", "Lua");
 	lua_writestringerror("%s\n", msg);
 	lua_pop(this->m_State, 1);
