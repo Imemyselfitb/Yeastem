@@ -5,7 +5,7 @@ YEASTEM_BEGIN
 class ImGuiWindow
 {
 public:
-	using ShowFunction = void(*)();
+	using ShowFunction = void(*)(bool&);
 
 public:
 	ImGuiWindow() {}
@@ -15,16 +15,18 @@ public:
 public:
 	void AttachRenderFunctionality(ShowFunction showfunc)
 	{
-		m_Show_function = showfunc;
+		if(m_isShown)
+			m_Show_function = showfunc;
 	}
 
 	void Render()
 	{
-		m_Show_function();
+		m_Show_function(m_isShown);
 	}
 	
 private:
 	ShowFunction m_Show_function = ShowFunction();
+	bool m_isShown = true;
 };
 
 YEASTEM_END

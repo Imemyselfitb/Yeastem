@@ -6,8 +6,11 @@ class LuaState
 {
 public:
 	LuaState() { m_State = luaL_newstate(); }
+	LuaState(const LuaState& other) :m_State(other.m_State) {}
+	LuaState(LuaState&& other) noexcept :m_State(other.m_State) { other.m_HandleOwnership = false; }
 
-	LuaState(lua_State& state) :m_State(&state) {}
+	void operator=(const LuaState& other) { this->m_State = other.m_State; }
+	void operator=(LuaState& other) { this->m_State = other.m_State; other.m_HandleOwnership = false; }
 
 	LuaState(lua_State* state) :m_State(state) {}
 	LuaState(lua_State* state, bool handleOwnership)
@@ -18,8 +21,10 @@ public:
 	operator lua_State* () { return m_State; }
 
 public:
+	bool ExecuteScript(const std::string& script);
+	bool ExecuteScript(const std::string& script, const std::string& fileName);
 	bool executeScriptFromFile(const std::string& file);
-	void addNativeFunction(int(*)(lua_State*), const char* functionName);
+	void addNativeFunction(int(*nativeFunction)(lua_State*), const char* functionName);
 
 public:
 	~LuaState() { if (m_HandleOwnership) lua_close(m_State); }

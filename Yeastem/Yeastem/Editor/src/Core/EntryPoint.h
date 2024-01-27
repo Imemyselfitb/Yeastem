@@ -2,8 +2,6 @@
 
 #include "Application.h"
 
-#if 1
-
 YEASTEM_BEGIN
 int EntryPoint(int argc, char* argv[])
 {
@@ -30,27 +28,3 @@ int EntryPoint(int argc, char* argv[])
 }
 
 YEASTEM_END
-
-#else
-
-#include "LuaAPI/Lua.h"
-
-YEASTEM_BEGIN
-int EntryPoint(int argc, char* argv[])
-{
-	LuaState L;
-	L.executeScriptFromFile("test/Test.lua");
-
-	std::cout << "AA";
-
-#if 0
-	lua_getglobal(L, "x");
-	lua_Number x = lua_tonumber(L, 1);
-	std::cout << "Lua says x = " << (int)x << std::endl;
-#endif
-
-	return 0;
-}
-YEASTEM_END
-
-#endif

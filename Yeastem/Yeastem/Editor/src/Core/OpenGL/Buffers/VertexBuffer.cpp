@@ -37,4 +37,12 @@ void VertexBuffer::UpdateBuffer(const void* data) const
 	this->Unbind();
 }
 
+void VertexBuffer::UpdateBuffer(const void* data, unsigned int size)
+{
+	this->m_Size = size;
+	this->Bind();
+	glBufferData(GL_ARRAY_BUFFER, this->m_Size, data, GL_DYNAMIC_DRAW);
+	this->Unbind();
+}
+
 YEASTEM_END

@@ -32,10 +32,12 @@ public:
 	void ReserveTextures(unsigned int count);
 	void AddTexture(const std::string& path);
 
+	void ReloadIndices();
 	void ReloadVertices();
 
 public:
 	std::vector<Vertex> VertexList;
+	std::shared_ptr<std::vector<unsigned int>> IndexList;
 	std::unique_ptr<VertexBuffer> vertices;
 	std::unique_ptr<IndexBuffer> indices;
 	std::unique_ptr<VertexArray> layout;

@@ -19,13 +19,19 @@ public:
 public:
 	void SubmitToVertexList(int windowWidth, int windowHeight) const;
 	void SetOffset(Vector2 centre);
-	operator Vector2() { return this->Position; }
+	operator Vector2&() { return this->Position; }
+	operator const Vector2&() const { return this->Position; }
+
+public:
+	void Push();
+	void Pop();
 
 public:
 	Vector2 Position;
 
 private:
 	Vector2 m_Offset;
+	std::vector<Vector2> m_Backups;
 
 private:
 	int m_VertexListIndex = -1;

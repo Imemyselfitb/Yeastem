@@ -16,6 +16,9 @@
     <Filter Include="Core\OpenGL\RenderAPI">
       <UniqueIdentifier>{4B2BA8E2-B797-63DD-808B-FB3AECB68545}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Scene">
+      <UniqueIdentifier>{CB0B2ACE-B7C3-6B1B-20CB-44770CA2060C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="FileIO">
       <UniqueIdentifier>{FD1DD1B2-E9BF-FB88-D27A-0FDDBEBB82D9}</UniqueIdentifier>
     </Filter>
@@ -72,6 +75,9 @@
     <ClInclude Include="src\Core\OpenGL\Texture.h">
       <Filter>Core\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Scene\Scene.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Timestep.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -124,6 +130,9 @@
     <ClCompile Include="src\Core\OpenGL\Texture.cpp">
       <Filter>Core\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Scene\Scene.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -134,5 +143,9 @@
       <Filter>LuaAPI</Filter>
     </ClCompile>
     <ClCompile Include="src\yst_pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\Test2a.lua" />
+    <None Include="test\Test2b.lua" />
   </ItemGroup>
 </Project>

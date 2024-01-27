@@ -4,6 +4,18 @@
 
 YEASTEM_BEGIN
 
+void PointMass::Push()
+{
+	this->m_Backups.push_back(Vector2(this->Position));
+}
+
+void PointMass::Pop()
+{
+	Vector2 last = this->m_Backups[this->m_Backups.size() - 1];
+	this->Position = last;
+	this->m_Backups.pop_back();
+}
+
 void PointMass::SubmitToVertexList(int windowWidth, int windowHeight) const
 {
 	Vector2 onScreenPos = this->Position / Vector2(windowWidth / 2.0f, windowHeight / 2.0f);

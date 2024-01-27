@@ -32,6 +32,7 @@ public:
 	void operator/=(float scalar);
 
 	void Rotate(float angle, Vector2 pivot = { 0, 0 });
+	void Scale(float sf, Vector2 centre = { 0, 0 });
 
 public:
 	float x = 0, y = 0;

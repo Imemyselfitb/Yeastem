@@ -44,7 +44,7 @@ private:
 	void initImGui();
 
 	void SetupRender();
-	void render_frame();
+	void process_frame(float deltaTime);
 	void run();
 
 private:
@@ -53,7 +53,6 @@ private:
 
 private:
 	std::unique_ptr<Yeastem::ImGuiAPI> m_ImGuiLayer;
-	Yeastem::Renderer m_Renderer;
 
 public:
 	uint64_t CurrentTime = 0;

@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>YST_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -100,7 +100,7 @@
       <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>YST_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -124,7 +124,7 @@
       <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>YST_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -159,6 +159,7 @@
     <ClInclude Include="src\Core\OpenGL\Shader.h" />
     <ClInclude Include="src\Core\OpenGL\ShaderContainer.h" />
     <ClInclude Include="src\Core\OpenGL\Texture.h" />
+    <ClInclude Include="src\Core\Scene\Scene.h" />
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\FileIO\FileIO.h" />
     <ClInclude Include="src\LuaAPI\Lua.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
     <ClCompile Include="src\Core\OpenGL\ShaderContainer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Texture.cpp" />
+    <ClCompile Include="src\Core\Scene\Scene.cpp" />
     <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\FileIO\FileReading.cpp" />
     <ClCompile Include="src\LuaAPI\LuaState.cpp" />
@@ -199,6 +201,10 @@
     <ProjectReference Include="..\..\Dependancies\ImGui\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\Test2a.lua" />
+    <None Include="test\Test2b.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

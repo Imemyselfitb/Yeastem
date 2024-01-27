@@ -52,6 +52,11 @@ void Renderable::AddTexture(const std::string& path)
 	this->textures.emplace_back(path);
 }
 
+void Renderable::ReloadIndices()
+{
+	//this->indices->UpdateBuffer(&(*this->IndexList)[0], this->IndexList->size());
+}
+
 void Renderable::ReloadVertices()
 {
 	this->vertices->UpdateBuffer(&this->VertexList[0]);

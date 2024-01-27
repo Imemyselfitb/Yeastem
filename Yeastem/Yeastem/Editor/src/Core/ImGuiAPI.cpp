@@ -25,7 +25,7 @@ void ImGuiAPI::Init()
 ImGuiAPI::ImGuiAPI(SDL_Window* window, SDL_GLContext* context)
 	:m_window(*window), m_context(*context)
 {
-	this->m_guiWindows.emplace_back([]() {
+	this->m_guiWindows.emplace_back([](bool&) {
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -52,7 +52,22 @@ ImGuiAPI::ImGuiAPI(SDL_Window* window, SDL_GLContext* context)
 			}
 			ImGui::EndMainMenuBar();
 		}
+	});
 
+	this->m_guiWindows.emplace_back([](bool& isShown) {
+		if (!ImGui::Begin("Tree", &isShown))
+			return ImGui::End();
+
+		if (ImGui::TreeNode("A"))
+		{
+			if (ImGui::TreeNode("B"))
+			{
+				ImGui::Text("C");
+				ImGui::TreePop();
+			}
+			ImGui::TreePop();
+		}
+		ImGui::End();
 	});
 }
 

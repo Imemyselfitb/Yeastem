@@ -83,6 +83,15 @@ void Vector2::Rotate(float Angle, Vector2 Pivot)
 	this->y = (x * s) + (y * c) + Pivot.y;
 }
 
+void Vector2::Scale(float sf, Vector2 centre)
+{
+	float x = this->x - centre.x;
+	float y = this->y - centre.y;
+
+	this->x = sf * x + centre.x;
+	this->y = sf * y + centre.y;
+}
+
 std::ostream& operator<<(std::ostream& s, const Vector2& v)
 {
 	s << v.x << ", " << v.y;

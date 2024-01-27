@@ -6,9 +6,36 @@
 
 YEASTEM_BEGIN
 
-void Shape::Init()
+void Shape::Init(Vector2 centre)
 {
 	this->m_RenderableShape = std::make_shared<Renderable>();
+	this->m_InitPosition = centre;
+}
+
+void Shape::Push()
+{
+	for (PointMass& pt : this->m_Points)
+		pt.Push();
+}
+void Shape::Translate(Vector2 v)
+{
+	for (PointMass& pt : this->m_Points)
+		pt.Position += v;
+}
+void Shape::Rotate(float Angle, Vector2 Pivot)
+{
+	for (PointMass& pt : this->m_Points)
+		pt.Position.Rotate(Angle, Pivot);
+}
+void Shape::ScaleBy(float sf, Vector2 centre)
+{
+	for (PointMass& pt : this->m_Points)
+		pt.Position.Scale(sf, centre);
+}
+void Shape::Pop()
+{
+	for (PointMass& pt : this->m_Points)
+		pt.Pop();
 }
 
 void Shape::AssignVertices(const std::vector<Vertex>& vertices)
@@ -20,11 +47,20 @@ void Shape::AssignVertices(const std::vector<Vertex>& vertices)
 		this->m_Points[i].m_VertexListIndex = i;
 	}
 	
+	this->AssignOffsets();
+}
+
+void Shape::AssignOffsets()
+{
 	Vector2 centre = this->GetCentre();
 	for (PointMass& pt : this->m_Points)
 		pt.SetOffset(centre);
 }
 
+void Shape::AssignIndices(const std::vector<unsigned int>& vertices)
+{
+	this->m_RenderableShape->AssignIndexBuffer(&vertices[0], vertices.size());
+}
 void Shape::AssignIndexBuffer(const unsigned int* data, unsigned int count)
 {
 	this->m_RenderableShape->AssignIndexBuffer(data, count);

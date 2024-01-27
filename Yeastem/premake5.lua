@@ -16,6 +16,7 @@ IncludeDir["SDL2"] = "Dependancies/SDL2/include"
 IncludeDir["stb_image"] = "Dependancies/stb_image/include"
 IncludeDir["Glad"] = "Dependancies/Glad/include"
 IncludeDir["Lua"] = "Dependancies/Lua/src"
+IncludeDir["EnTT"] = "Dependancies/EnTT/include"
 IncludeDir["ImGui"] = "Dependancies/ImGui/src"
 
 LibraryDir = {}
@@ -49,6 +50,7 @@ project "Yeastem Editor"
 		"$(SolutionDir)%{IncludeDir.Lua}", 
 		"$(SolutionDir)%{IncludeDir.Glad}", 
 		"$(SolutionDir)Dependancies/Glad/src", 
+		"$(SolutionDir)%{IncludeDir.EnTT}", 
 		"$(SolutionDir)%{IncludeDir.ImGui}", 
 		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
 	}

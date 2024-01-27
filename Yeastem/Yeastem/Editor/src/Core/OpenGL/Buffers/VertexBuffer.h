@@ -12,6 +12,7 @@ public:
 	void Bind() const;
 	void Unbind() const;
 	void UpdateBuffer(const void* data) const;
+	void UpdateBuffer(const void* data, unsigned int size);
 
 private:
 	unsigned int m_glID;
