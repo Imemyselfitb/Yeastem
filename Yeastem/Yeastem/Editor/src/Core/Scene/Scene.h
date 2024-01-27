@@ -25,6 +25,7 @@ private:
 	void UpdateScripts(int shapeIdx, float deltaTime);
 
 private:
+	int m_ScriptCount = 0;
 	LuaState m_LuaState;
 	std::vector<Shape> m_Shapes;
 	Yeastem::Renderer m_Renderer;

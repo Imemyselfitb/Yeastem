@@ -38,6 +38,7 @@ void Scene::Lua_AttachCFunction(int(*nativeFunction)(lua_State*), const char* fu
 
 void Scene::Lua_ExcecuteScript(const std::string& file)
 {
+	this->m_ScriptCount++;
 	this->m_LuaState.executeScriptFromFile(file);
 }
 
@@ -67,21 +68,17 @@ void Scene::UpdateScripts(int shapeIdx, float deltaTime) {
 
 void Scene::Update(float deltaTime, int windowWidth, int windowHeight)
 {
-	lua_getglobal(this->m_LuaState, "Update_46290");
-	if (lua_isfunction(this->m_LuaState, -1))
+	for (int i = 0; i < this->m_ScriptCount; i++)
 	{
-		lua_pushnumber(this->m_LuaState, deltaTime);
-		lua_pcall(this->m_LuaState, 1, 0, 0);
+		std::string funcName = (std::string)"Update_" + std::to_string(46290 + i);
+		lua_getglobal(this->m_LuaState, funcName.c_str());
+		if (lua_isfunction(this->m_LuaState, -1))
+		{
+			lua_pushnumber(this->m_LuaState, deltaTime);
+			lua_pcall(this->m_LuaState, 1, 0, 0);
+		}
+		else lua_pop(this->m_LuaState, 1);
 	}
-	else lua_pop(this->m_LuaState, 1);
-
-	lua_getglobal(this->m_LuaState, "Update_46291");
-	if (lua_isfunction(this->m_LuaState, -1))
-	{
-		lua_pushnumber(this->m_LuaState, deltaTime);
-		lua_pcall(this->m_LuaState, 1, 0, 0);
-	}
-	else lua_pop(this->m_LuaState, 1);
 
 	for (int i = 0; i < this->m_Shapes.size(); i++)
 	{
