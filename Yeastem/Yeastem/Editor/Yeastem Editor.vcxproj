@@ -147,6 +147,7 @@
     <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Core\ImGuiAPI.h" />
     <ClInclude Include="src\Core\ImGuiWindow.h" />
+    <ClInclude Include="src\Core\Lua\LuaVector2.h" />
     <ClInclude Include="src\Core\Math\Point.h" />
     <ClInclude Include="src\Core\Math\Vector2.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="src\Core\OpenGL\Shader.h" />
     <ClInclude Include="src\Core\OpenGL\ShaderContainer.h" />
     <ClInclude Include="src\Core\OpenGL\Texture.h" />
+    <ClInclude Include="src\Core\Scene\Events.h" />
     <ClInclude Include="src\Core\Scene\Scene.h" />
     <ClInclude Include="src\Core\Timestep.h" />
     <ClInclude Include="src\FileIO\FileIO.h" />
@@ -170,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\ImGuiAPI.cpp" />
+    <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
     <ClCompile Include="src\Core\Math\Point.cpp" />
     <ClCompile Include="src\Core\Math\Vector2.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp" />
@@ -180,6 +183,7 @@
     <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
     <ClCompile Include="src\Core\OpenGL\ShaderContainer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Texture.cpp" />
+    <ClCompile Include="src\Core\Scene\Events.cpp" />
     <ClCompile Include="src\Core\Scene\Scene.cpp" />
     <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\FileIO\FileReading.cpp" />
@@ -203,8 +207,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test\Test2a.lua" />
-    <None Include="test\Test2b.lua" />
+    <None Include="PongTest\Game.lua" />
+    <None Include="PongTest\RectCollisionModule.lua" />
+    <None Include="test\Test1a.lua" />
+    <None Include="test\Test1b.lua" />
+    <None Include="test\Test2.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

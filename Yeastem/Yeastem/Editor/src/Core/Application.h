@@ -1,8 +1,9 @@
 #pragma once
 
 #include "OpenGL/Include.h"
-
 #include "ImGuiAPI.h"
+
+#include "Scene/Scene.h"
 
 YEASTEM_BEGIN
 
@@ -56,6 +57,7 @@ private:
 
 public:
 	uint64_t CurrentTime = 0;
+	static Scene CurrentScene;
 
 private:
 	static bool s_GLInitialized;

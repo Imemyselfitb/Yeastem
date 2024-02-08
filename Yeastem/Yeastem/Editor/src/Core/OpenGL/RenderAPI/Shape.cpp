@@ -49,7 +49,6 @@ void Shape::AssignVertices(const std::vector<Vertex>& vertices)
 	
 	this->AssignOffsets();
 }
-
 void Shape::AssignOffsets()
 {
 	Vector2 centre = this->GetCentre();
@@ -85,13 +84,31 @@ void Shape::AddTexture(const std::string& path)
 
 void Shape::UpdateVertices(int windowWidth, int windowHeight)
 {
+	float xmin, ymin, xmax, ymax;
+
+	float x1 = this->m_Points[0].Position.x;
+	float y1 = this->m_Points[0].Position.y;
+
+	xmin = float(x1);
+	xmax = float(x1);
+	ymin = float(y1);
+	ymax = float(y1);
+
 	for (PointMass& pt : this->m_Points)
 	{
 		if (!pt.m_RenderableShape)
 			pt.m_RenderableShape = this->m_RenderableShape;
 
+		xmin = SDL_min(xmin, pt.Position.x);
+		ymin = SDL_min(ymin, pt.Position.y);
+		xmax = SDL_max(xmax, pt.Position.x);
+		ymax = SDL_max(ymax, pt.Position.y);
+
 		pt.SubmitToVertexList(windowWidth, windowHeight);
 	}
+	
+	this->Size.x = xmax - xmin;
+	this->Size.y = ymax - ymin;
 
 	this->m_RenderableShape->ReloadVertices();
 }

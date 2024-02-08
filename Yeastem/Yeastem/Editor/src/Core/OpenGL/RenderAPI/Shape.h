@@ -39,6 +39,7 @@ public:
 	Vector2 GetCentre();
 
 public:
+	Vector2 Size;
 	Vector2 Position;
 	float Direction = 0.0f;
 	float Scale = 1.0f;

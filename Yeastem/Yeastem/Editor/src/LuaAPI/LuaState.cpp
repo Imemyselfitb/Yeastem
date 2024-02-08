@@ -18,7 +18,7 @@ bool LuaState::ExecuteScript(const std::string& script)
 
 bool LuaState::ExecuteScript(const std::string& script, const std::string& fileName)
 {
-	std::regex exp("function (\\w)+( )*\\(");
+	std::regex exp("function Yeastem.(\\w)+( )*\\(");
 	std::smatch res;
 	std::string str = script;
 
@@ -29,7 +29,7 @@ bool LuaState::ExecuteScript(const std::string& script, const std::string& fileN
 	int c = 0;
 	while (std::regex_search(searchStart, str.cend(), res, exp)) {
 		c += (int)res.position();
-		if (str.substr(c - 6, 6) != "local ")
+		if (str.substr(c, 6) != "local ")
 		{
 			indices.push_back(c);
 			sizes.push_back((int)res.length());
@@ -59,10 +59,10 @@ bool LuaState::executeScriptFromFile(const std::string& file)
 	return this->ExecuteScript(str, file);
 }
 
-void LuaState::addNativeFunction(int(*new_function)(lua_State*), const char* function_name)
+void LuaState::addNativeFunction(int(*nativeFunction)(lua_State*), const char* functionName)
 {
-	lua_pushcfunction(this->m_State, new_function);
-	lua_setglobal(this->m_State, function_name);
+	lua_pushcfunction(this->m_State, nativeFunction);
+	lua_setglobal(this->m_State, functionName);
 }
 
 YEASTEM_END

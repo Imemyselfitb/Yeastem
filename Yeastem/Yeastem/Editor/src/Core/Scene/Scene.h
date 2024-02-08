@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/OpenGL/Include.h"
+#include "Events.h"
 #include "LuaAPI/Lua.h"
 
 YEASTEM_BEGIN
@@ -17,12 +18,16 @@ public:
 	void Lua_ExcecuteScript(const std::string& file);
 	void Update(float DeltaTime, int WindowWidth, int WindowHeight);
 	void Render();
+	void ProcessEvent(SDL_Event& evt);
 
 public:
 	uint64_t CurrentTime = 0;
+	Yeastem::EventHandler m_EventHandler;
 
 private:
-	void UpdateScripts(int shapeIdx, float deltaTime);
+	void UpdateObjectFromScripts(int shapeIdx);
+	void UpdateScriptsFromObjects(int shapeIdx);
+	void AddKeyEnum(const char* keyName, unsigned int keyCode);
 
 private:
 	int m_ScriptCount = 0;

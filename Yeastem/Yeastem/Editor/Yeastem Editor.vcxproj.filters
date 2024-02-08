@@ -92,6 +92,8 @@
     </ClInclude>
     <ClInclude Include="src\Macros.h" />
     <ClInclude Include="src\yst_pch.h" />
+    <ClInclude Include="src\Core\Scene\Events.h" />
+    <ClInclude Include="src\Core\Lua\LuaVector2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -143,9 +145,14 @@
       <Filter>LuaAPI</Filter>
     </ClCompile>
     <ClCompile Include="src\yst_pch.cpp" />
+    <ClCompile Include="src\Core\Scene\Events.cpp" />
+    <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="test\Test2a.lua" />
-    <None Include="test\Test2b.lua" />
+    <None Include="test\Test1a.lua" />
+    <None Include="test\Test1b.lua" />
+    <None Include="test\Test2.lua" />
+    <None Include="PongTest\Game.lua" />
+    <None Include="PongTest\RectCollisionModule.lua" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@
 
 #include <memory>
 #include <bitset>
+#include <functional>
 
 #include <iostream>
 

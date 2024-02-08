@@ -12,6 +12,10 @@ uniform int u_ShapeID;
 void main()
 {
 	vec4 texCol0 = texture(u_tex0, v_TexCoord);
+
+	glColour = texCol0;
+	return;
+
 	if(u_ShapeID == 1) {
 		vec4 texCol1 = texture(u_tex1, v_TexCoord);
 		float k = 0.5 * sin(u_Time) + 0.5;

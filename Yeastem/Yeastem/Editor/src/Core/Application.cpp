@@ -3,7 +3,6 @@
 #include "Application.h"
 
 #include "OpenGL/Include.h"
-#include "Scene/Scene.h"
 
 #include "LuaAPI/Lua.h"
 
@@ -11,6 +10,7 @@ YEASTEM_BEGIN
 
 Application Application::s_Instance;
 SDL_Renderer* Application::s_Renderer;
+Scene Application::CurrentScene;
 
 bool Application::s_GLInitialized = false;
 void Application::setupGlFlags() const
@@ -49,6 +49,7 @@ void Application::HandleEvents(SDL_Event& m_events) const
 			s_IsRunning = false;
 			return;
 		}
+
 		if (
 			m_events.type == SDL_WINDOWEVENT && 
 			m_events.window.event == SDL_WINDOWEVENT_CLOSE && 
@@ -57,66 +58,74 @@ void Application::HandleEvents(SDL_Event& m_events) const
 			s_IsRunning = false;
 			return;
 		}
+
+		this->CurrentScene.ProcessEvent(m_events);
 	}
 }
 
-Scene CurrentScene;
-
 void Application::SetupRender()
 {
-	Shape Object1;
-	Shape Object2;
+	Shape Paddle1;
+	Shape Paddle2;
+	Shape Ball;
 
-	std::vector<Vertex> squareVertices = {
-		{ { -125.0f, -125.0f }, { 0.0f, 0.0f } },
-		{ {  125.0f, -125.0f }, { 1.0f, 0.0f } },
-		{ {  125.0f,  125.0f }, { 1.0f, 1.0f } },
-		{ { -125.0f,  125.0f }, { 0.0f, 1.0f } }
+	std::vector<Vertex> paddleVertices = {
+		{ { -20.0f, -100.0f }, { 0.0f, 0.0f } },
+		{ {  20.0f, -100.0f }, { 1.0f, 0.0f } },
+		{ {  20.0f,  100.0f }, { 1.0f, 1.0f } },
+		{ { -20.0f,  100.0f }, { 0.0f, 1.0f } }
 	};
 
-	std::vector<unsigned int> squareIndices = {
+	std::vector<Vertex> ballVertices = {
+		{ { -20.0f, -20.0f }, { 0.0f, 0.0f } },
+		{ {  20.0f, -20.0f }, { 1.0f, 0.0f } },
+		{ {  20.0f,  20.0f }, { 1.0f, 1.0f } },
+		{ { -20.0f,  20.0f }, { 0.0f, 1.0f } }
+	};
+
+	std::vector<unsigned int> quadIndices = {
 		0U, 1U, 2U,
 		2U, 3U, 0U
 	};
 
-	Object1.Init(Vector2(0, 0));
-	Object2.Init(Vector2(0, 0));
+	Paddle1.Init(Vector2(0, 0));
+	Paddle2.Init(Vector2(0, 0));
+	Ball.Init(Vector2(0, 0));
 
-	Object1.AssignVertices(squareVertices);
-	Object2.AssignVertices(squareVertices);
-	Object1.AssignIndices(squareIndices);
-	Object2.AssignIndices(squareIndices);
+	Paddle1.AssignVertices(paddleVertices);
+	Paddle2.AssignVertices(paddleVertices);
+	Ball.AssignVertices(ballVertices);
+	Paddle1.AssignIndices(quadIndices);
+	Paddle2.AssignIndices(quadIndices);
+	Ball.AssignIndices(quadIndices);
 
-	Object1.Position = Vector2(250.0f, 200.0f);
-	Object2.Position = Vector2(750.0f, 200.0f);
+	Paddle1.Position = Vector2(150.0f, 250.0f);
+	Paddle2.Position = Vector2(850.0f, 250.0f);
+	Ball.Position = Vector2(500.0f, 250.0f);
 
 	VertexBufferLayout vbl;
 	vbl.Push<float>(2);
 	vbl.Push<float>(2);
 
-	Object1.AddVertexBufferLayout(vbl);
-	Object2.AddVertexBufferLayout(vbl);
+	Paddle1.AddVertexBufferLayout(vbl);
+	Paddle2.AddVertexBufferLayout(vbl);
+	Ball.AddVertexBufferLayout(vbl);
 
-	Object1.AssignShaderFromFiles(
-		"src/Shaders/Default.vert",
-		"src/Shaders/Texture.frag"
-	);
-	Object2.AssignShaderFromFiles(
-		"src/Shaders/Default.vert",
-		"src/Shaders/Texture.frag"
-	);
+	Paddle1.AssignShaderFromFiles("src/Shaders/Default.vert", "src/Shaders/Texture.frag");
+	Paddle2.AssignShaderFromFiles("src/Shaders/Default.vert", "src/Shaders/Texture.frag");
+	Ball.AssignShaderFromFiles("src/Shaders/Default.vert", "src/Shaders/Texture.frag");
 
-	Object1.ReserveTextures(2);
-	Object2.ReserveTextures(2);
+	Paddle1.ReserveTextures(1);
+	Paddle2.ReserveTextures(1);
+	Ball.ReserveTextures(1);
 
-	Object1.AddTexture("test/PNG_Texture.png");
-	Object1.AddTexture("test/MyTexture.png");
+	Paddle1.AddTexture("PongTest/Paddle.png");
+	Paddle2.AddTexture("PongTest/Paddle.png");
+	Ball.AddTexture("PongTest/Ball.png");
 
-	Object2.AddTexture("test/OnlyFrame.png");
-	Object2.AddTexture("test/Scenery.png");
-
-	CurrentScene.AddObject(Object1);
-	CurrentScene.AddObject(Object2);
+	this->CurrentScene.AddObject(Paddle1);
+	this->CurrentScene.AddObject(Paddle2);
+	this->CurrentScene.AddObject(Ball);
 }
 
 int seed = 0;
@@ -134,54 +143,8 @@ void Application::process_frame(float deltaTime)
 	glViewport(0, 0, m_WindowSize.w, m_WindowSize.h);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-
-	int Mouse_X, Mouse_Y;
-	SDL_GetMouseState(&Mouse_X, &Mouse_Y);
-	Vector2 Mouse(Mouse_X, Mouse_Y);
-
-	/*
-	{
-		float t_x = cos(accTime * 5) * 500.0f * deltaTime;
-		float t_y = sin(accTime * 5) * 300.0f * deltaTime;
-		Object1.Position += Vector2(t_x, t_y);
-	}
-
-	{
-		Object2.Position += (Mouse - Object2.Position) * 5.0f * deltaTime;
-		Object2.Direction += deltaTime;
-		Object2.Scale += sin(accTime * 5) * 1.0f * deltaTime;
-	}
-
-	Object1.Push();
-	Object2.Push();
-	
-	Object1.Translate({ Object1.Position.x, (float)m_WindowSize.h - Object1.Position.y });
-	Object2.Translate({ Object2.Position.x, (float)m_WindowSize.h - Object2.Position.y });
-
-	Object1.Rotate(Object1.Direction, Object1.GetCentre());
-	Object2.Rotate(Object2.Direction, Object2.GetCentre());
-
-	Object1.ScaleBy(Object1.Scale, Object1.GetCentre());
-	Object2.ScaleBy(Object2.Scale, Object2.GetCentre());
-
-	Object1.UpdateVertices(m_WindowSize.w, m_WindowSize.h);
-	Object2.UpdateVertices(m_WindowSize.w, m_WindowSize.h);
-
-	Object1.Pop();
-	Object2.Pop();
-
-	Object1.shader->SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
-	Object1.shader->SetUniform1i("u_ShapeID", 1);
-	this->m_Renderer.Render(Object1);
-
-	Object2.shader->SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
-	Object2.shader->SetUniform1i("u_ShapeID", 2);
-	this->m_Renderer.Render(Object2);
-	*/
-
-	CurrentScene.Update(deltaTime, m_WindowSize.w, m_WindowSize.h);
-	CurrentScene.Render();
-
+	this->CurrentScene.Update(deltaTime, m_WindowSize.w, m_WindowSize.h);
+	this->CurrentScene.Render();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -203,36 +166,10 @@ void Application::run()
 	s_IsRunning = true;
 
 	// -- RUN SCRIPTS -- //
-	auto print = [](lua_State* L) -> int {
-		int nargs = lua_gettop(L);
-
-		std::cout << "Yeastem: Script: ";
-		for (int i = 1; i <= nargs; i++) {
-			if (lua_isstring(L, i))
-				std:: cout << lua_tostring(L, i);
-			else if (lua_isnumber(L, i))
-				std::cout << lua_tonumber(L, i);
-			else if (lua_isboolean(L, i))
-				std::cout << (lua_toboolean(L, i) ? "True" : "False");
-			else
-				std::cout << lua_typename(L, i);
-			
-			if(i < nargs) 
-				std::cout << " ";
-		}
-
-		std::cout << std::endl;
-
-		return 1;
-	};
-
-	CurrentScene.Lua_Init();
-	CurrentScene.Lua_AttachCFunction(print, "print");
+	this->CurrentScene.Lua_Init();
 	this->SetupRender();
-
-	//CurrentScene.Lua_ExcecuteScript("test/Test.lua");
-	CurrentScene.Lua_ExcecuteScript("test/Test2a.lua");
-	CurrentScene.Lua_ExcecuteScript("test/Test2b.lua");
+	this->CurrentScene.Lua_ExcecuteScript("PongTest/Game.lua");
+	this->CurrentScene.Lua_ExcecuteScript("PongTest/RectCollisionModule.lua");
 
 	SDL_Event m_events;
 	unsigned long long previous_time = 0;
@@ -240,48 +177,13 @@ void Application::run()
 	while (s_IsRunning)
 	{
 		this->HandleEvents(m_events);
+
 		this->CurrentTime = SDL_GetTicks64();
-		CurrentScene.CurrentTime = this->CurrentTime;
-
 		float deltaTime = (this->CurrentTime - previous_time) / 1000.0f;
-		deltaTime = SDL_min(deltaTime, 0.004f);
+		deltaTime = SDL_min(deltaTime, 0.008f);
 		previous_time = this->CurrentTime;
-
+			
 		this->m_ImGuiLayer->Update();
-		
-		//lua_getglobal(L, "Update");
-		//if (lua_isfunction(L, -1))
-		//{
-		//	lua_pushnumber(L, deltaTime);
-		//	lua_pcall(L, /*ParamCount*/1, /*ReturnCount*/0, /*ErrorHandler*/0);
-		//}
-
-		//lua_getglobal(L, "Object1");
-		//lua_getfield(L, -1, "x");
-		//Object1.Position.x = (float)lua_tonumber(L, -1);
-		//lua_getglobal(L, "Object1");
-		//lua_getfield(L, -1, "y");
-		//Object1.Position.y = (float)lua_tonumber(L, -1);
-		//lua_getglobal(L, "Object1");
-		//lua_getfield(L, -1, "dir");
-		//Object1.Direction = (float)lua_tonumber(L, -1);
-		//lua_getglobal(L, "Object1");
-		//lua_getfield(L, -1, "scale");
-		//Object1.Scale = (float)lua_tonumber(L, -1);
-		// 
-		//lua_getglobal(L, "Object2");
-		//lua_getfield(L, -1, "x");
-		//Object2.Position.x = (float)lua_tonumber(L, -1);
-		//lua_getglobal(L, "Object2");
-		//lua_getfield(L, -1, "y");
-		//Object2.Position.y = (float)lua_tonumber(L, -1);
-		//lua_getglobal(L, "Object2");
-		//lua_getfield(L, -1, "dir");
-		//Object2.Direction = (float)lua_tonumber(L, -1);
-		//lua_getglobal(L, "Object2");
-		//lua_getfield(L, -1, "scale");
-		//Object2.Scale = (float)lua_tonumber(L, -1);
-
 		this->process_frame(deltaTime);
 
 		this->m_ImGuiLayer->BackupFrame();
