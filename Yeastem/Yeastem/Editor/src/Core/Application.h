@@ -52,8 +52,8 @@ private:
 	Application() { s_GLInitialized = false; }
 	~Application() { if (m_window != nullptr) this->DestroyWindow(); }
 
-private:
-	std::unique_ptr<Yeastem::ImGuiAPI> m_ImGuiLayer;
+public:
+	static std::unique_ptr<Yeastem::ImGuiAPI> s_ImGuiLayer;
 
 public:
 	uint64_t CurrentTime = 0;

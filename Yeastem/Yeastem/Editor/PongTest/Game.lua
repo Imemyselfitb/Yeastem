@@ -32,7 +32,8 @@ local function ResetGame()
 		extraInfo = " to " .. ((LeftScore > RightScore) and "LEFT" or "RIGHT")
 	end
 
-	print("Score: " .. tostring(LeftScore) .. " - " .. tostring(RightScore) .. extraInfo)
+	local text = "Score: " .. tostring(LeftScore) .. " - " .. tostring(RightScore) .. extraInfo
+	Update(text)
 end
 
 local function MoveBall(deltaTime)

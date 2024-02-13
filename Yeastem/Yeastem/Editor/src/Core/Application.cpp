@@ -11,6 +11,7 @@ YEASTEM_BEGIN
 Application Application::s_Instance;
 SDL_Renderer* Application::s_Renderer;
 Scene Application::CurrentScene;
+std::unique_ptr<Yeastem::ImGuiAPI> Application::s_ImGuiLayer;
 
 bool Application::s_GLInitialized = false;
 void Application::setupGlFlags() const
@@ -154,20 +155,21 @@ void Application::process_frame(float deltaTime)
 
 void Application::initImGui()
 {
-	this->m_ImGuiLayer = std::make_unique<Yeastem::ImGuiAPI>(this->m_window, &this->m_context);
+	this->s_ImGuiLayer = std::make_unique<Yeastem::ImGuiAPI>(this->m_window, &this->m_context);
 }
 
 void Application::run()
 {
 	s_Renderer = SDL_CreateRenderer(m_window, -1, 0);
 
-	this->m_ImGuiLayer->Init();
+	this->s_ImGuiLayer->Init();
 
 	s_IsRunning = true;
 
 	// -- RUN SCRIPTS -- //
 	this->CurrentScene.Lua_Init();
 	this->SetupRender();
+	this->CurrentScene.Lua_ExcecuteScript("PongTest/Panels.lua");
 	this->CurrentScene.Lua_ExcecuteScript("PongTest/Game.lua");
 	this->CurrentScene.Lua_ExcecuteScript("PongTest/RectCollisionModule.lua");
 
@@ -183,14 +185,14 @@ void Application::run()
 		deltaTime = SDL_min(deltaTime, 0.008f);
 		previous_time = this->CurrentTime;
 			
-		this->m_ImGuiLayer->Update();
+		this->s_ImGuiLayer->Update();
 		this->process_frame(deltaTime);
 
-		this->m_ImGuiLayer->BackupFrame();
+		this->s_ImGuiLayer->BackupFrame();
 		accumulated_time += deltaTime;
 	}
 
-	this->m_ImGuiLayer->Destroy();
+	this->s_ImGuiLayer->Destroy();
 
 	SDL_GL_DeleteContext(this->m_context);
 	SDL_DestroyRenderer(s_Renderer);

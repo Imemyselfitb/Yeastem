@@ -5,6 +5,7 @@
 #include "Core/Application.h"
 
 #include "Core/Lua/LuaVector2.h"
+#include "Core/Lua/LuaPanel.h"
 
 YEASTEM_BEGIN
 
@@ -43,17 +44,18 @@ void Scene::Lua_Init()
 {
 	luaL_openlibs(this->m_LuaState);
 
-	LuaVector2::Init(this->m_LuaState);
-
 	lua_newtable(this->m_LuaState);
 	lua_setglobal(this->m_LuaState, "Yeastem");
+
+	LuaImguiPanel::Init(this->m_LuaState);
+	LuaVector2::Init(this->m_LuaState);
 
 	lua_newtable(this->m_LuaState);
 	lua_pushstring(this->m_LuaState, "IsKeyDown");
 	lua_pushcfunction(this->m_LuaState, [](lua_State* L) -> int {
 		if (lua_isnumber(L, -1))
 		{
-			unsigned int k = lua_tonumber(L, -1);
+			unsigned int k = (unsigned int)lua_tonumber(L, -1);
 			lua_pushboolean(L, Application::CurrentScene.m_EventHandler.IsKeyDown(k));
 		} else if (lua_isstring(L, -1))
 		{
@@ -71,6 +73,7 @@ void Scene::Lua_Init()
 	this->AddKeyEnum("DownArrow", SDLK_DOWN);
 
 	lua_setglobal(this->m_LuaState, "Keys");
+
 }
 
 void Scene::AddKeyEnum(const char* keyName, unsigned int keyCode)
@@ -185,7 +188,9 @@ void Scene::Update(float deltaTime, int windowWidth, int windowHeight)
 		shape.Pop();
 	}
 
-	this->CurrentTime += deltaTime * 1000.0f;
+	LuaImguiPanel::ShowAll(this->m_LuaState);
+
+	this->CurrentTime += uint64_t(deltaTime * 1000.0f);
 }
 
 void Scene::Render()

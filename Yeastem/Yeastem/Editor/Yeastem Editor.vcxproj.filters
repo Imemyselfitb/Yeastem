@@ -94,6 +94,7 @@
     <ClInclude Include="src\yst_pch.h" />
     <ClInclude Include="src\Core\Scene\Events.h" />
     <ClInclude Include="src\Core\Lua\LuaVector2.h" />
+    <ClInclude Include="src\Core\Lua\LuaPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -147,6 +148,7 @@
     <ClCompile Include="src\yst_pch.cpp" />
     <ClCompile Include="src\Core\Scene\Events.cpp" />
     <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
+    <ClCompile Include="src\Core\Lua\LuaPanel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test\Test1a.lua" />
@@ -154,5 +156,6 @@
     <None Include="test\Test2.lua" />
     <None Include="PongTest\Game.lua" />
     <None Include="PongTest\RectCollisionModule.lua" />
+    <None Include="PongTest\Panels.lua" />
   </ItemGroup>
 </Project>

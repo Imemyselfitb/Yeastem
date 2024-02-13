@@ -53,23 +53,9 @@ ImGuiAPI::ImGuiAPI(SDL_Window* window, SDL_GLContext* context)
 			ImGui::EndMainMenuBar();
 		}
 	});
-
-	this->m_guiWindows.emplace_back([](bool& isShown) {
-		if (!ImGui::Begin("Tree", &isShown))
-			return ImGui::End();
-
-		if (ImGui::TreeNode("A"))
-		{
-			if (ImGui::TreeNode("B"))
-			{
-				ImGui::Text("C");
-				ImGui::TreePop();
-			}
-			ImGui::TreePop();
-		}
-		ImGui::End();
-	});
 }
+
+
 
 void ImGuiAPI::Update()
 {
@@ -91,6 +77,11 @@ void ImGuiAPI::BackupFrame()
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 	}
+}
+
+void ImGuiAPI::AddWindow(Yeastem::ImGuiWindow::ShowFunction func)
+{
+	this->m_guiWindows.push_back(func);
 }
 
 void ImGuiAPI::Destroy()

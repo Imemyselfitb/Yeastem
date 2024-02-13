@@ -147,6 +147,7 @@
     <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Core\ImGuiAPI.h" />
     <ClInclude Include="src\Core\ImGuiWindow.h" />
+    <ClInclude Include="src\Core\Lua\LuaPanel.h" />
     <ClInclude Include="src\Core\Lua\LuaVector2.h" />
     <ClInclude Include="src\Core\Math\Point.h" />
     <ClInclude Include="src\Core\Math\Vector2.h" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\ImGuiAPI.cpp" />
+    <ClCompile Include="src\Core\Lua\LuaPanel.cpp" />
     <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
     <ClCompile Include="src\Core\Math\Point.cpp" />
     <ClCompile Include="src\Core\Math\Vector2.cpp" />
@@ -208,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PongTest\Game.lua" />
+    <None Include="PongTest\Panels.lua" />
     <None Include="PongTest\RectCollisionModule.lua" />
     <None Include="test\Test1a.lua" />
     <None Include="test\Test1b.lua" />

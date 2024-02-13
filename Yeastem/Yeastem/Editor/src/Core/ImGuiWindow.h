@@ -5,7 +5,7 @@ YEASTEM_BEGIN
 class ImGuiWindow
 {
 public:
-	using ShowFunction = void(*)(bool&);
+	using ShowFunction = std::function<void(bool&)>;
 
 public:
 	ImGuiWindow() {}

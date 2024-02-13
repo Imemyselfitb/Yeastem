@@ -14,6 +14,7 @@ public:
 	void Init();
 	void Update();
 	void BackupFrame();
+	void AddWindow(Yeastem::ImGuiWindow::ShowFunction);
 	void Destroy();
 
 public:

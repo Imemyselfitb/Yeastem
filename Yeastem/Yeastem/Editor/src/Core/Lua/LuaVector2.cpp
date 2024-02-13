@@ -19,7 +19,7 @@ void LuaVector2::Init(LuaState& L)
 	lua_settable(L, -3);
 
 	lua_setglobal(L, "Vector2");
-	luaL_newmetatable(L, "Vector2MetaTable");
+	luaL_newmetatable(L, "Vector2_t");
 
 	lua_pushstring(L, "__add");
 	lua_pushcfunction(L, LuaVector2::__add);
@@ -50,7 +50,7 @@ void LuaVector2::InitVector(const Vector2& v, lua_State* L)
 	lua_pushnumber(L, v.y);
 	lua_settable(L, -3);
 
-	luaL_getmetatable(L, "Vector2MetaTable");
+	luaL_getmetatable(L, "Vector2_t");
 	lua_setmetatable(L, -2);
 }
 
@@ -70,17 +70,17 @@ int LuaVector2::__new(lua_State* L)
 	float x = 0, y = 0;
 	if (lua_isnumber(L, -2) && lua_isnumber(L, -1))
 	{
-		x = lua_tonumber(L, -2);
-		y = lua_tonumber(L, -1);
+		x = (float)lua_tonumber(L, -2);
+		y = (float)lua_tonumber(L, -1);
 	}
 	else if (lua_istable(L, -1))
 	{
 		lua_getfield(L, -1, "x");
-		x = lua_tonumber(L, -1);
+		x = (float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 
 		lua_getfield(L, -1, "y");
-		y = lua_tonumber(L, -1);
+		y = (float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 	}
 
@@ -94,7 +94,7 @@ int LuaVector2::__new(lua_State* L)
 	lua_pushnumber(L, y);
 	lua_settable(L, -3);
 
-	luaL_getmetatable(L, "Vector2MetaTable");
+	luaL_getmetatable(L, "Vector2_t");
 	lua_setmetatable(L, -2);
 
 	return 1;

@@ -21,6 +21,7 @@ public:
 	void ProcessEvent(SDL_Event& evt);
 
 public:
+	LuaState m_LuaState;
 	uint64_t CurrentTime = 0;
 	Yeastem::EventHandler m_EventHandler;
 
@@ -31,7 +32,6 @@ private:
 
 private:
 	int m_ScriptCount = 0;
-	LuaState m_LuaState;
 	std::vector<Shape> m_Shapes;
 	Yeastem::Renderer m_Renderer;
 };
