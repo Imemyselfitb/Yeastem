@@ -1,4 +1,4 @@
-local p = Panel.new("ABCD")
+local p = Panel.new("Pong!")
 local q = Panel.createElement("Text", "Score: 0 - 0")
 
 p:AppendChild(q);

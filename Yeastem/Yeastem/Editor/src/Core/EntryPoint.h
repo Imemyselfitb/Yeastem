@@ -12,7 +12,7 @@ int EntryPoint(int argc, char* argv[])
 	}
 
 	int flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
-	SDL_Window* window = SDL_CreateWindow("Yeastem!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000, 500, flags);
+	SDL_Window* window = SDL_CreateWindow("Yeastem!", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1200, 600, flags);
 	
 	Application::AttachWindow(window);
 	Application::CreateGLContext();

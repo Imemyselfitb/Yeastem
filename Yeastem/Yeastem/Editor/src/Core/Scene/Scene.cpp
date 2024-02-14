@@ -74,6 +74,15 @@ void Scene::Lua_Init()
 
 	lua_setglobal(this->m_LuaState, "Keys");
 
+	lua_newtable(this->m_LuaState);
+	lua_pushstring(this->m_LuaState, "width");
+	lua_pushnumber(this->m_LuaState, 0);
+	lua_settable(this->m_LuaState, -3);
+
+	lua_pushstring(this->m_LuaState, "height");
+	lua_pushnumber(this->m_LuaState, 0);
+	lua_settable(this->m_LuaState, -3);
+	lua_setglobal(this->m_LuaState, "Window");
 }
 
 void Scene::AddKeyEnum(const char* keyName, unsigned int keyCode)
@@ -147,10 +156,20 @@ void Scene::ProcessEvent(SDL_Event& evt)
 	this->m_EventHandler.Dispatch(evt);
 }
 
-void Scene::Update(float deltaTime, int windowWidth, int windowHeight)
+void Scene::Update(float deltaTime)
 {
 	for (int i = 0; i < this->m_Shapes.size(); i++)
 		this->UpdateScriptsFromObjects(i);
+
+	lua_getglobal(this->m_LuaState, "Window");
+	lua_pushstring(this->m_LuaState, "width");
+	lua_pushnumber(this->m_LuaState, this->SceneSize.x);
+	lua_settable(this->m_LuaState, -3);
+
+	lua_pushstring(this->m_LuaState, "height");
+	lua_pushnumber(this->m_LuaState, this->SceneSize.y);
+	lua_settable(this->m_LuaState, -3);
+	lua_pop(this->m_LuaState, 1);
 
 	lua_getglobal(this->m_LuaState, "Yeastem");
 	for (int i = 0; i < this->m_ScriptCount; i++)
@@ -179,12 +198,12 @@ void Scene::Update(float deltaTime, int windowWidth, int windowHeight)
 		UpdateObjectFromScripts(i);
 
 		shape.Push();
-		shape.Translate({ shape.Position.x, (float)windowHeight - shape.Position.y });
+		shape.Translate({ shape.Position.x, this->SceneSize.y - shape.Position.y });
 		Vector2 Centre = shape.GetCentre();
 		shape.Rotate(shape.Direction, Centre);
 		shape.ScaleBy(shape.Scale, Centre);
 
-		shape.UpdateVertices(windowWidth, windowHeight);
+		shape.UpdateVertices((int)this->SceneSize.x, (int)this->SceneSize.y);
 		shape.Pop();
 	}
 
@@ -193,14 +212,38 @@ void Scene::Update(float deltaTime, int windowWidth, int windowHeight)
 	this->CurrentTime += uint64_t(deltaTime * 1000.0f);
 }
 
+void Scene::RecreateFrameBuffer(unsigned int width, unsigned int height)
+{
+	if (!this->m_FrameBuffer)
+		return this->CreateFrameBuffer(width, height);
+
+	this->m_FrameBuffer->Destroy();
+	this->m_FrameBuffer->Create(width, height);
+}
+
+void Scene::CreateFrameBuffer(unsigned int width, unsigned int height)
+{
+	this->m_FrameBuffer = std::make_unique<FrameBuffer>(width, height);
+}
+
 void Scene::Render()
 {
+	if (this->m_FrameBuffer)
+	{
+		this->m_FrameBuffer->Bind();
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
 	for (int i = 0; i < this->m_Shapes.size(); i++)
 	{
 		this->m_Shapes[i].shader->SetUniform1f("u_Time", this->CurrentTime / 1000.0f);
 		this->m_Shapes[i].shader->SetUniform1i("u_ShapeID", i + 1);
 		this->m_Renderer.Render(this->m_Shapes[i]);
 	}
+
+	if (this->m_FrameBuffer)
+		this->m_FrameBuffer->Unbind();
 }
+
 
 YEASTEM_END

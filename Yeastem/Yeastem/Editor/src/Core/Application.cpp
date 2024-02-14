@@ -112,9 +112,9 @@ void Application::SetupRender()
 	Paddle2.AddVertexBufferLayout(vbl);
 	Ball.AddVertexBufferLayout(vbl);
 
-	Paddle1.AssignShaderFromFiles("src/Shaders/Default.vert", "src/Shaders/Texture.frag");
-	Paddle2.AssignShaderFromFiles("src/Shaders/Default.vert", "src/Shaders/Texture.frag");
-	Ball.AssignShaderFromFiles("src/Shaders/Default.vert", "src/Shaders/Texture.frag");
+	Paddle1.AssignShaderFromFiles("PongTest/Default.vert", "PongTest/Texture.frag");
+	Paddle2.AssignShaderFromFiles("PongTest/Default.vert", "PongTest/Texture.frag");
+	Ball.AssignShaderFromFiles("PongTest/Default.vert", "PongTest/Texture.frag");
 
 	Paddle1.ReserveTextures(1);
 	Paddle2.ReserveTextures(1);
@@ -126,7 +126,30 @@ void Application::SetupRender()
 
 	this->CurrentScene.AddObject(Paddle1);
 	this->CurrentScene.AddObject(Paddle2);
-	this->CurrentScene.AddObject(Ball);
+	this->CurrentScene.AddObject(Ball);	
+
+	SDL_GetWindowSize(m_window, &m_WindowSize.w, &m_WindowSize.h);
+
+	this->s_ImGuiLayer->AddWindow([&](bool& isVisible) {
+		if (!isVisible) this->s_IsRunning = false;
+
+		ImGui::Begin("Stage", &isVisible, ImGuiWindowFlags_NoBringToFrontOnFocus);
+
+		ImVec2 WindowSize = ImGui::GetWindowSize();
+		
+		WindowSize.y -= 35;
+
+		if (this->CurrentScene.SceneSize.x != WindowSize.x || this->CurrentScene.SceneSize.y != WindowSize.y)
+		{
+			this->CurrentScene.RecreateFrameBuffer((unsigned int)WindowSize.x, (unsigned int)WindowSize.y);
+			this->CurrentScene.SceneSize = WindowSize;
+		}
+
+		unsigned int glColourAttachmentId = this->CurrentScene.GetFrameBufferColourAttachmentID();
+		ImGui::Image((void*)glColourAttachmentId, WindowSize, { 0, 1 }, { 1, 0 });
+		
+		ImGui::End();
+	});
 }
 
 int seed = 0;
@@ -141,10 +164,10 @@ void Application::process_frame(float deltaTime)
 	SDL_GetWindowPosition(m_window, &m_WindowPosition.x, &m_WindowPosition.y);
 	SDL_GetWindowSize(m_window, &m_WindowSize.w, &m_WindowSize.h);
 
-	glViewport(0, 0, m_WindowSize.w, m_WindowSize.h);
+	glViewport(0, 0, (unsigned int)this->CurrentScene.SceneSize.x, (unsigned int)this->CurrentScene.SceneSize.y);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	this->CurrentScene.Update(deltaTime, m_WindowSize.w, m_WindowSize.h);
+	this->CurrentScene.Update(deltaTime);
 	this->CurrentScene.Render();
 
 	ImGui::Render();
@@ -163,6 +186,7 @@ void Application::run()
 	s_Renderer = SDL_CreateRenderer(m_window, -1, 0);
 
 	this->s_ImGuiLayer->Init();
+	this->s_ImGuiLayer->CreateMenuBar();
 
 	s_IsRunning = true;
 
@@ -184,7 +208,7 @@ void Application::run()
 		float deltaTime = (this->CurrentTime - previous_time) / 1000.0f;
 		deltaTime = SDL_min(deltaTime, 0.008f);
 		previous_time = this->CurrentTime;
-			
+		
 		this->s_ImGuiLayer->Update();
 		this->process_frame(deltaTime);
 

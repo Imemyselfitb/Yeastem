@@ -95,6 +95,7 @@
     <ClInclude Include="src\Core\Scene\Events.h" />
     <ClInclude Include="src\Core\Lua\LuaVector2.h" />
     <ClInclude Include="src\Core\Lua\LuaPanel.h" />
+    <ClInclude Include="src\Core\OpenGL\Buffers\FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -149,6 +150,7 @@
     <ClCompile Include="src\Core\Scene\Events.cpp" />
     <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
     <ClCompile Include="src\Core\Lua\LuaPanel.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Buffers\FrameBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test\Test1a.lua" />

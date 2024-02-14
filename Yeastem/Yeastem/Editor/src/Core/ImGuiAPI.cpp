@@ -22,8 +22,7 @@ void ImGuiAPI::Init()
 	ImGui::StyleColorsDark();
 }
 
-ImGuiAPI::ImGuiAPI(SDL_Window* window, SDL_GLContext* context)
-	:m_window(*window), m_context(*context)
+void ImGuiAPI::CreateMenuBar()
 {
 	this->m_guiWindows.emplace_back([](bool&) {
 		if (ImGui::BeginMainMenuBar())
@@ -54,8 +53,6 @@ ImGuiAPI::ImGuiAPI(SDL_Window* window, SDL_GLContext* context)
 		}
 	});
 }
-
-
 
 void ImGuiAPI::Update()
 {

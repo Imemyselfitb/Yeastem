@@ -7,11 +7,12 @@ YEASTEM_BEGIN
 class ImGuiAPI
 {
 public:
-	ImGuiAPI(SDL_Window* window, SDL_GLContext* context);
+	ImGuiAPI(SDL_Window* window, SDL_GLContext* context) :m_window(*window), m_context(*context) {}
 	~ImGuiAPI() {}
 
 public:
 	void Init();
+	void CreateMenuBar();
 	void Update();
 	void BackupFrame();
 	void AddWindow(Yeastem::ImGuiWindow::ShowFunction);

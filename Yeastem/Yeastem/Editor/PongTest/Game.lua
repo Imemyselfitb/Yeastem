@@ -1,14 +1,14 @@
 local function MovePaddles(deltaTime)
-	if Keys.IsKeyDown(Keys.UpArrow) and Object2.Position.y - Object2.height / 2 > 20 then
+	if Keys.IsKeyDown(Keys.UpArrow) and Object2.Position.y - Object2.height / 2 > 0 then
 		Object2.Position.y = Object2.Position.y - deltaTime * 500
 	end
-	if Keys.IsKeyDown(Keys.DownArrow) and Object2.Position.y + Object2.height / 2 < 500 then
+	if Keys.IsKeyDown(Keys.DownArrow) and Object2.Position.y + Object2.height / 2 < Window.height then
 		Object2.Position.y = Object2.Position.y + deltaTime * 500
 	end
-	if Keys.IsKeyDown("W") and Object1.Position.y - Object1.height / 2 > 20 then
+	if Keys.IsKeyDown("W") and Object1.Position.y - Object1.height / 2 > 0 then
 		Object1.Position.y = Object1.Position.y - deltaTime * 500
 	end
-	if Keys.IsKeyDown("S") and Object1.Position.y + Object1.height / 2 < 500 then
+	if Keys.IsKeyDown("S") and Object1.Position.y + Object1.height / 2 < Window.height then
 		Object1.Position.y = Object1.Position.y + deltaTime * 500
 	end
 end
@@ -39,10 +39,10 @@ end
 local function MoveBall(deltaTime)
 	Object3.Position = Object3.Position + vel * deltaTime * speed
 
-	if Object3.Position.y - Object3.height / 2 < 20 then
+	if Object3.Position.y - Object3.height / 2 < 0 then
 		vel.y = 0 - vel.y
 		Object3.Position = Object3.Position + vel * deltaTime * speed
-	elseif Object3.Position.y + Object3.height / 2 > 500 then
+	elseif Object3.Position.y + Object3.height / 2 > Window.height then
 		vel.y = 0 - vel.y
 		Object3.Position = Object3.Position + vel * deltaTime * speed
 	end
@@ -51,7 +51,7 @@ local function MoveBall(deltaTime)
 		print("RIGHT Scores!")
 		RightScore = RightScore + 1
 		ResetGame()
-	elseif Object3.Position.x + Object3.width / 2 > 1000 then
+	elseif Object3.Position.x + Object3.width / 2 > Window.width then
 		print("LEFT Scores!")
 		LeftScore = LeftScore + 1
 		ResetGame()

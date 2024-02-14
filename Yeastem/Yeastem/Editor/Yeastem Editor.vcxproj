@@ -151,6 +151,7 @@
     <ClInclude Include="src\Core\Lua\LuaVector2.h" />
     <ClInclude Include="src\Core\Math\Point.h" />
     <ClInclude Include="src\Core\Math\Vector2.h" />
+    <ClInclude Include="src\Core\OpenGL\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexArray.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexBuffer.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
     <ClCompile Include="src\Core\Math\Point.cpp" />
     <ClCompile Include="src\Core\Math\Vector2.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Buffers\FrameBuffer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp" />
