@@ -68,6 +68,12 @@ void BasicRenderer::Render(const Renderable& obj)
 	{
 		YEASTEM_WARNING("ONLY BOUND 32 TEXTURES OF OBJECT - " << obj.textures.size() << " EXISTED")
 	}
+
+	if (!obj.indices || !obj.layout || !obj.vertices || !obj.shader)
+	{
+		YEASTEM_ERROR("COULD NOT RENDER OBJECTS :- Doing so would lead to a Segmentation Fault!s")
+		return;
+	}
 	
 	obj.indices->Bind();
 	obj.layout->Bind();
