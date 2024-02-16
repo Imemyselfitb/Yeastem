@@ -42,6 +42,7 @@ void Application::createGLContext()
 bool Application::s_IsRunning = false;
 void Application::HandleEvents(SDL_Event& m_events) const
 {
+	std::cout << "Event Handling Started!\n";
 	while (SDL_PollEvent(&m_events))
 	{
 		ImGui_ImplSDL2_ProcessEvent(&m_events);
@@ -161,6 +162,7 @@ int pseudo_rand()
 
 void Application::process_frame(float deltaTime)
 {
+	std::cout << "Frame Processing Started!\n";
 	SDL_GetWindowPosition(m_window, &m_WindowPosition.x, &m_WindowPosition.y);
 	SDL_GetWindowSize(m_window, &m_WindowSize.w, &m_WindowSize.h);
 

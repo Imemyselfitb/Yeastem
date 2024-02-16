@@ -92,4 +92,5 @@ function Yeastem.Update(deltaTime)
 	MovePaddles(deltaTime)
 	CheckCollision()
 	MoveBall(deltaTime)
+	print(deltaTime)
 end

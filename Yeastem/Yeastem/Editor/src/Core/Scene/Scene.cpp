@@ -159,6 +159,8 @@ void Scene::ProcessEvent(SDL_Event& evt)
 
 void Scene::Update(float deltaTime)
 {
+	std::cout << "Scene Update Started!\n";
+
 	for (int i = 0; i < this->m_Shapes.size(); i++)
 		this->UpdateScriptsFromObjects(i);
 
