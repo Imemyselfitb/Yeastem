@@ -55,7 +55,7 @@ bool LuaState::ExecuteScript(const std::string& script, const std::string& fileN
 
 bool LuaState::executeScriptFromFile(const std::string& file)
 {
-	const std::string& str = readFileText(file);
+	const std::string& str = FileIO::readFileText(file);
 	return this->ExecuteScript(str, file);
 }
 

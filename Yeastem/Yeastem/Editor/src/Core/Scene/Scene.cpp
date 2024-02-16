@@ -99,6 +99,7 @@ void Scene::Lua_AttachCFunction(int(*nativeFunction)(lua_State*), const char* fu
 
 void Scene::Lua_ExcecuteScript(const std::string& file)
 {
+	if (!FileIO::checkIfExists(file)) return;
 	this->m_ScriptCount++;
 	this->m_LuaState.executeScriptFromFile(file);
 }

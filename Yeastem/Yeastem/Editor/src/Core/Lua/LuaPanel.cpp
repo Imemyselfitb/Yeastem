@@ -67,6 +67,8 @@ void LuaImguiPanel::ShowAll(LuaState& L)
 		lua_rawgeti(L, -1, i);
 		LuaImguiPanel::ShowElement(L);
 	}
+
+	lua_pop(L, 2);
 }
 
 void LuaImguiPanel::ShowElement(LuaState& L)

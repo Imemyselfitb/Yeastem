@@ -2,6 +2,10 @@
 
 YEASTEM_BEGIN
 
-std::string readFileText(const std::string& path);
+namespace FileIO
+{
+	std::string readFileText(const std::string& path);
+	bool checkIfExists(const std::string& path);
+}
 
 YEASTEM_END

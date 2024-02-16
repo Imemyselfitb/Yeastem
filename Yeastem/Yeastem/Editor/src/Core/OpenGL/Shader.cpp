@@ -48,8 +48,8 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 		glGetShaderInfoLog(id, err_length, &err_length, &infoLog[0]);
 
 		// Print out the message using <iostream>
-		std::cout << "ERROR: Error Compiling " << (type == GL_VERTEX_SHADER ? "Vertex " : "Fragment ");
-		std::cout << "Shader! \n" << std::string(&infoLog[0]) << std::endl;
+		YEASTEM_ERROR("Error Compiling " << (type == GL_VERTEX_SHADER ? "Vertex " : "Fragment ") << "Shader! \nCAUSE:" 
+			<< std::string(&infoLog[0]));
 
 		// Delete Shader and Exit
 		glDeleteShader(id);
@@ -85,8 +85,8 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 unsigned int Shader::CreateShaderFromFiles(const std::string& vert, const std::string& frag)
 {
 	return CreateShader(
-		readFileText(vert),
-		readFileText(frag)
+		FileIO::readFileText(vert),
+		FileIO::readFileText(frag)
 	);
 }
 

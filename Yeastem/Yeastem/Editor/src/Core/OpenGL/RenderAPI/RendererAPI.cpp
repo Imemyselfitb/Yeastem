@@ -3,6 +3,8 @@
 #include "RendererAPI.h"
 #include "Core/OpenGL/ShaderContainer.h"
 
+#include "FileIO/FileIO.h"
+
 YEASTEM_BEGIN
 
 void Renderable::AssignVertexBuffer(const void* data, unsigned int size)
@@ -49,7 +51,8 @@ void Renderable::ReserveTextures(unsigned int count)
 }
 void Renderable::AddTexture(const std::string& path)
 {
-	this->textures.emplace_back(path);
+	if(FileIO::checkIfExists(path))
+		this->textures.emplace_back(path);
 }
 
 void Renderable::ReloadIndices()

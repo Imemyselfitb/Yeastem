@@ -4,7 +4,7 @@
 #define YEASTEM_END }
 
 #define YEASTEM_ERROR(str) \
-	std::cout << "YEASTEM: ERROR: " << str << std::endl;
+	std::cout << "YEASTEM: ERROR: " << str << "\n";
 #define YEASTEM_WARNING(str) \
-	std::cout << "YEASTEM: Warning: " << str << std::endl;
+	std::cout << "YEASTEM: Warning: " << str << "\n";
 

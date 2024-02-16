@@ -12,7 +12,7 @@ void Texture::LoadTexture(const std::string& path)
 
 	if (!data)
 	{
-		YEASTEM_ERROR("Texture `" << path << "` could not load! ");
+		YEASTEM_ERROR("Texture `" << path << "` could not load! - " << stbi_failure_reason());
 		return;
 	}
 
