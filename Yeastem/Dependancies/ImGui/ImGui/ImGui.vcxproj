@@ -17,9 +17,6 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0FF640D-2C14-8DBE-F595-301E616989EF}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ImGui</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -56,20 +53,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\lib\x64\Debug\</OutDir>
     <IntDir>..\bin-int\Debug\</IntDir>
-    <TargetName>ImGui</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <TargetName>libImGui</TargetName>
+    <TargetExt>.a</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\lib\x64\Release\</OutDir>
     <IntDir>..\bin-int\Release\</IntDir>
-    <TargetName>ImGui</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <TargetName>libImGui</TargetName>
+    <TargetExt>.a</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <OutDir>..\lib\x64\Dist\</OutDir>
     <IntDir>..\bin-int\Dist\</IntDir>
-    <TargetName>ImGui</TargetName>
-    <TargetExt>.lib</TargetExt>
+    <TargetName>libImGui</TargetName>
+    <TargetExt>.a</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -77,8 +74,6 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>..\src;..\src\backends;..\..\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -91,8 +86,6 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>..\src;..\src\backends;..\..\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -105,8 +98,6 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>..\src;..\src\backends;..\..\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>

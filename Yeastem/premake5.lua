@@ -7,6 +7,8 @@ workspace "Yeastem"
 		"Release", 
 		"Dist"
 	}
+	system "linux"
+
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -74,11 +76,18 @@ project "Yeastem Editor"
 		"ImGui"
 	}
 
+	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
 		systemversion "latest"
 
+	filter "system:linux"
+		cppdialect "C++latest"
+		staticruntime "On"
+		systemversion "latest"
+
+	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
 	filter "configurations:Debug"
 		kind "ConsoleApp"
 		defines "YST_DEBUG"

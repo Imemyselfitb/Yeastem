@@ -17,8 +17,6 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A43A8714-9008-7B1A-799C-EB406509577F}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Yeastem Editor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -55,24 +53,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Debug-windows-x86_64\Yeastem Editor\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Debug-windows-x86_64\Yeastem Editor\</IntDir>
+    <OutDir>$(SolutionDir)bin\Debug-linux-x86_64\Yeastem Editor\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Debug-linux-x86_64\Yeastem Editor\</IntDir>
     <TargetName>Yeastem Editor</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>
+    </TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Release-windows-x86_64\Yeastem Editor\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Release-windows-x86_64\Yeastem Editor\</IntDir>
+    <OutDir>$(SolutionDir)bin\Release-linux-x86_64\Yeastem Editor\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Release-linux-x86_64\Yeastem Editor\</IntDir>
     <TargetName>Yeastem Editor</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>
+    </TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Dist-windows-x86_64\Yeastem Editor\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Dist-windows-x86_64\Yeastem Editor\</IntDir>
+    <OutDir>$(SolutionDir)bin\Dist-linux-x86_64\Yeastem Editor\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Dist-linux-x86_64\Yeastem Editor\</IntDir>
     <TargetName>Yeastem Editor</TargetName>
-    <TargetExt>.exe</TargetExt>
+    <TargetExt>
+    </TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -209,14 +210,6 @@
     <ProjectReference Include="..\..\Dependancies\ImGui\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="PongTest\Game.lua" />
-    <None Include="PongTest\Panels.lua" />
-    <None Include="PongTest\RectCollisionModule.lua" />
-    <None Include="test\Test1a.lua" />
-    <None Include="test\Test1b.lua" />
-    <None Include="test\Test2.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

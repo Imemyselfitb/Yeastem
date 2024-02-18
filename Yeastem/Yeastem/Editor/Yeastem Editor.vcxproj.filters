@@ -4,6 +4,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Lua">
+      <UniqueIdentifier>{BF3399C2-AB00-F4CD-D419-E275C045295C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\Math">
       <UniqueIdentifier>{C7E5BF15-3350-748C-7C8E-2532E83752E1}</UniqueIdentifier>
     </Filter>
@@ -39,11 +42,20 @@
     <ClInclude Include="src\Core\ImGuiWindow.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Lua\LuaPanel.h">
+      <Filter>Core\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Lua\LuaVector2.h">
+      <Filter>Core\Lua</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Math\Point.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Math\Vector2.h">
       <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\OpenGL\Buffers\FrameBuffer.h">
+      <Filter>Core\OpenGL\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h">
       <Filter>Core\OpenGL\Buffers</Filter>
@@ -75,6 +87,9 @@
     <ClInclude Include="src\Core\OpenGL\Texture.h">
       <Filter>Core\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Scene\Events.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Scene\Scene.h">
       <Filter>Core\Scene</Filter>
     </ClInclude>
@@ -92,10 +107,6 @@
     </ClInclude>
     <ClInclude Include="src\Macros.h" />
     <ClInclude Include="src\yst_pch.h" />
-    <ClInclude Include="src\Core\Scene\Events.h" />
-    <ClInclude Include="src\Core\Lua\LuaVector2.h" />
-    <ClInclude Include="src\Core\Lua\LuaPanel.h" />
-    <ClInclude Include="src\Core\OpenGL\Buffers\FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Application.cpp">
@@ -104,11 +115,20 @@
     <ClCompile Include="src\Core\ImGuiAPI.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Lua\LuaPanel.cpp">
+      <Filter>Core\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Lua\LuaVector2.cpp">
+      <Filter>Core\Lua</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Math\Point.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Math\Vector2.cpp">
       <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\OpenGL\Buffers\FrameBuffer.cpp">
+      <Filter>Core\OpenGL\Buffers</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp">
       <Filter>Core\OpenGL\Buffers</Filter>
@@ -134,6 +154,9 @@
     <ClCompile Include="src\Core\OpenGL\Texture.cpp">
       <Filter>Core\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Scene\Events.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Scene\Scene.cpp">
       <Filter>Core\Scene</Filter>
     </ClCompile>
@@ -147,17 +170,5 @@
       <Filter>LuaAPI</Filter>
     </ClCompile>
     <ClCompile Include="src\yst_pch.cpp" />
-    <ClCompile Include="src\Core\Scene\Events.cpp" />
-    <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
-    <ClCompile Include="src\Core\Lua\LuaPanel.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Buffers\FrameBuffer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test\Test1a.lua" />
-    <None Include="test\Test1b.lua" />
-    <None Include="test\Test2.lua" />
-    <None Include="PongTest\Game.lua" />
-    <None Include="PongTest\RectCollisionModule.lua" />
-    <None Include="PongTest\Panels.lua" />
   </ItemGroup>
 </Project>
