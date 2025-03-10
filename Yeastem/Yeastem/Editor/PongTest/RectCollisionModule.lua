@@ -9,7 +9,5 @@ function CheckCollisionBetweenRectangles(ObjectA, ObjectB)
 	local top2 = ObjectB.Position.y - ObjectB.height / 2
 	local bottom2 = ObjectB.Position.y + ObjectB.height / 2
 
-	--print(left2 > right1, right2 < left1, top2 > bottom1, bottom2 < top1)
-
 	return not (left2 > right1 or right2 < left1 or top2 > bottom1 or bottom2 < top1);
 end

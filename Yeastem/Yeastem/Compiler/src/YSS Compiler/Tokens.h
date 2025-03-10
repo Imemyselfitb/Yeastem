@@ -54,8 +54,8 @@ class Token
 public:
 	Token() {}
 	Token(TOKEN_TYPE type) :type(type) {}
-	Token(std::string value, TOKEN_TYPE type) :type(type), value(value) {}
+	Token(const char* value, TOKEN_TYPE type) :type(type), value(value) {}
 
-	std::string value = "";
-	TOKEN_TYPE type;
+	const char* value = "";
+	TOKEN_TYPE type = TOKEN_TYPE::NONE;
 };

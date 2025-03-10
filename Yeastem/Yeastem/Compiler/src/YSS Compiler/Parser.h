@@ -1,10 +1,14 @@
 #pragma once
 
+#include "Macros.h"
+
 #include "Tokens.h"
 #include "Tokenizer.h"
 
 #include <vector>
 #include <iostream>
+
+YEASTEM_COMPILER_BEGIN
 
 enum class PARSED_TYPE
 {
@@ -23,139 +27,55 @@ enum class PARSED_TYPE
 	ROOT // PROGRAM
 };
 
-std::string get_PARSED_TYPE(PARSED_TYPE type)
-{
-	switch (type)
-	{
-	case PARSED_TYPE::NumberLiteral:
-		return "Number";
-	case PARSED_TYPE::StringLiteral:
-		return "String";
-	case PARSED_TYPE::BinaryExpression:
-		return "[Binary] Expression";
-	case PARSED_TYPE::Assignment:
-		return "Assignment";
-	case PARSED_TYPE::Name:
-		return "Name";
-	case PARSED_TYPE::Var:
-		return "Variable";
-	case PARSED_TYPE::ConstVar:
-		return "Constant Variable";
-	case PARSED_TYPE::KeyWord:
-		return "KeyWord";
-	case PARSED_TYPE::Func:
-		return "Function Declaration";
-	case PARSED_TYPE::FuncBody:
-		return "Function Body";
-	case PARSED_TYPE::FuncCall:
-		return "Function Call";
-	case PARSED_TYPE::ROOT:
-		return "Program Root";
-	default:
-		return "NONE";
-	}
-}
+const char* get_PARSED_TYPE(PARSED_TYPE type);
 
 namespace KeyWord
 {
-	enum KeyWord
+	enum class KeyWords
 	{
 		NONE = 0,
 
-		_const,
-		_let, 
-		_return
+		Const,
+		Let, 
+		Return
 	};
 
-	KeyWord convert(std::string val)
-	{
-		if (val == "let") return _let;
-		if (val == "const") return _const;
-		if (val == "ret") return _return;
-		return NONE;
-	}
+	KeyWords convert(const std::string& val);
 }
 
-bool isKeyWord(std::string name)
+inline bool isKeyWord(std::string name)
 {
-	return KeyWord::convert(name) != KeyWord::NONE;
+	return KeyWord::convert(name) != KeyWord::KeyWords::NONE;
 }
 
 struct DataType
 {
 	enum class AllTypes
 	{
+		None = 0,
 		Number,
 		String
 	} type;
 
-	DataType() {}
-	DataType(std::string STRING, AllTypes type) :type(type)
-	{
-		if (type == AllTypes::Number)
-			this->val = std::stof(STRING);
-		else if (type == AllTypes::String)
-			this->str = STRING;
-	}
-	DataType(std::string STRING, PARSED_TYPE type)
-	{
-		if (type == PARSED_TYPE::NumberLiteral)
-		{
-			this->val = std::stof(STRING);
-			this->type = AllTypes::Number;
-		}
-		else if (type == PARSED_TYPE::StringLiteral)
-		{
-			this->str = STRING;
-			this->type = AllTypes::String;
-		}
-	}
+	DataType() :type(AllTypes::None) {}
+	DataType(const std::string& STRING, AllTypes type);
+	DataType(const std::string& STRING, PARSED_TYPE type);
 
 	~DataType() {}
 
-	void operator=(const DataType& other)
-	{
-		this->val = other.val;
-		this->type = other.type;
-	}
+	void operator=(const DataType& other);
 
-	union
+	// The Value Can Be Either a String (in which case "str" is used)
+	// or a Number(in which case "val" is used)
+	union 
 	{
-		float val;
+		float val = 0;
 		std::string str;
 	};
 };
 
-bool trySolveOp(const DataType& a, const DataType& b, const char* opCode, DataType& result)
-{
-	if (a.type == b.type && a.type == DataType::AllTypes::Number)
-	{
-		if (opCode == "+")
-		{
-			result.type = DataType::AllTypes::Number;
-			result.val = a.val + b.val;
-			return true;
-		}
-		if (opCode == "-")
-		{
-			result.type = DataType::AllTypes::Number;
-			result.val = a.val - b.val;
-			return true;
-		}
-		if (opCode == "*")
-		{
-			result.type = DataType::AllTypes::Number;
-			result.val = a.val * b.val;
-			return true;
-		}
-		if (opCode == "/")
-		{
-			result.type = DataType::AllTypes::Number;
-			result.val = a.val / b.val;
-			return true;
-		}
-	}
-}
+bool trySolveOp(const DataType& a, const DataType& b, const char* opCode, DataType& result);
+
 #define printType true
 class ParsedNode
 {
@@ -189,7 +109,7 @@ public:
 		}
 	}
 
-	virtual void toString(std::string& str, int tabs = 0)
+	virtual void toString(std::string& str, int tabs = 0) const
 	{
 #define _tab "  "
 		if (tabs < 0) tabs = 0;
@@ -221,7 +141,7 @@ public:
 
 		str += "\n" + TAB + "}";
 	}
-	std::string toString()
+	std::string toString() const
 	{
 		std::string str;
 		this->toString(str);
@@ -239,7 +159,6 @@ public:
 			loc = { this->str, this->type };
 			return true;
 		case PARSED_TYPE::BinaryExpression:
-			if (true)
 			{
 				DataType a;
 				if (!this->params[0].tryResolve(a)) return false;
@@ -273,7 +192,7 @@ public:
 		this->toString(str);
 		return str;
 	}
-	void toString(std::string& str, int tabs = 0) override 
+	void toString(std::string& str, int tabs = 0) const override 
 	{
 #define _tab "  "
 		if (tabs < 0) tabs = 0;
@@ -336,7 +255,7 @@ class RootNode
 public:
 	RootNode() {}
 
-	void toString(std::string& str, int tabs = 0)
+	void toString(std::string& str, int tabs = 0) const
 	{
 		std::string tab = "";
 		for (int i = 0; i < tabs; i++) tab += _tab;
@@ -344,7 +263,7 @@ public:
 		str += tab + "{\n";
 		str += (tab + _tab) + "type: " + get_PARSED_TYPE(PARSED_TYPE::ROOT) + "\n";
 		str += (tab + _tab) + "Body: [";
-		for (FunctionNode& func : this->body)
+		for (const FunctionNode& func : this->body)
 		{
 			str += "\n";
 			func.toString(str, tabs + 2);
@@ -352,7 +271,7 @@ public:
 		str += "\n" + (tab + _tab) + "]\n";
 		str += tab + "}";
 	}
-	std::string toString()
+	std::string toString() const
 	{
 		std::string str;
 		this->toString(str);
@@ -414,10 +333,7 @@ public:
 	std::vector<RootNode> body;
 };
 
-void error(const char* String)
-{
-	std::cout << "ERROR: " << String << std::endl;
-}
+#define error(String) std::cout << "ERROR: " << String << std::endl;
 
 namespace Parser
 {
@@ -433,351 +349,6 @@ namespace Parser
 	bool block(const std::vector<Token>& tokens, int& current, RootNode& root);
 }
 
-void Parser::factor(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	if (isType(FILE_END)) return;
+void ParseProgram(const std::vector<Token>& tokens);
 
-	if (tokens[current].type == TOKEN_TYPE::NAME)
-	{
-		node.params.push_back(name(tokens, current));
-		current++;
-		return;
-	}
-	if (tokens[current].type == TOKEN_TYPE::STRING)
-	{
-		node.params.push_back({ tokens[current].value, PARSED_TYPE::StringLiteral });
-		current++;
-		return;
-	}
-	if (tokens[current].type == TOKEN_TYPE::NUMBER)
-	{
-		node.params.push_back({ tokens[current].value, PARSED_TYPE::NumberLiteral });
-		current++;
-		return;
-	}
-	if (tokens[current].type == TOKEN_TYPE::LPAR)
-	{
-		current++;
-		ParsedNode exp(PARSED_TYPE::BinaryExpression);
-		expression(tokens, current, exp);
-		node.params.push_back(exp);
-		return;
-	}
-
-	if (tokens[current].type == TOKEN_TYPE::NEW_LINE)
-		return;
-
-	std::string errorInfo = "Syntax Error: factor ('";
-	errorInfo += tokens[current].value;
-	errorInfo += "').  ";
-
-	error(errorInfo.c_str());
-	current++;
-}
-
-ParsedNode Parser::name(const std::vector<Token>& tokens, int& current)
-{
-	if (isKeyWord(tokens[current].value))
-	{
-		return { tokens[current].value, PARSED_TYPE::KeyWord };
-	}
-	else
-	{
-		return { tokens[current].value, PARSED_TYPE::Name };
-	}
-}
-
-void addParams(ParsedNode& node, ParsedNode& n)
-{
-	if (n.type != PARSED_TYPE::BinaryExpression) return node.params.push_back(n);
-
-	if (n.params.size() > 1) // Type Binary Expression
-	{
-		node.params.push_back(n);
-	}
-	else if (n.params.size() > 0)
-	{
-		addParams(node, n.params[0]); // We know it has ONLY ONE child node
-	}
-}
-
-void Parser::term(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	if (isType(FILE_END)) return;
-
-	ParsedNode n(PARSED_TYPE::BinaryExpression);
-
-	factor(tokens, current, n);
-	if (isType(RPAR))
-	{
-		current++;
-		return addParams(node, n);
-	}
-
-	if (isType(STAR) || isType(SLASH))
-	{
-		n.str = tokens[current].value;
-
-		current++;
-		factor(tokens, current, n);
-	}
-
-	if (isType(STAR) || isType(SLASH))
-	{
-		ParsedNode pN(tokens[current].value, PARSED_TYPE::BinaryExpression);
-
-		current++;
-		expression(tokens, current, pN);
-		pN.params.insert(pN.params.begin(), n);
-		node.params.push_back(pN);
-		return;
-	}
-
-	addParams(node, n);
-}
-
-void Parser::expression(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	if (isType(FILE_END)) return;
-
-	ParsedNode n(PARSED_TYPE::BinaryExpression);
-
-	if (isType(LPAR))
-	{
-		current++;
-		expression(tokens, current, n);
-	}
-	else
-	{
-		term(tokens, current, n);
-	}
-
-	if (isType(RPAR)) {
-		current++;
-		return addParams(node, n);
-	}
-
-	if(isType(PLUS) || isType(MINUS))
-	{
-		n.str = tokens[current].value;
-
-		current++;
-		term(tokens, current, n);
-		if (isType(RPAR)) return addParams(node, n);
-	}
-	else if (isType(STAR) || isType(SLASH))
-	{
-		n.str = tokens[current].value;
-
-		current++;
-		factor(tokens, current, n);
-		if (isType(RPAR)) return addParams(node, n);
-	}
-
-	if ((isType(PLUS) || isType(MINUS)) || (isType(STAR) || isType(SLASH)) )
-	{
-		ParsedNode pN(tokens[current].value, PARSED_TYPE::BinaryExpression);
-
-		current++;
-		expression(tokens, current, pN);
-		pN.params.insert(pN.params.begin(), n);
-		node.params.push_back(pN);
-		return;
-	}
-
-	addParams(node, n);
-}
-
-/*
-void Parser::condition(const std::vector<Token>& tokens, int& current)
-{
-	if (isType(FILE_END)) return;
-
-	expression(tokens, current);
-	if ((isType(EQ_EQUAL)  || isType(LESS)       || isType(GREATER))      || 
-		(isType(NOT_EQUAL) || isType(LESS_EQUAL) || isType(GREATER_EQUAL) ))
-	{
-		current++;
-		expression(tokens, current);
-		return;
-	}
-
-	error("Syntax Error: condition()");
-	current++;
-}
-*/
-
-bool assignment(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	int cur = current;
-	ParsedNode child = Parser::name(tokens, cur);
-	if (child.type == PARSED_TYPE::KeyWord)
-	{
-		if(child.str != "const" && child.str != "let")
-			return false;
-	}
-
-	cur++;
-	ParsedNode n("=", PARSED_TYPE::Assignment);
-
-	ParsedNode NAME = Parser::name(tokens, cur);
-	if (NAME.type != PARSED_TYPE::Name)
-		return false;
-
-	if(child.str == "let") 
-		NAME.type = PARSED_TYPE::Var;
-	else 
-		NAME.type = PARSED_TYPE::ConstVar;
-
-	n.params.push_back(NAME);
-
-	cur++;
-	if (isTkType(tokens[cur], EQUAL))
-	{
-		cur++;
-		Parser::expression(tokens, cur, n);
-
-		current = cur + 1;
-		addParams(node, n);
-		return true;
-	}
-	return false;
-}
-bool func(const std::vector<Token>& tokens, int& current, FunctionNode& funcNode)
-{
-	ParsedNode FUNC = Parser::name(tokens, current);
-	if (FUNC.type != PARSED_TYPE::Name)
-	{
-		return false;
-	}
-
-	funcNode.str = FUNC.str;
-
-	current++;
-	if (isTkType(tokens[current], LSQB))
-	{
-		current++;
-		while (!(isTkType(tokens[current], RSQB)))
-		{
-			ParsedNode n = Parser::name(tokens, current);
-			current++;
-			if (isTkType(tokens[current], COMMA)) current++;
-			else break;
-		}
-		current++;
-	}
-
-	if (isTkType(tokens[current], COLON))
-	{
-		current ++;
-		return true;
-	}
-	return false;
-}
-bool funcCall(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	int cur = current;
-
-	ParsedNode FuncName = Parser::name(tokens, cur);
-	if (FuncName.type != PARSED_TYPE::Name)
-		return false;
-	
-	cur++;
-	if (!(isTkType(tokens[cur], LPAR))) return false;
-
-	ParsedNode Function(FuncName.str, PARSED_TYPE::FuncCall);
-
-	cur++;
-	while (!(isTkType(tokens[cur], RPAR)))
-	{
-		Parser::expression(tokens, cur, Function);
-		if (isTkType(tokens[cur], COMMA)) cur++;
-		else break;
-	}
-	current = cur + 1;
-
-	if (isType(NEW_LINE)) current++;
-	node.params.push_back(Function);
-	return true;
-}
-bool returnCall(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	ParsedNode ReturnNode = Parser::name(tokens, current);
-	if (ReturnNode.type != PARSED_TYPE::KeyWord || ReturnNode.str != "ret")
-		return false;
-
-	current++;
-	Parser::expression(tokens, current, ReturnNode);
-
-	if (!(isType(NEW_LINE))) return false;
-	current++;
-
-	node.params.push_back(ReturnNode);
-	return true;
-}
-
-bool Parser::statement(const std::vector<Token>& tokens, int& current, ParsedNode& node)
-{
-	if (isType(FILE_END)) return false;
-
-	while (isType(NEW_LINE)) current++;
-
-	if (isType(NAME)) // Variables & KeyWords
-	{
-		if (assignment(tokens, current, node))
-		{
-			return true;
-		}
-		if (funcCall(tokens, current, node))
-		{
-			return true;
-		}
-		if (returnCall(tokens, current, node))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Parser::block(const std::vector<Token>& tokens, int& current, RootNode& root)
-{
-	if (isType(FILE_END)) return false;
-
-	FunctionNode label;
-	while (isType(NEW_LINE)) current++;
-
-	if (func(tokens, current, label))
-	{
-		ParsedNode body(label.str, PARSED_TYPE::FuncBody);
-
-		while (statement(tokens, current, body)) {}
-		current--;
-
-		if (body.params.size() < 1) return false;
-		label.appendBody(body);
-		root.appendBody(label);
-		return true;
-	}
-	return false;
-}
-
-void ParseProgram(const std::vector<Token>& tokens)
-{
-	AST ast;
-	
-	int current = 0;
-
-	RootNode root;
-	while (current < int(tokens.size() - 1))
-	{
-		Parser::block(tokens, current, root);
-		current++;
-	}
-	root.prune();
-	ast.body.push_back(root);
-
-	std::cout << ast.body[0].toString() << std::endl;
-
-	std::cin.get();
-}
+YEASTEM_COMPILER_END

@@ -10,6 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\FileReader.h" />
+    <ClInclude Include="src\Macros.h" />
     <ClInclude Include="src\YSS Compiler\Parser.h">
       <Filter>YSS Compiler</Filter>
     </ClInclude>
@@ -24,6 +25,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\YSS Compiler\Parser.cpp">
+      <Filter>YSS Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\YSS Compiler\Tokenizer.cpp">
+      <Filter>YSS Compiler</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

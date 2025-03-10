@@ -7,7 +7,8 @@ workspace "Yeastem"
 		"Release", 
 		"Dist"
 	}
-	system "linux"
+
+	startproject "Yeastem Editor"
 
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -20,15 +21,19 @@ IncludeDir["Glad"] = "Dependancies/Glad/include"
 IncludeDir["Lua"] = "Dependancies/Lua/src"
 IncludeDir["EnTT"] = "Dependancies/EnTT/include"
 IncludeDir["ImGui"] = "Dependancies/ImGui/src"
+IncludeDir["glm"] = "Dependancies/glm/include"
 
 LibraryDir = {}
 LibraryDir["SDL2"] = "Dependancies/SDL2/lib/"
 
 include "Dependancies"
 
-project "Yeastem Editor"
-	local m_Location = "Yeastem/Editor"
-	location ( m_Location )
+EngineLocation = "Yeastem/Engine"
+
+project "Yeastem Engine"
+	kind "StaticLib"
+	
+	location ( EngineLocation )
 
 	language "C++"
 
@@ -36,17 +41,17 @@ project "Yeastem Editor"
 	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "yst_pch.h"
-	pchsource (m_Location .. "/src/yst_pch.cpp")
+	pchsource (EngineLocation .. "/src/yst_pch.cpp")
 
 	files
 	{
-		m_Location .. "/src/**.h",
-		m_Location .. "/src/**.cpp"
+		EngineLocation .. "/src/**.h",
+		EngineLocation .. "/src/**.cpp"
 	}
 
 	includedirs
 	{
-		"$(SolutionDir)" .. m_Location .. "/src", 
+		"$(SolutionDir)" .. EngineLocation .. "/src", 
 		"$(SolutionDir)%{IncludeDir.SDL2}", 
 		"$(SolutionDir)%{IncludeDir.stb_image}", 
 		"$(SolutionDir)%{IncludeDir.Lua}", 
@@ -54,7 +59,8 @@ project "Yeastem Editor"
 		"$(SolutionDir)Dependancies/Glad/src", 
 		"$(SolutionDir)%{IncludeDir.EnTT}", 
 		"$(SolutionDir)%{IncludeDir.ImGui}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
+		"$(SolutionDir)%{IncludeDir.ImGui}/backends",
+		"$(SolutionDir)%{IncludeDir.glm}"
 	}
 	 
 	libdirs
@@ -81,26 +87,90 @@ project "Yeastem Editor"
 		cppdialect "C++latest"
 		staticruntime "On"
 		systemversion "latest"
+		defines "YST_PLATFORM_WINDOWS"
 
 	filter "system:linux"
 		cppdialect "C++latest"
 		staticruntime "On"
 		systemversion "latest"
+		defines "YST_PLATFORM_LINUX"
+
+	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
+	filter "configurations:Debug"
+		defines "YST_CONFIG_DEBUG"
+		symbols "On"
+
+	filter "configurations:Release"
+		defines "YST_CONFIG_RELEASE"
+		optimize "On"
+
+	filter "configurations:Dist"
+		defines "YST_CONFIG_DIST"
+		optimize "On"
+
+project "Yeastem Editor"
+	local m_Location = "Yeastem/Editor"
+	location ( m_Location )
+
+	language "C++"
+
+	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		m_Location .. "/src/**.h",
+		m_Location .. "/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"$(SolutionDir)" .. m_Location .. "/src",
+		"$(SolutionDir)" .. EngineLocation .. "/src",
+		"$(SolutionDir)Yeastem",
+		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.stb_image}", 
+		"$(SolutionDir)%{IncludeDir.Lua}", 
+		"$(SolutionDir)%{IncludeDir.Glad}", 
+		"$(SolutionDir)Dependancies/Glad/src", 
+		"$(SolutionDir)%{IncludeDir.EnTT}", 
+		"$(SolutionDir)%{IncludeDir.ImGui}", 
+		"$(SolutionDir)%{IncludeDir.ImGui}/backends",
+		"$(SolutionDir)%{IncludeDir.glm}"
+	}
+
+	links 
+	{
+		"Yeastem Engine"
+	}
+
+	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
+	filter "system:windows"
+		cppdialect "C++latest"
+		staticruntime "On"
+		systemversion "latest"
+		defines "YST_PLATFORM_WINDOWS"
+
+	filter "system:linux"
+		cppdialect "C++latest"
+		staticruntime "On"
+		systemversion "latest"
+		defines "YST_PLATFORM_LINUX"
 
 	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
 	filter "configurations:Debug"
 		kind "ConsoleApp"
-		defines "YST_DEBUG"
+		defines "YST_CONFIG_DEBUG"
 		symbols "On"
 
 	filter "configurations:Release"
 		kind "ConsoleApp"
-		defines "YST_RELEASE"
+		defines "YST_CONFIG_RELEASE"
 		optimize "On"
 
 	filter "configurations:Dist"
 		kind "WindowedApp"
-		defines "YST_DIST"
+		defines "YST_CONFIG_DIST"
 		optimize "On"
 
 project "Yeastem Runtime"
@@ -134,8 +204,7 @@ project "Yeastem Runtime"
 	links 
 	{
 		"SDL2.lib", 
-		"SDL2main.lib", 
-		"Dependancies/Glad"
+		"SDL2main.lib"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }

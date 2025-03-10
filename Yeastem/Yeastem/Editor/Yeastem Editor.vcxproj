@@ -17,6 +17,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A43A8714-9008-7B1A-799C-EB406509577F}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Yeastem Editor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -53,35 +55,31 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Debug-linux-x86_64\Yeastem Editor\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Debug-linux-x86_64\Yeastem Editor\</IntDir>
+    <OutDir>$(SolutionDir)bin\Debug-windows-x86_64\Yeastem Editor\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Debug-windows-x86_64\Yeastem Editor\</IntDir>
     <TargetName>Yeastem Editor</TargetName>
-    <TargetExt>
-    </TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Release-linux-x86_64\Yeastem Editor\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Release-linux-x86_64\Yeastem Editor\</IntDir>
+    <OutDir>$(SolutionDir)bin\Release-windows-x86_64\Yeastem Editor\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Release-windows-x86_64\Yeastem Editor\</IntDir>
     <TargetName>Yeastem Editor</TargetName>
-    <TargetExt>
-    </TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Dist-linux-x86_64\Yeastem Editor\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Dist-linux-x86_64\Yeastem Editor\</IntDir>
+    <OutDir>$(SolutionDir)bin\Dist-windows-x86_64\Yeastem Editor\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Dist-windows-x86_64\Yeastem Editor\</IntDir>
     <TargetName>Yeastem Editor</TargetName>
-    <TargetExt>
-    </TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YST_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YST_PLATFORM_WINDOWS;YST_CONFIG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Yeastem;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;$(SolutionDir)Dependancies\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -91,17 +89,14 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YST_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YST_PLATFORM_WINDOWS;YST_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Yeastem;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;$(SolutionDir)Dependancies\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -115,17 +110,14 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>yst_pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YST_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YST_PLATFORM_WINDOWS;YST_CONFIG_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Yeastem;$(SolutionDir)Dependancies\SDL2\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;$(SolutionDir)Dependancies\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -139,77 +131,19 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependancies\SDL2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Application.h" />
-    <ClInclude Include="src\Core\EntryPoint.h" />
-    <ClInclude Include="src\Core\ImGuiAPI.h" />
-    <ClInclude Include="src\Core\ImGuiWindow.h" />
-    <ClInclude Include="src\Core\Lua\LuaPanel.h" />
-    <ClInclude Include="src\Core\Lua\LuaVector2.h" />
-    <ClInclude Include="src\Core\Math\Point.h" />
-    <ClInclude Include="src\Core\Math\Vector2.h" />
-    <ClInclude Include="src\Core\OpenGL\Buffers\FrameBuffer.h" />
-    <ClInclude Include="src\Core\OpenGL\Buffers\IndexBuffer.h" />
-    <ClInclude Include="src\Core\OpenGL\Buffers\VertexArray.h" />
-    <ClInclude Include="src\Core\OpenGL\Buffers\VertexBuffer.h" />
-    <ClInclude Include="src\Core\OpenGL\Buffers\VertexBufferLayout.h" />
-    <ClInclude Include="src\Core\OpenGL\Include.h" />
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h" />
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\Shape.h" />
-    <ClInclude Include="src\Core\OpenGL\Shader.h" />
-    <ClInclude Include="src\Core\OpenGL\ShaderContainer.h" />
-    <ClInclude Include="src\Core\OpenGL\Texture.h" />
-    <ClInclude Include="src\Core\Scene\Events.h" />
-    <ClInclude Include="src\Core\Scene\Scene.h" />
-    <ClInclude Include="src\Core\Timestep.h" />
-    <ClInclude Include="src\FileIO\FileIO.h" />
-    <ClInclude Include="src\LuaAPI\Lua.h" />
-    <ClInclude Include="src\LuaAPI\LuaState.h" />
-    <ClInclude Include="src\Macros.h" />
-    <ClInclude Include="src\yst_pch.h" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ProjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Application.cpp" />
-    <ClCompile Include="src\Core\ImGuiAPI.cpp" />
-    <ClCompile Include="src\Core\Lua\LuaPanel.cpp" />
-    <ClCompile Include="src\Core\Lua\LuaVector2.cpp" />
-    <ClCompile Include="src\Core\Math\Point.cpp" />
-    <ClCompile Include="src\Core\Math\Vector2.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Buffers\FrameBuffer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Buffers\VertexArray.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp" />
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\Shape.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
-    <ClCompile Include="src\Core\OpenGL\ShaderContainer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\Texture.cpp" />
-    <ClCompile Include="src\Core\Scene\Events.cpp" />
-    <ClCompile Include="src\Core\Scene\Scene.cpp" />
-    <ClCompile Include="src\Core\main.cpp" />
-    <ClCompile Include="src\FileIO\FileReading.cpp" />
-    <ClCompile Include="src\LuaAPI\LuaState.cpp" />
-    <ClCompile Include="src\yst_pch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
+    <ProjectReference Include="..\Engine\Yeastem Engine.vcxproj">
+      <Project>{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Dependancies\stb_image\stb_image\stb_image.vcxproj">
-      <Project>{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Dependancies\Glad\Glad\Glad.vcxproj">
-      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Dependancies\Lua\Lua\Lua.vcxproj">
-      <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Dependancies\ImGui\ImGui\ImGui.vcxproj">
-      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
+    <ClInclude Include="src\ProjectManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

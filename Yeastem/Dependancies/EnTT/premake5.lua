@@ -2,7 +2,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "EnTT"
 	location "EnTT"
-	kind "StaticLib"
+	kind "None"
 	language "C++"
 
 	targetdir "lib/x64/%{cfg.buildcfg}/"
@@ -11,13 +11,6 @@ project "EnTT"
 	files
 	{
 		"include/entt.hpp"
-	}
-
-	removefiles
-	{
-		"src/lua.c", 
-		"src/lua.h", 
-		"src/luac.c"
 	}
 	
 	filter "system:windows"

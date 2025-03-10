@@ -1,0 +1,16 @@
+[stem type="sprite" name="Paddle1" id=1]
+position=150,250
+texture="Paddle.png"
+
+[stem type="sprite" name="Paddle2" id=2]
+position=150,250
+texture="Paddle.png"
+
+[stem type="sprite" name="Ball" id=3]
+position=150,250
+texture="Ball.png"
+
+[stem type="script" src="Game.lua"]
+[stem type="script" src="Panels.lua"]
+[stem type="script" src="RectCollisionModule.lua"]
+

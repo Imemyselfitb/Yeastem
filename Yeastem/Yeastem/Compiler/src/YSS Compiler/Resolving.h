@@ -2,6 +2,8 @@
 
 // Extract taken from `Parser.h`
 
+#if 0
+
 struct DataType
 {
 	DataType() {}
@@ -134,3 +136,5 @@ DataType simplifyAndSolve(RootNode& root)
 	}
 	return d;
 }
+
+#endif

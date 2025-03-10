@@ -17,6 +17,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>YSS Compiler</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -52,27 +55,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Debug-linux-x86_64\YSS Compiler\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Debug-linux-x86_64\YSS Compiler\</IntDir>
+    <OutDir>$(SolutionDir)bin\Debug-windows-x86_64\YSS Compiler\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Debug-windows-x86_64\YSS Compiler\</IntDir>
     <TargetName>YSS Compiler</TargetName>
-    <TargetExt>
-    </TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Release-linux-x86_64\YSS Compiler\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Release-linux-x86_64\YSS Compiler\</IntDir>
+    <OutDir>$(SolutionDir)bin\Release-windows-x86_64\YSS Compiler\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Release-windows-x86_64\YSS Compiler\</IntDir>
     <TargetName>YSS Compiler</TargetName>
-    <TargetExt>
-    </TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\Dist-linux-x86_64\YSS Compiler\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\Dist-linux-x86_64\YSS Compiler\</IntDir>
+    <OutDir>$(SolutionDir)bin\Dist-windows-x86_64\YSS Compiler\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\Dist-windows-x86_64\YSS Compiler\</IntDir>
     <TargetName>YSS Compiler</TargetName>
-    <TargetExt>
-    </TargetExt>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -82,6 +82,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Compiler\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -100,6 +102,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -119,6 +123,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
@@ -129,12 +135,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\FileReader.h" />
+    <ClInclude Include="src\Macros.h" />
     <ClInclude Include="src\YSS Compiler\Parser.h" />
     <ClInclude Include="src\YSS Compiler\Resolving.h" />
     <ClInclude Include="src\YSS Compiler\Tokenizer.h" />
     <ClInclude Include="src\YSS Compiler\Tokens.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\YSS Compiler\Parser.cpp" />
+    <ClCompile Include="src\YSS Compiler\Tokenizer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
