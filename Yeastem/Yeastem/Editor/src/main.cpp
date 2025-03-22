@@ -3,62 +3,51 @@
 #include "Engine/src/Core/Application.h"
 #include "Engine/src/Platforms/Windows/Window.h"
 
+#include "Engine/src/Core/Scene/Components.h"
+
 YEASTEM_BEGIN
-void AttachObjects()
+
+void AttachEntities()
 {
 	ResourceManager& resourceManager = Yeastem::Application::GetResourceManager();
 	Scene& currentScene = Yeastem::Application::Get().CurrentScene;
 
-	ObjectID Paddle1ID = currentScene.CreateObject();
-	ObjectID Paddle2ID = currentScene.CreateObject();
-	ObjectID BallID = currentScene.CreateObject();
+	Entity paddle1 = currentScene.CreateEntity("Stem/Paddle1", "Paddle");
+	Entity paddle2 = currentScene.CreateEntity("Stem/Paddle2", "Paddle");
+	Entity ball = currentScene.CreateEntity("Stem/Ball", "Paddle");
 
-	std::vector<QuadVertex> paddleVertices = {
-		{ { -20.0f, -100.0f }, { 0.0f, 0.0f } },
-		{ {  20.0f, -100.0f }, { 1.0f, 0.0f } },
-		{ {  20.0f,  100.0f }, { 1.0f, 1.0f } },
-		{ { -20.0f,  100.0f }, { 0.0f, 1.0f } }
-	};
+	paddle1.AddComponent<TransformComponent>(Vector2{ 150.0f, 250.0f });
+	paddle2.AddComponent<TransformComponent>(Vector2{ 850.0f, 250.0f });
+	ball.AddComponent<TransformComponent>(Vector2{ 500.0f, 250.0f });
 
-	std::vector<QuadVertex> ballVertices = {
-		{ { -20.0f, -20.0f }, { 0.0f, 0.0f } },
-		{ {  20.0f, -20.0f }, { 1.0f, 0.0f } },
-		{ {  20.0f,  20.0f }, { 1.0f, 1.0f } },
-		{ { -20.0f,  20.0f }, { 0.0f, 1.0f } }
-	};
+	RenderQuadComponent& renderCompPaddle1 = paddle1.AddComponent<RenderQuadComponent>();
+	RenderQuadComponent& renderCompPaddle2 = paddle2.AddComponent<RenderQuadComponent>();
+	RenderQuadComponent& renderCompBall = ball.AddComponent<RenderQuadComponent>();
 
-	Shape<QuadVertex>& Paddle1 = currentScene.GetObjectWithID(Paddle1ID);
-	Shape<QuadVertex>& Paddle2 = currentScene.GetObjectWithID(Paddle2ID);
-	Shape<QuadVertex>& Ball = currentScene.GetObjectWithID(BallID);
+	renderCompPaddle1.Size = { 40.0f, 200.0f };
+	renderCompPaddle2.Size = { 40.0f, 200.0f };
+	renderCompBall.Size = { 40.0f, 40.0f };
 
-	Paddle1.AssignVertices(paddleVertices);
-	Paddle2.AssignVertices(paddleVertices);
-	Ball.AssignVertices(ballVertices);
+	renderCompPaddle1.Textures.reserve(1);
+	renderCompPaddle2.Textures.reserve(1);
+	renderCompBall.Textures.reserve(1);
 
-	Paddle1.DefaultPosition = Vector2(150.0f, 250.0f);
-	Paddle2.DefaultPosition = Vector2(850.0f, 250.0f);
-	Ball.DefaultPosition = Vector2(500.0f, 250.0f);
+	renderCompPaddle1.Textures.push_back(resourceManager.Textures.Load("PongTest/Paddle.png"));
+	renderCompPaddle2.Textures.push_back(resourceManager.Textures.Load("PongTest/Paddle.png"));
+	renderCompBall.Textures.push_back(resourceManager.Textures.Load("PongTest/Ball.png"));
 
-	Paddle1.DefaultScale = 1.0f;
-	Paddle2.DefaultScale = 1.0f;
-	Ball.DefaultScale = 1.0f;
-
-	Paddle1.ReserveTextures(1);
-	Paddle1.AddTexture("PongTest/Paddle.png", resourceManager);
-	
-	Paddle2.ReserveTextures(1);
-	Paddle2.AddTexture("PongTest/Paddle.png", resourceManager);
-	
-	Ball.ReserveTextures(1);
-	Ball.AddTexture("PongTest/Ball.png", resourceManager);
-
-	currentScene.SetQuadShader(resourceManager.Shaders.Load(
+	Renderer::SetQuadShader(resourceManager.Shaders.Load(
 		"src/Shaders/Quad.vert", "src/Shaders/Quad.frag"
 	));
 
-	currentScene.Lua_AttachScript("PongTest/Panels.lua");
-	currentScene.Lua_AttachScript("PongTest/Game.lua");
-	currentScene.Lua_AttachScript("PongTest/RectCollisionModule.lua");
+	Entity scriptGame = currentScene.CreateEntity("Stem/Game", "Game");
+	scriptGame.AddComponent<ScriptComponent>("PongTest/Game.lua");
+
+	Entity scriptPanels = currentScene.CreateEntity("Stem/Panels", "Panels");
+	scriptPanels.AddComponent<ScriptComponent>("PongTest/Panels.lua");
+
+	Entity scriptRectCollisionModule = currentScene.CreateEntity("Stem/RectCollisionModule", "RectCollisionModule");
+	scriptRectCollisionModule.AddComponent<ScriptComponent>("PongTest/RectCollisionModule.lua");
 }
 
 YEASTEM_END
@@ -73,23 +62,20 @@ int main(int argc, char* argv[])
 		std::cout << "SDL could not be initialized: " << SDL_GetError();
 	}
 
-	int flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
-	SDL_Window* window = SDL_CreateWindow(
-		"Yeastem!",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		1350, 600, flags
-	);
+	WindowInfoData windowData;
+	windowData.Title = "Yeastem!";
+	windowData.Width = 1350;
+	windowData.Height = 600;
+	windowData.Flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+	Application::Init(windowData);
 
 #if YEASTEM_COLOURLESS
 	MakeWindowTransparent(window, RGB(255, 0, 255));
 	SDL_SetWindowAlwaysOnTop(window, SDL_TRUE);
 #endif
 
-	Application::AttachWindow(window);
-	Application::CreateGLContext();
-	Application::InitImGui();
 
-	AttachObjects();
+	AttachEntities();
 
 	Application::Run();
 

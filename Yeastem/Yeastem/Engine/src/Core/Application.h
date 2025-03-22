@@ -5,8 +5,19 @@
 
 #include "ResourceManager.h"
 #include "Scene/Scene.h"
+#include "Scene/Entity.h"
 
 YEASTEM_BEGIN
+
+struct WindowInfoData
+{
+	const char* Title;
+	int Width = 0;
+	int Height = 0;
+	int Flags = 0;
+	int X = SDL_WINDOWPOS_UNDEFINED;
+	int Y = SDL_WINDOWPOS_UNDEFINED;
+};
 
 class Application
 {
@@ -18,10 +29,11 @@ public:
 	}
 
 	static void SetupGLFlags() { Get().setupGlFlags(); }
-	static void AttachWindow(SDL_Window* window) { Get().m_Window = window; }
 	static void CreateGLContext() { Get().createGLContext(); }
 	static void InitImGui() { Get().initImGui(); }
 	static ResourceManager& GetResourceManager() { return Get().m_ResourceManager; }
+
+	static void Init(const WindowInfoData& windowInfo) { Get().init(windowInfo); }
 
 	static void Run() { return Get().run(); }
 
@@ -32,6 +44,8 @@ public:
 	bool IsRunning = false;
 
 private:
+	void init(const WindowInfoData& windowInfo);
+
 	void handleEvents(SDL_Event& m_events);
 
 	void setupGlFlags() const;

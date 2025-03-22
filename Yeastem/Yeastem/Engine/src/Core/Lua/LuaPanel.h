@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LuaAPI/Lua.h"
+#include "LuaAPI/LuaState.h"
 
 YEASTEM_BEGIN
 

@@ -1,18 +1,14 @@
 #include "yst_pch.h"
 
-#include "RendererAPI.h"
+#include "Renderer.h"
 
 #include "FileIO/FileIO.h"
 
-#include "Shape.h"
-
 YEASTEM_BEGIN
 
-template struct Renderable<QuadVertex>;
+static RenderBatch<QuadVertex, 4> s_QuadData;
 
-static RenderBatch s_QuadData;
-
-void BatchRenderer::Init(ResourceManager& resourceManager)
+void Renderer::Init(ResourceManager& resourceManager)
 {
 	VertexBufferLayout layout;
 	layout.Push<float>(2);
@@ -41,6 +37,16 @@ void BatchRenderer::Init(ResourceManager& resourceManager)
 		indexOffset += 4;
 	}
 
+	s_QuadData.DefaultVertexPositions[0] = { -0.5f, -0.5f, };
+	s_QuadData.DefaultVertexPositions[1] = {  0.5f, -0.5f, };
+	s_QuadData.DefaultVertexPositions[2] = {  0.5f,  0.5f, };
+	s_QuadData.DefaultVertexPositions[3] = { -0.5f,  0.5f, };
+
+	s_QuadData.DefaultTexturePositions[0] = { 0.0f, 0.0f };
+	s_QuadData.DefaultTexturePositions[1] = { 1.0f, 0.0f };
+	s_QuadData.DefaultTexturePositions[2] = { 1.0f, 1.0f };
+	s_QuadData.DefaultTexturePositions[3] = { 0.0f, 1.0f };
+
 	s_QuadData.VertexBufferPtr = std::make_unique<VertexBuffer>(nullptr, static_cast<uint32_t>(s_QuadData.MaxVertices * sizeof(QuadVertex)));
 	s_QuadData.IndexBufferPtr = std::make_unique<IndexBuffer>(nullptr, s_QuadData.MaxIndices);
 
@@ -48,12 +54,17 @@ void BatchRenderer::Init(ResourceManager& resourceManager)
 	s_QuadData.LayoutPtr->AddBuffer(*s_QuadData.VertexBufferPtr, layout);
 }
 
-void BatchRenderer::SetQuadShader(ObjectID shaderID)
+void Renderer::SetQuadShader(ObjectID shaderID)
 {
 	s_QuadData.ShaderResource = shaderID;
 }
 
-void BatchRenderer::BeginScene(ResourceManager& resourceManager) const
+ObjectID Renderer::GetQuadShaderID()
+{
+	return s_QuadData.ShaderResource;
+}
+
+void Renderer::BeginScene(ResourceManager& resourceManager)
 {
 	s_QuadData.VertexProgressPtr = s_QuadData.VerticesArrayPtr;
 	s_QuadData.IndexCount = 0;
@@ -66,22 +77,17 @@ void BatchRenderer::BeginScene(ResourceManager& resourceManager) const
 	resourceManager.Shaders.Get(s_QuadData.ShaderResource).SetUniform1iv("u_textures", 16, textureUnits);
 }
 
-ObjectID BatchRenderer::GetQuadShaderID()
+void Renderer::Submit(
+	const RenderQuadComponent& renderable, const TransformComponent& transform,
+	ResourceManager& resourceManager, float windowWidth, float windowHeight)
 {
-	return s_QuadData.ShaderResource;
-}
-
-void BatchRenderer::Submit(Shape<QuadVertex>& quad, ResourceManager& resourceManager, float windowWidth, float windowHeight) const
-{
-	Renderable<QuadVertex>& quadRenderable = quad.GetRenderable();
-
 	if (s_QuadData.VertexCount >= 400 || s_QuadData.TextureCount >= 16)
 	{
 		EndScene(resourceManager);
 		BeginScene(resourceManager);
 	}
 
-	ObjectID curTextureID = quadRenderable.Textures[quadRenderable.CurrentTexture];
+	ObjectID curTextureID = renderable.Textures[renderable.CurrentTexture];
 	Texture& curTexture = resourceManager.Textures.Get(curTextureID);
 
 	if (!curTexture.isBound() || s_QuadData.BoundTextures[curTexture.getBoundSlot()] != curTextureID)
@@ -93,27 +99,22 @@ void BatchRenderer::Submit(Shape<QuadVertex>& quad, ResourceManager& resourceMan
 	}
 
 	// Add Vertices
-	for (int i = 0; i < quadRenderable.VertexList.size(); i++)
+	for (int i = 0; i < 4; i++)
 	{
-		*s_QuadData.VertexProgressPtr = quadRenderable.VertexList[i];
-		s_QuadData.VertexProgressPtr->Position = quad.GetVertexPosition(i, windowWidth, windowHeight);
+		Vector2 pos = transform.TransformPoint(s_QuadData.DefaultVertexPositions[i] * renderable.Size);
+		pos /= Vector2(windowWidth * 0.5f, windowHeight * -0.5f);
+		pos += Vector2(-1.0f, 1.0f);
+		s_QuadData.VertexProgressPtr->Position = pos;
+		s_QuadData.VertexProgressPtr->Texture = s_QuadData.DefaultTexturePositions[i];
 		s_QuadData.VertexProgressPtr->TextureIndex = static_cast<float>(curTexture.getBoundSlot());
 		s_QuadData.VertexProgressPtr++;
 		s_QuadData.VertexCount++;
 	}
 
-	//// Generic - Add Indices (Not used for Sprites)
-	//for (const IndexBuffer::Type& index : quadRenderable.IndexList)
-	//{
-	//	*s_QuadData.IndexProgressPtr = index + s_QuadData.VertexCount;
-	//	s_QuadData.IndexProgressPtr++;
-	//	s_QuadData.IndexCount++;
-	//}
-
 	s_QuadData.IndexCount += 6;
 }
 
-void BatchRenderer::EndScene(ResourceManager& resourceManager) const
+void Renderer::EndScene(ResourceManager& resourceManager)
 {
 	s_QuadData.VertexBufferPtr->UpdateBuffer(s_QuadData.VerticesArrayPtr);
 	s_QuadData.IndexBufferPtr->UpdateBuffer(s_QuadData.IndicesArrayPtr);

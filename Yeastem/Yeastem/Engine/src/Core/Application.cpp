@@ -35,6 +35,21 @@ void Application::createGLContext()
 	m_GLInitialized = true;
 }
 
+void Application::init(const WindowInfoData& windowInfo)
+{
+	SetupGLFlags();
+
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		YEASTEM_ERROR("SDL could not be initialized: " << SDL_GetError());
+
+	m_Window = SDL_CreateWindow(windowInfo.Title, windowInfo.X, windowInfo.Y, windowInfo.Width, windowInfo.Height, windowInfo.Flags);
+
+	CreateGLContext();
+	InitImGui();
+
+	CurrentScene.Init(m_ResourceManager);
+}
+
 void Application::handleEvents(SDL_Event& m_events)
 {
 	YEASTEM_ScopedProfiler("APPLICATION: Events");
@@ -62,8 +77,6 @@ void Application::handleEvents(SDL_Event& m_events)
 
 void Application::SetupRender()
 {
-	CurrentScene.Init(m_ResourceManager);
-
 	SDL_GetWindowSize(m_Window, &m_WindowSize.w, &m_WindowSize.h);
 
 	m_ImGuiLayer->AddWindow([&](bool& isVisible) {

@@ -5,7 +5,13 @@
 #include "LuaAPI/Lua.h"
 #include "Core/Scene/Profiling.h"
 
+#include "LuaScene.h"
+
+#include <entt.hpp>
+
 YEASTEM_BEGIN
+
+class Entity;
 
 class Scene
 {
@@ -14,16 +20,11 @@ public:
 
 public:
 	void Init(ResourceManager& resourceManager);
-	void Lua_Init();
-	void Lua_AttachCFunction(int(*nativeFunction)(lua_State*), const char* functionName);
-	void Lua_ExcecuteScript(const std::string& file);
-	void Lua_AttachScript(const std::string& file);
 	void Update(float DeltaTime);
 	void Render(ResourceManager& resourceManager);
 	void ProcessEvent(SDL_Event& evt);
 
-	ObjectID CreateObject();
-	Shape<QuadVertex>& GetObjectWithID(ObjectID id);
+	Entity CreateEntity(const char* NodePath = "", const char* Name = "");
 
 	void CreateFrameBuffer(uint32_t width, uint32_t height);
 	void RecreateFrameBuffer(uint32_t width, uint32_t height);
@@ -31,8 +32,6 @@ public:
 	bool DoesFrameBufferExist() const { return m_FrameBuffer != nullptr; }
 	uint32_t GetFrameBufferColourAttachmentID() const { return m_FrameBuffer->GetColourAttachmentID(); }
 	uint32_t GetFrameBufferDepthAttachmentID() const { return m_FrameBuffer->GetDepthAttachmentID(); }
-
-	void SetQuadShader(ObjectID shaderID) { m_Renderer.SetQuadShader(shaderID); }
 
 public:
 	bool IsRunning = false;
@@ -43,24 +42,27 @@ public:
 	ImVec2 SceneSize;
 
 private:
-	void UpdateObjectFromScripts(ObjectID shapeIdx);
-	void UpdateScriptsFromObjects(ObjectID shapeIdx);
-	void AddKeyEnum(const char* keyName, uint32_t keyCode);
-	void Lua_RebuildState();
-	void CreateObjectInScript(Shape<QuadVertex>& shape, const std::string& str);
+	void InitScripts();
+	void UpdateScriptObjects();
+
+	template<typename Component>
+	void SetScriptAllComponents();
+	template<typename Component>
+	void GetScriptAllComponents();
 
 private:
 	Yeastem::EventHandler m_EventHandler;
-	BatchRenderer m_Renderer;
-	LuaState m_LuaState;
-	int m_ScriptCount = -1; // -1 Represents Uninitialised
+	LuaScene m_LuaScene;
 
 	std::unique_ptr<FrameBuffer> m_FrameBuffer;
 
-	std::vector<std::string> m_Scripts;
+	entt::registry m_Registry;
 
-	std::unordered_map<ObjectID, Shape<QuadVertex>> m_Shapes;
+	bool m_ScriptsInitiated = false;
+
+private:
+	friend class Entity;
+	friend class LuaScene;
 };
 
 YEASTEM_END
-

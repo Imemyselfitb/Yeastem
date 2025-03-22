@@ -7,9 +7,3 @@ extern "C"
 	#include "lauxlib.h"
 }
 
-// LUA API, YEASTEM DEFINED FILES
-#include "LuaAPI/LuaState.h"
-
-#include "FileIO/FileIO.h"
-
-

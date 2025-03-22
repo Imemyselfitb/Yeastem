@@ -147,7 +147,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Application.h" />
-    <ClInclude Include="src\Core\EntryPoint.h" />
     <ClInclude Include="src\Core\ImGuiAPI.h" />
     <ClInclude Include="src\Core\ImGuiWindow.h" />
     <ClInclude Include="src\Core\Lua\LuaPanel.h" />
@@ -160,12 +159,14 @@
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\Core\OpenGL\Buffers\VertexBufferLayout.h" />
     <ClInclude Include="src\Core\OpenGL\Include.h" />
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h" />
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\Shape.h" />
+    <ClInclude Include="src\Core\OpenGL\Renderer.h" />
     <ClInclude Include="src\Core\OpenGL\Shader.h" />
     <ClInclude Include="src\Core\OpenGL\Texture.h" />
     <ClInclude Include="src\Core\ResourceManager.h" />
+    <ClInclude Include="src\Core\Scene\Components.h" />
+    <ClInclude Include="src\Core\Scene\Entity.h" />
     <ClInclude Include="src\Core\Scene\Events.h" />
+    <ClInclude Include="src\Core\Scene\LuaScene.h" />
     <ClInclude Include="src\Core\Scene\Profiling.h" />
     <ClInclude Include="src\Core\Scene\Scene.h" />
     <ClInclude Include="src\Core\Timestep.h" />
@@ -187,14 +188,13 @@
     <ClCompile Include="src\Core\OpenGL\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp" />
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp" />
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\Shape.cpp" />
+    <ClCompile Include="src\Core\OpenGL\Renderer.cpp" />
     <ClCompile Include="src\Core\OpenGL\Shader.cpp" />
     <ClCompile Include="src\Core\OpenGL\Texture.cpp" />
     <ClCompile Include="src\Core\Scene\Events.cpp" />
+    <ClCompile Include="src\Core\Scene\LuaScene.cpp" />
     <ClCompile Include="src\Core\Scene\Profiling.cpp" />
     <ClCompile Include="src\Core\Scene\Scene.cpp" />
-    <ClCompile Include="src\Core\main.cpp" />
     <ClCompile Include="src\FileIO\FileReading.cpp" />
     <ClCompile Include="src\LuaAPI\LuaState.cpp" />
     <ClCompile Include="src\Platforms\Windows\Window.cpp" />

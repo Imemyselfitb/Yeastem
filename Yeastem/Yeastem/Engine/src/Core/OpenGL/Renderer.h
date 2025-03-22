@@ -11,6 +11,8 @@
 
 #include "Core/ResourceManager.h"
 
+#include "Core/Scene/Components.h"
+
 YEASTEM_BEGIN
 
 struct QuadVertex
@@ -21,42 +23,32 @@ struct QuadVertex
 };
 
 /// <summary>
-/// Renderable (used for Shape, Lines, etc.)
-/// </summary>
-/// <typeparam name="VertexType"></typeparam>
-template<typename VertexType>
-struct Renderable
-{
-	uint32_t CurrentTexture = 0;
-
-	std::vector<ObjectID> Textures{};
-	std::vector<VertexType> VertexList{};
-	std::vector<IndexBuffer::Type> IndexList{};
-};
-
-/// <summary>
 /// Batch for Rendering under one Draw Call
 /// </summary>
+template <typename VertexType, uint32_t VertexPerShape>
 struct RenderBatch
 {
 	std::shared_ptr<VertexArray> LayoutPtr;
 	std::shared_ptr<VertexBuffer> VertexBufferPtr;
 	std::shared_ptr<IndexBuffer> IndexBufferPtr;
 
-	ObjectID ShaderResource;
+	ObjectID ShaderResource{ 0 };
 
 	uint32_t IndexCount = 0;
 	uint32_t VertexCount = 0;
 	uint32_t TextureCount = 0;
 	IndexBuffer::Type* IndicesArrayPtr = nullptr;
 
-	QuadVertex* VerticesArrayPtr = nullptr;
-	QuadVertex* VertexProgressPtr = nullptr;
+	VertexType* VerticesArrayPtr = nullptr;
+	VertexType* VertexProgressPtr = nullptr;
 
 	uint32_t MaxVertices = 0;
 	uint32_t MaxIndices = 0;
 
-	ObjectID BoundTextures[16];
+	ObjectID BoundTextures[16]{ 0 };
+
+	Vector2 DefaultVertexPositions[VertexPerShape];
+	Vector2 DefaultTexturePositions[VertexPerShape];
 };
 
 template<typename VertexType>
@@ -65,22 +57,21 @@ class Shape;
 /// <summary>
 /// Renderer which combines data into a single Draw Call!
 /// </summary>
-class BatchRenderer
+class Renderer
 {
 public:
-	BatchRenderer() {}
+	Renderer() {}
 
 public:
-	void Init(ResourceManager& resourceManager);
-	void SetQuadShader(ObjectID shaderID);
+	static void Init(ResourceManager& resourceManager);
 
-	void BeginScene(ResourceManager& resourceManager) const;
+	static void BeginScene(ResourceManager& resourceManager);
+	static void EndScene(ResourceManager& resourceManager);
 
-	void Submit(Shape<QuadVertex>& renderable, ResourceManager& resourceManager, float windowWidth, float windowHeight) const;
+	static void Submit(const RenderQuadComponent& renderable, const TransformComponent& transform, ResourceManager& resourceManager, float windowWidth, float windowHeight);
 
-	void EndScene(ResourceManager& resourceManager) const;
-
-	ObjectID GetQuadShaderID();
+	static void SetQuadShader(ObjectID shaderID);
+	static ObjectID GetQuadShaderID();
 };
 
 YEASTEM_END

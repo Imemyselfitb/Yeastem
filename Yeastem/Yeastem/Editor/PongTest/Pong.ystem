@@ -10,7 +10,6 @@ texture="Paddle.png"
 position=150,250
 texture="Ball.png"
 
-[stem type="script" src="Game.lua"]
 [stem type="script" src="Panels.lua"]
 [stem type="script" src="RectCollisionModule.lua"]
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Math/Vector2.h"
-#include "LuaAPI/Lua.h"
+#include "LuaAPI/LuaState.h"
 
 YEASTEM_BEGIN
 

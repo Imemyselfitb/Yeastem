@@ -1,3 +1,5 @@
+print("Hello from Rect... .lua!")
+
 function CheckCollisionBetweenRectangles(ObjectA, ObjectB)
 	local left1 = ObjectA.Position.x - ObjectA.width / 2
 	local right1 = ObjectA.Position.x + ObjectA.width / 2

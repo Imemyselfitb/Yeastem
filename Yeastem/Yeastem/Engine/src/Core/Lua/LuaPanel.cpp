@@ -1,7 +1,6 @@
 #include "yst_pch.h"
 
 #include "LuaPanel.h"
-#include "Core/Application.h"
 
 YEASTEM_BEGIN
 

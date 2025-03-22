@@ -9,6 +9,4 @@
 
 #include "Texture.h"
 
-#include "RenderAPI/RendererAPI.h"
-
-#include "RenderAPI/Shape.h"
+#include "Renderer.h"

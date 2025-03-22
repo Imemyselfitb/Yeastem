@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Lua.h"
+#include "Core/Scene/Components.h"
+
 YEASTEM_BEGIN
 
 class LuaState
@@ -23,14 +26,18 @@ public:
 	operator lua_State* () { return m_State; }
 
 public:
-	bool ExecuteScript(const std::string& script);
-	bool ExecuteScript(const std::string& script, const std::string& fileName);
-	bool executeScriptFromFile(const std::string& file);
-	void addNativeFunction(int(*nativeFunction)(lua_State*), const char* functionName);
+	bool ExecuteScript(const ScriptComponent& scriptComponent, const TagComponent& tagComponent);
+	void AddNativeFunction(int(*nativeFunction)(lua_State*), const char* functionName);
 	void CreateNewState();
+	void PrintLuaValue(int index, uint32_t indentationLevel = 0);
 
 public:
 	~LuaState() { if (m_HandleOwnership) lua_close(m_State); }
+
+private:
+	bool ExecuteScriptModifyEnv(const char* script, const ScriptComponent& scriptComponent, const TagComponent& tagComponent);
+	bool LoadScript(const char* script);
+	void PrintLuaTable(int index, uint32_t indentationLevel);
 
 private:
 	lua_State* m_State;

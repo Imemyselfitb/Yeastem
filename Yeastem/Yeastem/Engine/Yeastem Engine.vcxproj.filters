@@ -39,9 +39,6 @@
     <ClInclude Include="src\Core\Application.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EntryPoint.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\ImGuiAPI.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -78,10 +75,7 @@
     <ClInclude Include="src\Core\OpenGL\Include.h">
       <Filter>Core\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\RendererAPI.h">
-      <Filter>Core\OpenGL\RenderAPI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\OpenGL\RenderAPI\Shape.h">
+    <ClInclude Include="src\Core\OpenGL\Renderer.h">
       <Filter>Core\OpenGL\RenderAPI</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\OpenGL\Shader.h">
@@ -93,7 +87,16 @@
     <ClInclude Include="src\Core\ResourceManager.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\Scene\Components.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Scene\Entity.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Core\Scene\Events.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Scene\LuaScene.h">
       <Filter>Core\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Scene\Profiling.h">
@@ -151,10 +154,7 @@
     <ClCompile Include="src\Core\OpenGL\Buffers\VertexBuffer.cpp">
       <Filter>Core\OpenGL\Buffers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\RendererAPI.cpp">
-      <Filter>Core\OpenGL\RenderAPI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\OpenGL\RenderAPI\Shape.cpp">
+    <ClCompile Include="src\Core\OpenGL\Renderer.cpp">
       <Filter>Core\OpenGL\RenderAPI</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\OpenGL\Shader.cpp">
@@ -166,14 +166,14 @@
     <ClCompile Include="src\Core\Scene\Events.cpp">
       <Filter>Core\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Core\Scene\LuaScene.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\Core\Scene\Profiling.cpp">
       <Filter>Core\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Scene\Scene.cpp">
       <Filter>Core\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\main.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\FileIO\FileReading.cpp">
       <Filter>FileIO</Filter>
