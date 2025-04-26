@@ -19,6 +19,9 @@ static GLuint IBO;
 using VertexBufferType = float;
 using IndexBufferType = unsigned int;
 
+static std::vector<VertexBufferType> vertices;
+static std::vector<IndexBufferType> indices;
+
 void APIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	std::cout << "GL CALLBACK: " << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "") <<
@@ -35,7 +38,7 @@ void addRenderObject(VertexBufferType verts[], IndexBufferType inds[])
 	// Add indices to the indices vector
 	for (int i = 0; i < 6; i++)
 	{
-		indices.push_back(inds[i] + (vertices.size() / 2));
+		indices.push_back(inds[i] + (IndexBufferType)(vertices.size() / 2));
 	}
 
 	// Add vertices to the vertices vector
@@ -94,7 +97,7 @@ void RenderOpenGlScene()
 #if USING_IBO
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	glDrawElements(GL_TRIANGLES, indices.size() * sizeof(IndexBufferType), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size() * sizeof(IndexBufferType), GL_UNSIGNED_INT, nullptr);
 #else
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -106,20 +109,16 @@ int main(int argc, char* argv[])
 {
 	SetOpenGlFlags();
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (!SDL_Init(SDL_INIT_VIDEO))
 	{
 		std::cout << "SDL could not be initialized: " << SDL_GetError();
 	}
 
-	int flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
-	SDL_Window* Window = SDL_CreateWindow(
-		"Run Time!",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		600, 600, flags
-	);
+	int flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
+	SDL_Window* Window = SDL_CreateWindow("Run Time!", 600, 600, flags);
 
 	SDL_GLContext Context = SDL_GL_CreateContext(Window);
-	gladLoadGLLoader(SDL_GL_GetProcAddress);
+	gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 	SDL_GL_MakeCurrent(Window, Context);
 
 	SDL_Event Events;
@@ -135,7 +134,7 @@ int main(int argc, char* argv[])
 		frame++;
 		while (SDL_PollEvent(&Events))
 		{
-			if (Events.type == SDL_QUIT)
+			if (Events.type == SDL_EVENT_QUIT)
 			{
 				Running = false;
 				break;
@@ -161,15 +160,13 @@ int main(int argc, char* argv[])
 			SDL_ClearError();  // Clear the error message after retrieving it
 		}
 
-		std::cout << frame << "\n";
-
 		SDL_GL_SwapWindow(Window);
 	}
 
 	glDeleteBuffers(1, &IBO);
 	glDeleteBuffers(1, &VBO);
 
-	SDL_GL_DeleteContext(Context);
+	SDL_GL_DestroyContext(Context);
 	SDL_DestroyWindow(Window); 
 	SDL_Quit();
 

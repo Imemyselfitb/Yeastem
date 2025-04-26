@@ -1,0 +1,4 @@
+[root id=0 type="node" name="StartStem"]
+
+[extstem id=1 name="Pong" parent=0]
+src="Pong.ystem"

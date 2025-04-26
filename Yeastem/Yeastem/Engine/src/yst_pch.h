@@ -1,19 +1,13 @@
-#pragma once
+#pragma once	
 
 #define APIENTRY
-
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <glad/glad.h>
 
-#include <stb_image.h>
-
 #include <imgui.h>
-#include <imgui_impl_sdl2.h>
+#include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
 
-#include <chrono>
-
-#include <regex>
 #include <string>
 #include <fstream>
 #include <sstream>

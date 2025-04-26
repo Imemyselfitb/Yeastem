@@ -1,4 +1,7 @@
 [submodule "Yeastem/Dependancies/ImGui"]
 	path = Yeastem/Dependancies/ImGui
-	url = https://github.com/ocornut/imgui.git
+	url = https://github.com/Imemyselfitb/ImGui.git
 	branch = docking
+[submodule "Yeastem/Dependancies/SDL3"]
+	path = Yeastem/Dependancies/SDL3
+	url = https://github.com/Imemyselfitb/SDL3.git

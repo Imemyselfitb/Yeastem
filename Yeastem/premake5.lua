@@ -15,16 +15,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- include dirs relative to the root (solution) directory
 IncludeDir = {}
-IncludeDir["SDL2"] = "Dependancies/SDL2/include"
+IncludeDir["SDL3"] = "Dependancies/SDL3/include"
 IncludeDir["stb_image"] = "Dependancies/stb_image/include"
 IncludeDir["Glad"] = "Dependancies/Glad/include"
 IncludeDir["Lua"] = "Dependancies/Lua/src"
 IncludeDir["EnTT"] = "Dependancies/EnTT/include"
 IncludeDir["ImGui"] = "Dependancies/ImGui/src"
-IncludeDir["glm"] = "Dependancies/glm/include"
-
-LibraryDir = {}
-LibraryDir["SDL2"] = "Dependancies/SDL2/lib/"
 
 include "Dependancies"
 
@@ -32,16 +28,20 @@ EngineLocation = "Yeastem/Engine"
 
 project "Yeastem Engine"
 	kind "StaticLib"
-	
-	location ( EngineLocation )
-
 	language "C++"
+	location (EngineLocation)
 
 	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "yst_pch.h"
 	pchsource (EngineLocation .. "/src/yst_pch.cpp")
+
+	defines
+	{
+		"SDL_MAIN_HANDLED",
+		"SDL_STATIC"
+	}
 
 	files
 	{
@@ -52,47 +52,36 @@ project "Yeastem Engine"
 	includedirs
 	{
 		"$(SolutionDir)" .. EngineLocation .. "/src", 
-		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.SDL3}", 
 		"$(SolutionDir)%{IncludeDir.stb_image}", 
 		"$(SolutionDir)%{IncludeDir.Lua}", 
 		"$(SolutionDir)%{IncludeDir.Glad}", 
 		"$(SolutionDir)Dependancies/Glad/src", 
 		"$(SolutionDir)%{IncludeDir.EnTT}", 
 		"$(SolutionDir)%{IncludeDir.ImGui}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}/backends",
-		"$(SolutionDir)%{IncludeDir.glm}"
-	}
-	 
-	libdirs
-	{
-		"$(SolutionDir)%{LibraryDir.SDL2}x64"
+		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
 	}
 
-	links 
+	links
 	{
-		-- SDL Libraries
-		"SDL2.lib", 
-		"SDL2main.lib", 
-		-- SDL Projects
+		"SDL3",
 		"stb_image", 
-
-		-- Projects
 		"Glad", 
 		"Lua", 
 		"ImGui"
 	}
 
+	ignoredefaultlibraries { "MSVCRT" }
+
 	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
-		systemversion "latest"
 		defines "YST_PLATFORM_WINDOWS"
 
 	filter "system:linux"
 		cppdialect "C++latest"
 		staticruntime "On"
-		systemversion "latest"
 		defines "YST_PLATFORM_LINUX"
 
 	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
@@ -127,34 +116,40 @@ project "Yeastem Editor"
 	{
 		"$(SolutionDir)" .. m_Location .. "/src",
 		"$(SolutionDir)" .. EngineLocation .. "/src",
-		"$(SolutionDir)Yeastem",
-		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.SDL3}", 
 		"$(SolutionDir)%{IncludeDir.stb_image}", 
 		"$(SolutionDir)%{IncludeDir.Lua}", 
 		"$(SolutionDir)%{IncludeDir.Glad}", 
 		"$(SolutionDir)Dependancies/Glad/src", 
 		"$(SolutionDir)%{IncludeDir.EnTT}", 
 		"$(SolutionDir)%{IncludeDir.ImGui}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}/backends",
-		"$(SolutionDir)%{IncludeDir.glm}"
+		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
 	}
 
-	links 
+	links
 	{
-		"Yeastem Engine"
+		"Yeastem Engine",
+		"SDL3",
+		"ImGui"
+	}
+
+	ignoredefaultlibraries { "MSVCRT" }
+
+	defines
+	{
+		"SDL_MAIN_HANDLED",
+		"SDL_STATIC"
 	}
 
 	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
-		systemversion "latest"
 		defines "YST_PLATFORM_WINDOWS"
 
 	filter "system:linux"
 		cppdialect "C++latest"
 		staticruntime "On"
-		systemversion "latest"
 		defines "YST_PLATFORM_LINUX"
 
 	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
@@ -191,20 +186,21 @@ project "Yeastem Runtime"
 	includedirs
 	{
 		"$(SolutionDir)" .. m_Location .. "/src", 
-		"$(SolutionDir)%{IncludeDir.SDL2}", 
+		"$(SolutionDir)%{IncludeDir.SDL3}", 
 		"$(SolutionDir)%{IncludeDir.Glad}", 
 		"$(SolutionDir)Dependancies/Glad/src"
 	}
 
 	libdirs
 	{
-		"$(SolutionDir)%{LibraryDir.SDL2}x64"
+		"Dependancies/SDL3/lib/x64/%{cfg.buildcfg}", 
+		"Dependancies/Glad/lib/x64/%{cfg.buildcfg}"
 	}
 
-	links 
+	links
 	{
-		"SDL2.lib", 
-		"SDL2main.lib"
+		"SDL3",
+		"Glad"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
@@ -212,7 +208,6 @@ project "Yeastem Runtime"
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
-		systemversion "latest"
 
 	filter "configurations:Debug"
 		defines "YST_DEBUG"
@@ -248,10 +243,15 @@ project "YSS Compiler"
 		"$(SolutionDir)" .. m_Location .. "/src", 
 	}
 
+	defines
+	{
+		"SDL_MAIN_HANDLED",
+		"SDL_STATIC"
+	}
+
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
-		systemversion "latest"
 
 	filter "configurations:Debug"
 		defines "YST_DEBUG"

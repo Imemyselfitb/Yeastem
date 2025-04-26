@@ -1,114 +1,119 @@
 print("Hello from Game.lua!")
 
+Ball = Yeastem.script.parent.Ball
+Paddle1 = Yeastem.script.parent.Paddle1
+Paddle2 = Yeastem.script.parent.Paddle2
+
 local function MovePaddles(deltaTime)
-	if Keys.IsKeyDown(Keys.UpArrow) and Yeastem.Stem.Paddle2.Position.y - Yeastem.Stem.Paddle2.height / 2 > 0 then
-		Yeastem.Stem.Paddle2.Position.y = Yeastem.Stem.Paddle2.Position.y - deltaTime * 500
+	if Keys.IsKeyDown(Keys.UpArrow) and Paddle2.position.y - Paddle2.height / 2 > 0 then
+		Paddle2.position.y = Paddle2.position.y - deltaTime * 500
 	end
-	if Keys.IsKeyDown(Keys.DownArrow) and Yeastem.Stem.Paddle2.Position.y + Yeastem.Stem.Paddle2.height / 2 < Window.height then
-		Yeastem.Stem.Paddle2.Position.y = Yeastem.Stem.Paddle2.Position.y + deltaTime * 500
+	if Keys.IsKeyDown(Keys.DownArrow) and Paddle2.position.y + Paddle2.height / 2 < Window.height then
+		Paddle2.position.y = Paddle2.position.y + deltaTime * 500
 	end
-	if Keys.IsKeyDown("W") and Yeastem.Stem.Paddle1.Position.y - Yeastem.Stem.Paddle1.height / 2 > 0 then
-		Yeastem.Stem.Paddle1.Position.y = Yeastem.Stem.Paddle1.Position.y - deltaTime * 500
+	if Keys.IsKeyDown("W") and Paddle1.position.y - Paddle1.height / 2 > 0 then
+		Paddle1.position.y = Paddle1.position.y - deltaTime * 500
 	end
-	if Keys.IsKeyDown("S") and Yeastem.Stem.Paddle1.Position.y + Yeastem.Stem.Paddle1.height / 2 < Window.height then
-		Yeastem.Stem.Paddle1.Position.y = Yeastem.Stem.Paddle1.Position.y + deltaTime * 500
+	if Keys.IsKeyDown("S") and Paddle1.position.y + Paddle1.height / 2 < Window.height then
+		Paddle1.position.y = Paddle1.position.y + deltaTime * 500
 	end
 
-	Yeastem.Stem.Paddle1.Position.x = 150;
-	Yeastem.Stem.Paddle2.Position.x = Window.width - 150;
+	Paddle1.position.x = 150;
+	Paddle2.position.x = Window.width - 150;
 end
 
 local speed = 350
 local vel = Vector2.new(1, 0)
 local CheckCollisionBetweenRectangles = nil
 
-local LeftScore = 0
-local RightScore = 0
+local leftScore = 0
+local rightScore = 0
 
 local function ResetGame()
-	Yeastem.Stem.Paddle1.Position = Vector2.new(Yeastem.Stem.Paddle1.StartPosition)
-	Yeastem.Stem.Paddle2.Position = Vector2.new(Yeastem.Stem.Paddle2.StartPosition)
+	Paddle1.position = Vector2.new(Paddle1.Startposition)
+	Paddle2.position = Vector2.new(Paddle2.Startposition)
 
-	Yeastem.Stem.Ball.Position.x = Window.width / 2;
-	Yeastem.Stem.Ball.Position.y = Window.height / 2;
+	Ball.position.x = Window.width / 2;
+	Ball.position.y = Window.height / 2;
 
 	speed = 350
 	vel = Vector2.new(1, 0)
 
 	local extraInfo = ""
-	if LeftScore ~= RightScore then	
-		extraInfo = " to " .. ((LeftScore > RightScore) and "LEFT" or "RIGHT")
+	if leftScore ~= rightScore then	
+		extraInfo = " to " .. ((leftScore > rightScore) and "LEFT" or "RIGHT")
 	end
 
-	local text = "Score: " .. tostring(LeftScore) .. " - " .. tostring(RightScore) .. extraInfo
+	local text = "Score: " .. tostring(leftScore) .. " - " .. tostring(rightScore) .. extraInfo
 	
 	-- panels.lua
 	UpdatePanels(text)
 end
 
-local function MoveBall(deltaTime)
-	Yeastem.Stem.Ball.Position = Yeastem.Stem.Ball.Position + vel * deltaTime * speed
-	Yeastem.Stem.Ball.dir = math.atan(vel.y, vel.x) * 180 / 3.141592
+local function MoveBall(delta)
+	Ball.position = Ball.position + vel * delta * speed
+	Ball.dir = math.atan(vel.y, vel.x) * 180 / 3.141592
 
-	if Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Ball.height / 2 < 0 then
+	if Ball.position.y - Ball.height / 2 < 0 then
 		vel.y = 0 - vel.y
-		Yeastem.Stem.Ball.Position = Yeastem.Stem.Ball.Position + vel * deltaTime * speed
-	elseif Yeastem.Stem.Ball.Position.y + Yeastem.Stem.Ball.height / 2 > Window.height then
+		Ball.position = Ball.position + vel * delta * speed
+	elseif Ball.position.y + Ball.height / 2 > Window.height then
 		vel.y = 0 - vel.y
-		Yeastem.Stem.Ball.Position = Yeastem.Stem.Ball.Position + vel * deltaTime * speed
+		Ball.position = Ball.position + vel * delta * speed
 	end
 
-	if Yeastem.Stem.Ball.Position.x - Yeastem.Stem.Ball.width / 2 < 0 then
+	if Ball.position.x - Ball.width / 2 < 0 then
 		print("RIGHT Scores!")
-		RightScore = RightScore + 1
+		rightScore = rightScore + 1
 		ResetGame()
-	elseif Yeastem.Stem.Ball.Position.x + Yeastem.Stem.Ball.width / 2 > Window.width then
+	elseif Ball.position.x + Ball.width / 2 > Window.width then
 		print("LEFT Scores!")
-		LeftScore = LeftScore + 1
+		leftScore = leftScore + 1
 		ResetGame()
 	end
 end
 
 local function CheckCollision()
-	if CheckCollisionBetweenRectangles(Yeastem.Stem.Ball, Yeastem.Stem.Paddle1) then
+	if CheckCollisionBetweenRectangles(Ball, Paddle1) then
 		vel.x = 1
-		vel.y = 0.5 * vel.y + 0.5 * (Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Paddle1.Position.y) / Yeastem.Stem.Paddle1.height
+		vel.y = 0.5 * vel.y + 0.5 * (Ball.position.y - Paddle1.position.y) / Paddle1.height
 		speed = speed + 5
 	end
 
-	if CheckCollisionBetweenRectangles(Yeastem.Stem.Ball, Yeastem.Stem.Paddle2) then
+	if CheckCollisionBetweenRectangles(Ball, Paddle2) then
 		vel.x = -1
-		vel.y = (Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Paddle2.Position.y) / Yeastem.Stem.Paddle2.height
+		vel.y = (Ball.position.y - Paddle2.position.y) / Paddle2.height
 		speed = speed + 5
 	end
 end
 
 local accTime = 0
 
-function Update(deltaTime)
-	if not Yeastem.Stem.Paddle1.StartPosition then
-		CheckCollisionBetweenRectangles = Yeastem.Stem.RectCollisionModule.CheckCollisionBetweenRectangles
-		Yeastem.Stem.Paddle1.StartPosition = Vector2.new(Yeastem.Stem.Paddle1.Position)
-		Yeastem.Stem.Paddle2.StartPosition = Vector2.new(Yeastem.Stem.Paddle2.Position)
-		UpdatePanels = Yeastem.Stem.Panels.UpdatePanels
+function Update(delta)
+	if not Paddle1.Startposition then
+		CheckCollisionBetweenRectangles = Yeastem.script.parent.RectCollisionModule.CheckCollisionBetweenRectangles
+		Paddle1.Startposition = Vector2.new(Paddle1.position)
+		Paddle2.Startposition = Vector2.new(Paddle2.position)
+		UpdatePanels = Yeastem.script.parent.Panels.UpdatePanels
 		print("START!")
 	end
 
-	paddleSpeed1 = 0.0004 * 100
-	paddleSpeed2 = 0.0004 * 100
+	paddleSpeed1 = 0.0004 * 1
+	paddleSpeed2 = 0.0004 * 1
 
-	if math.abs(Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Paddle1.Position.y) > Yeastem.Stem.Paddle1.height / 2 then
-		Yeastem.Stem.Paddle1.Position.y = Yeastem.Stem.Paddle1.Position.y + paddleSpeed1 * (Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Paddle1.Position.y)
+	if math.abs(Ball.position.y - Paddle1.position.y) > Paddle1.height / 2 then
+		Paddle1.position.y = Paddle1.position.y + paddleSpeed1 * (Ball.position.y - Paddle1.position.y)
 	end
 
-	if math.abs(Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Paddle2.Position.y) > Yeastem.Stem.Paddle1.height / 2 then
-		Yeastem.Stem.Paddle2.Position.y = Yeastem.Stem.Paddle2.Position.y + paddleSpeed2 * (Yeastem.Stem.Ball.Position.y - Yeastem.Stem.Paddle2.Position.y)
+	if math.abs(Ball.position.y - Paddle2.position.y) > Paddle1.height / 2 then
+		Paddle2.position.y = Paddle2.position.y + paddleSpeed2 * (Ball.position.y - Paddle2.position.y)
 	end
 
-	MovePaddles(deltaTime)
+	MovePaddles(delta)
 	CheckCollision()
-	MoveBall(deltaTime)
+	MoveBall(delta)
 
-	Yeastem.Stem.Paddle2.Scale = Yeastem.Stem.Paddle2.Scale + math.sin(accTime * 20) * deltaTime * 1;
-	accTime = accTime + deltaTime;
+	--Paddle1.scale = Paddle1.scale + math.sin(accTime * 20) * delta * math.max(rightScore - leftScore, 0);
+	--Paddle2.scale = Paddle2.scale + math.sin(accTime * 20) * delta * math.max(leftScore - rightScore, 0);
+	accTime = accTime + delta;
 end

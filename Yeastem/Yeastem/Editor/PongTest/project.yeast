@@ -3,5 +3,4 @@ version=1.0
 
 [Application]
 name="Pong"
-start_scene="Pong.ystem"
-
+start_stem="StartStem.ystem"
