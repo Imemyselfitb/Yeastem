@@ -1,5 +1,5 @@
 # Yeastem
-The Yeastem Tool
+The Yeastem Game Engine
 
 # About
 Yeastem is a game engine developed by Imemyselfitb. 
