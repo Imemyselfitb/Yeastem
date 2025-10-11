@@ -3,7 +3,7 @@
 YEASTEM_BEGIN
 
 bool MakeWindowTransparent(SDL_Window* window, uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
-int GetWindowData();
+void GetWindowData();
 
 struct Windows
 {

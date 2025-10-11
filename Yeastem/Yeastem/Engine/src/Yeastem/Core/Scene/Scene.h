@@ -17,13 +17,19 @@ class Scene
 {
 public:
 	Scene() {}
+	Scene(const std::filesystem::path& scenePath) {}
 
 public:
-	void Init(ResourceManager& resourceManager);
+	void Init(ObjectID sceneID, ResourceManager& resourceManager);
 	void Update(float DeltaTime);
 	void Render(ResourceManager& resourceManager);
+	ObjectID GetID() const { return m_SceneID; }
 
 	Entity CreateEntity(const char* NodePath = "", const char* Name = "", entt::entity Parent = entt::null);
+	entt::registry& GetRegistry() { return m_Registry; }
+
+	Entity GetRootEntity();
+	void SetRootEntity(entt::entity entity) { m_RootEntity = entity; }
 
 	void CreateFrameBuffer(uint32_t width, uint32_t height);
 	void RecreateFrameBuffer(uint32_t width, uint32_t height);
@@ -32,12 +38,10 @@ public:
 	uint32_t GetFrameBufferColourAttachmentID() const { return m_FrameBuffer->GetColourAttachmentID(); }
 	uint32_t GetFrameBufferDepthAttachmentID() const { return m_FrameBuffer->GetDepthAttachmentID(); }
 
-	EventHandler& GetEventHandler() { return m_EventHandler; }
-	const EventHandler& GetEventHandler() const { return m_EventHandler; }
-	
+	void ResetScripts() { m_ScriptsInitiated = false; m_LuaScene.Recreate(); }
+
 public:
 	bool IsRunning = false;
-	bool IsReset = false;
 
 	uint64_t CurrentTime = 0;
 	Vector2i SceneSize;
@@ -53,14 +57,16 @@ private:
 	void GetScriptAllComponents();
 
 private:
-	EventHandler m_EventHandler;
 	LuaScene m_LuaScene;
 
 	std::unique_ptr<FrameBuffer> m_FrameBuffer;
 
 	entt::registry m_Registry;
+	entt::entity m_RootEntity = entt::null;
 
 	bool m_ScriptsInitiated = false;
+
+	ObjectID m_SceneID = 0;
 
 private:
 	friend class Entity;

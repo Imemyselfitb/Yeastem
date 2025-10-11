@@ -20,6 +20,8 @@ project "Lua"
 		"src/lua.h", 
 		"src/luac.c"
 	}
+
+	buildoptions { "/MP" }
 	
 	filter "system:windows"
 		cppdialect "C++17"

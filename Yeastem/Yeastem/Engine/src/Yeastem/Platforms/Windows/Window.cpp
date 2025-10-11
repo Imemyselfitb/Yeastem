@@ -42,7 +42,6 @@ static BOOL CALLBACK enumWindowCallback(HWND hWnd, LPARAM lparam)
 
     if (err == 0) {
         std::string str(str_buffer);
-        std::cout << str_buffer << std::endl; // Output: Hello, world!
     }
     else {
         std::cerr << "Conversion error" << std::endl;
@@ -75,12 +74,10 @@ static BOOL CALLBACK enumWindowCallback(HWND hWnd, LPARAM lparam)
     return TRUE;
 }
 
-int GetWindowData()
+void GetWindowData()
 {
-    std::cout << "ARGHHHH\n";
     AllWindows.clear();
     EnumWindows(Yeastem::enumWindowCallback, NULL);
-    return 1;
 }
 
 YEASTEM_END

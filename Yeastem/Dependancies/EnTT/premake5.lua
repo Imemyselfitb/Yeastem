@@ -12,7 +12,7 @@ project "EnTT"
 	{
 		"include/entt.hpp"
 	}
-	
+
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"

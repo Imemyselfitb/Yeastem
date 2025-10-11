@@ -4,227 +4,35 @@
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui.h>
-#include <SDL3/SDL_dialog.h>
+#include <imgui_internal.h>
+
 #include <string>
 
 YEASTEM_BEGIN
 
-std::string_view SectionView::getAttribute(std::string_view key) const
+static ProjectManager s_ProjectManager;
+ProjectManager& ProjectManager::Get()
 {
-	for (KV attr : attributes)
-		if (attr.key == key)
-			return attr.value;
-
-	return {};
+	return s_ProjectManager;
 }
 
-const SectionView::KV_Multi* SectionView::getProperty(std::string_view key) const
+void ProjectManager::CreateProject(const std::filesystem::path& projectPath)
 {
-	for (const KV_Multi& prop : properties)
-		if (prop.key == key)
-			return &prop;
+	if (!s_CurrentProjectFolderPath.empty())
+		UnloadProject();
 
-	return nullptr;
+	m_HierarchyPanel.Init();
+	s_CurrentProjectPath = std::filesystem::absolute(projectPath);
+	s_CurrentProjectFolderPath = s_CurrentProjectPath.parent_path();
+	SaveProject();
 }
 
-const SectionView* INI_File::getSection(std::string_view name, uint32_t appearanceIdx)
+void ProjectManager::LoadProject(const std::filesystem::path& projectPath)
 {
-	uint32_t currentAppearanceIdx = 0;
-	for (const SectionView& section : sections)
-	{
-		if (section.header == name)
-		{
-			if (currentAppearanceIdx >= appearanceIdx)
-				return &section;
-
-			currentAppearanceIdx++;
-		}
-	}
-
-	return nullptr;
-}
-
-std::string_view INI_Parser::Trim(std::string_view str)
-{
-	while (!str.empty() && isspace(str.front())) str.remove_prefix(1);
-	while (!str.empty() && isspace(str.back())) str.remove_suffix(1);
-	return str;
-}
-
-void INI_Parser::SplitPropertiesList(std::vector<std::string_view>& result, std::string_view s)
-{
-	s = Trim(s);
-	while (!s.empty())
-	{
-		s = Trim(s);
-		if (s.front() == '"')
-		{
-			s.remove_prefix(1);
-			size_t endQuote = s.find('"');
-			if (endQuote == std::string_view::npos)
-				break;
-
-			result.emplace_back(s.substr(0, endQuote));
-			s.remove_prefix(endQuote + 1);
-		}
-		else
-		{
-			size_t comma = s.find(',');
-			result.emplace_back(Trim(s.substr(0, comma)));
-			if (comma == std::string_view::npos)
-				break;
-
-			s.remove_prefix(comma);
-		}
-
-		size_t comma = s.find(',');
-		if (comma == std::string_view::npos)
-			break;
-
-		s.remove_prefix(comma + 1);
-	}
-}
-
-void INI_Parser::Print(const INI_File& data)
-{
-	for (auto& section : data.sections)
-	{
-		YEASTEM_INFO("Section: " << section.header);
-		for (auto& attr : section.attributes)
-			YEASTEM_INFO("\t[[Attribute]] " << attr.key << " = " << attr.value);
-
-		for (auto& prop : section.properties)
-		{
-			if (prop.values_count == 1)
-			{
-				YEASTEM_INFO("\t[[Property]] " << prop.key << " = " << section.allProperties[prop.values_start]);
-			}
-			else
-			{
-				std::cout << "\t[[Property]] " << prop.key << " = [";
-				for (uint32_t i = 0; i < prop.values_count; i++)
-				{
-					if (i > 0)
-						std::cout << ", ";
-
-					std::cout << section.allProperties[prop.values_start + i];
-				}
-				std::cout << "]\n";
-			}
-		}
-		YEASTEM_INFO("");
-	}
-}
-
-void INI_Parser::ReadFile(INI_File& outData, const char* projectPath, const char* folderPath)
-{
-	if (!FileIO::checkIfExists(projectPath))
-	{
-		YEASTEM_ERROR("LOADING PROJECT: File " << projectPath << " does not exist!");
-		return;
-	}
-
-	outData.file = FileIO::readFileText(projectPath);
-	const char* ptr = outData.file.data();
-	const char* end = outData.file.data() + outData.file.size();
-
-	SectionView currentSection;
-
-	while (ptr < end)
-	{
-		const char* lineStart = ptr;
-		while (ptr < end && *ptr != '\n' && *ptr != '\r')
-			ptr++;
-
-		std::string_view line(lineStart, ptr - lineStart);
-		line = Trim(line);
-
-		if (line.empty() || line.front() == '#')
-		{
-			ptr++;
-			continue;
-		}
-
-		if (line.front() == '[')
-		{
-			if (!currentSection.header.empty())
-			{
-				outData.sections.push_back(currentSection);
-				currentSection = SectionView();
-			}
-
-			std::string_view inner = line.substr(1, line.size() - 2);
-			inner = Trim(inner);
-
-			size_t space = inner.find(' ');
-			if (space == std::string_view::npos)
-			{
-				currentSection.header = inner;
-			}
-			else
-			{
-				currentSection.header = inner.substr(0, space);
-				std::string_view attrs = inner.substr(space + 1);
-				while (!attrs.empty())
-				{
-					size_t eq = attrs.find('=');
-					if (eq == std::string_view::npos)
-						break;
-					
-					std::string_view key = Trim(attrs.substr(0, eq));
-					attrs.remove_prefix(eq + 1);
-
-					std::string_view val;
-					if (!attrs.empty() && attrs.front() == '"')
-					{
-						attrs.remove_prefix(1);
-						size_t endQuote = attrs.find('"');
-						if (endQuote == std::string_view::npos)
-							break;
-
-						val = attrs.substr(0, endQuote);
-						attrs.remove_prefix(endQuote + 1);
-					}
-					else
-					{
-						size_t space = attrs.find(' ');
-						val = Trim(attrs.substr(0, space));
-						attrs = (space == std::string_view::npos) ? "" : attrs.substr(space + 1);
-					}
-
-					currentSection.attributes.push_back({ key, val });
-					attrs = Trim(attrs);
-				}
-			}
-		}
-		else
-		{
-			auto eqPos = line.find('=');
-			if (eqPos == std::string_view::npos)
-				break;
-			
-			SectionView::KV_Multi entry;
-			entry.key = Trim(line.substr(0, eqPos));
-			entry.values_start = currentSection.allProperties.size();
-
-			std::string_view values = Trim(line.substr(eqPos + 1));
-			SplitPropertiesList(currentSection.allProperties, values);
-
-			entry.values_count = currentSection.allProperties.size() - entry.values_start;
-			currentSection.properties.push_back(entry);
-		}
-	}
-
-	if (!currentSection.header.empty())
-		outData.sections.push_back(currentSection);
-}
-
-void ProjectManager::LoadProject(const char* projectPath, const char* folderPath)
-{
-	m_HierarchyPanel.Init(Application::Get().GetCurrentScene());
+	m_HierarchyPanel.Init();
 
 	INI_File ProjectFile;
-	INI_Parser::ReadFile(ProjectFile, projectPath, folderPath);
+	INI_Parser::ReadFile(ProjectFile, projectPath);
 
 	const SectionView* applicationSection = ProjectFile.getSection("Application");
 	if (!applicationSection)
@@ -246,29 +54,82 @@ void ProjectManager::LoadProject(const char* projectPath, const char* folderPath
 		return;
 	}
 
-	std::string startScenePath = (std::string)applicationSection->allProperties[startScene->values_start];
-	YEASTEM_INFO("Start Stem: " << startScenePath);
-	LoadStem(
-		(folderPath + (std::string)startScenePath).c_str(),
-		folderPath, PROJECT_ROOT_NODE_NAME, 0
-	);
+	const SectionView::KV_Multi* config = applicationSection->getProperty("config");
+	if (!config)
+	{
+		YEASTEM_ERROR("LOADING PROJECT: Config not found!");
+		return;
+	}
+
+	s_CurrentProjectPath = std::filesystem::absolute(projectPath);
+	s_CurrentProjectFolderPath = s_CurrentProjectPath.parent_path();
+
+	INI_File ConfigFile;
+	std::filesystem::path projectConfigPath = applicationSection->allProperties[config->values_start].stringview;
+	INI_Parser::ReadFile(ProjectFile, s_CurrentProjectFolderPath / projectConfigPath);
+
+	const SectionView* editorSection = ProjectFile.getSection("Editor");
+	if (!applicationSection)
+	{
+		YEASTEM_ERROR("LOADING PROJECT: Editor section not found!");
+		return;
+	}
+
+	const SectionView::KV_Multi* currentOpenStem = editorSection->getProperty("current_scene");
+	if (!currentOpenStem)
+	{
+		YEASTEM_ERROR("LOADING PROJECT: Current Scene section not found!");
+		return;
+	}
+	m_Config.CurrentOpenStemFilePath = editorSection->allProperties[currentOpenStem->values_start].stringview;
+
+	const SectionView::KV_Multi* allOpenStems = editorSection->getProperty("open_scenes");
+	if (!allOpenStems)
+	{
+		YEASTEM_ERROR("LOADING PROJECT: Open Scenes section not found!");
+		return;
+	}
+
+	ObjectID lastSceneID;
+	bool openSceneFound = false;
+	m_Config.OpenStemFilePaths.resize(allOpenStems->values_count);
+	for (size_t i = 0; i < allOpenStems->values_count; i++)
+	{
+		std::filesystem::path stemPath = editorSection->allProperties[allOpenStems->values_start + i].stringview;
+		m_Config.OpenStemFilePaths[i] = stemPath;
+		ObjectID sceneID = LoadStem(s_CurrentProjectFolderPath / stemPath, PROJECT_ROOT_NODE_NAME);
+		lastSceneID = sceneID;
+		if (stemPath == m_Config.CurrentOpenStemFilePath)
+		{
+			Application::Get().SetCurrentScene(m_AllScenes.Get(sceneID));
+			openSceneFound = true;
+		}
+	}
+	if (!openSceneFound)
+		Application::Get().SetCurrentScene(m_AllScenes.Get(lastSceneID));
 }
 
-struct StemComponent
-{
-	std::string Source;
-};
+ObjectID ProjectManager::LoadStem(
+	const std::filesystem::path& stemFilePath, const std::string& stemPath, 
+	HierarchyNode::NodeID stemID, ObjectID sceneID
+) {
+	if (stemID == -1)
+	{
+		sceneID = m_AllScenes.Load(std::make_shared<Scene>(stemFilePath));
+		Ref<Scene>& currentScene = m_AllScenes.Get(sceneID);
+		currentScene->Init(sceneID, Application::Get().GetResourceManager());
 
-void ProjectManager::LoadStem(const char* stemFilePath, const char* folderPath, const char* stemPath, HierarchyNode::NodeID stemID)
-{
-	std::cout << stemFilePath << "\n";
+		Entity rootEntity = currentScene->CreateEntity(stemFilePath.stem().string().c_str(), PROJECT_ROOT_NODE_NAME);
+		stemID = m_HierarchyPanel.AddStem(rootEntity);
+		currentScene->SetRootEntity(rootEntity);
+	}
 
-	Scene& currentScene = Application::Get().GetCurrentScene();
-
+	Ref<Scene>& currentScene = m_AllScenes.Get(sceneID);
+	
 	INI_File StemFile;
-	INI_Parser::ReadFile(StemFile, stemFilePath, folderPath);
+	INI_Parser::ReadFile(StemFile, stemFilePath);
 
-	std::vector<std::string> stemPaths{ StemFile.sections.size() + 1 };
+	std::vector<std::string> stemPaths{ StemFile.sections.size() + 1 }; // Path in engine editor tree
 	stemPaths[0] = stemPath;
 	
 	for (SectionView& section : StemFile.sections)
@@ -283,10 +144,10 @@ void ProjectManager::LoadStem(const char* stemFilePath, const char* folderPath, 
 			parentID += stemID;
 
 			entt::entity parent = m_HierarchyPanel.GetNode(parentID).entity;
-			Entity entity = currentScene.CreateEntity(entityPath.c_str(), entityName.c_str(), parent);
+			Entity entity = currentScene->CreateEntity(entityPath.c_str(), entityName.c_str(), parent);
 			HierarchyNode::NodeID entityHierarchyID = -1;
 			m_HierarchyPanel.AddNode(entity, parentID, &entityHierarchyID);
-			LoadEntity(m_HierarchyPanel.GetNode(entityHierarchyID), section, parentID, folderPath);
+			LoadEntity(m_HierarchyPanel.GetNode(entityHierarchyID), section, parentID);
 		}
 		else if (section.header == "extstem")
 		{
@@ -298,23 +159,36 @@ void ProjectManager::LoadStem(const char* stemFilePath, const char* folderPath, 
 			parentID += stemID;
 
 			entt::entity parent = m_HierarchyPanel.GetNode(parentID).entity;
-			Entity entity = currentScene.CreateEntity(entityPath.c_str(), entityName.c_str(), parent);
+			Entity entity = currentScene->CreateEntity(entityPath.c_str(), entityName.c_str(), parent);
 
 			const SectionView::KV_Multi* src = section.getProperty("src");
-			YEASTEM_ASSERT(src, "LOADING STEM: External Stem has no source!");
+			if (!src)
+			{
+				YEASTEM_ERROR("LOADING STEM: External Stem has no source!");
+				entity.Destroy();
+				return sceneID;
+			}
 
 			std::string relativePath = (std::string)section.allProperties[src->values_start];
-			entity.AddComponent<StemComponent>(relativePath);
+			entity.AddComponent<ExtStemComponent>(relativePath);
 			m_HierarchyPanel.AddNode(entity, parentID);
-			LoadStem((folderPath + relativePath).c_str(), folderPath, stemPaths[thisID].c_str(), parentID + thisID);
+			LoadStem(s_CurrentProjectFolderPath / relativePath, stemPaths[thisID], parentID + thisID, sceneID);
 		}
 		else if (section.header == "root")
 		{
 			Entity stem = m_HierarchyPanel.GetNode(stemID).entity;
 
-			if (!stem.HasComponent<StemComponent>())
+			if (stem.HasComponent<ExtStemComponent>())
 			{
-				stem.AddComponent<StemComponent>(stemFilePath);
+				ExtStemComponent& stemComponent = stem.GetComponent<ExtStemComponent>();
+				stemComponent.Source = std::filesystem::absolute(stemFilePath);
+			}
+			else if (!stem.HasComponent<StemComponent>())
+			{
+				StemComponent& stemComponent = stem.AddComponent<StemComponent>(stemFilePath);
+				stemComponent.nodeID = stemID;
+				stemComponent.Source = std::filesystem::absolute(stemFilePath);
+				stemComponent.SceneID = currentScene->GetID();
 
 				TagComponent& tag = stem.GetComponent<TagComponent>();
 				tag.Name = (std::string)section.getAttribute("name");
@@ -322,29 +196,32 @@ void ProjectManager::LoadStem(const char* stemFilePath, const char* folderPath, 
 				stemPaths[0] = tag.NodePath + tag.Name + '/';
 			}
 
-			LoadEntity(m_HierarchyPanel.GetNode(stemID), section, -1, folderPath);
+			LoadEntity(m_HierarchyPanel.GetNode(stemID), section, -1);
 		}
 	}
+
+	return sceneID;
 }
 
-void ProjectManager::LoadEntity(HierarchyNode& node, const SectionView& section, int parentID, const char* folderPath)
-{
-	std::string_view type = section.getAttribute("type");
+void ProjectManager::LoadEntity(
+	HierarchyNode& node, const SectionView& section, int parentID
+) {
+	std::string_view type = section.getAttribute("type").stringview;
 	if (type == "sprite")
 	{
-		LoadComponent<TransformComponent>(node.entity, section, folderPath);
-		LoadComponent<RenderQuadComponent>(node.entity, section, folderPath);
+		LoadComponent<TransformComponent>(node.entity, section);
+		LoadComponent<RenderQuadComponent>(node.entity, section);
 		node.nodeType = NodeType::Sprite;
 	}
 	else if (type == "script")
 	{
-		LoadComponent<ScriptComponent>(node.entity, section, folderPath);
+		LoadComponent<ScriptComponent>(node.entity, section);
 		node.nodeType = NodeType::Script;
 	}
 }
 
 template<>
-void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const SectionView& section, const char* folderPath)
+void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const SectionView& section)
 {
 	TransformComponent& transform = entity.AddComponent<TransformComponent>();
 
@@ -374,7 +251,7 @@ void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const Sec
 }
 
 template<>
-void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section, const char* folderPath)
+void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section)
 {
 	RenderQuadComponent& renderQuad = entity.AddComponent<RenderQuadComponent>();
 
@@ -393,7 +270,7 @@ void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const Se
 		for (size_t i = 0; i < textures->values_count; i++)
 		{
 			renderQuad.Textures.push_back(textureManager.Load(
-				folderPath + (std::string)section.allProperties[textures->values_start + i]
+				s_CurrentProjectFolderPath / section.allProperties[textures->values_start + i].stringview
 			));
 		}
 	}
@@ -409,102 +286,318 @@ void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const Se
 }
 
 template<>
-void ProjectManager::LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section, const char* folderPath)
+void ProjectManager::LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section)
 {
 	ScriptComponent& script = entity.AddComponent<ScriptComponent>();
 
 	const SectionView::KV_Multi* src = section.getProperty("src");
 	if (src)
 	{
-		script.FilePath = folderPath + (std::string)section.allProperties[src->values_start];
+		script.FilePath = s_CurrentProjectFolderPath / (std::string)section.allProperties[src->values_start];
 	}
+}
+
+void ProjectManager::SaveProject()
+{
+	Ref<Scene>& currentScene = Application::Get().GetCurrentScene();
+	entt::basic_view stemView = currentScene->GetRegistry().view<StemComponent>();
+	for (entt::entity entity : stemView)
+	{
+		std::cout << "Saving Stem: " << currentScene->GetRegistry().get<TagComponent>(entity).Name << '\n';
+		SaveStem(Entity{ entity, currentScene.get() });
+	}
+}
+
+void ProjectManager::SaveStem(const Entity& entity)
+{
+	INI_File stemFile;
+	StemComponent& stemComponent = entity.GetComponent<StemComponent>();
+	SaveNode(stemComponent.nodeID, stemFile, stemComponent.nodeID);
+	stemFile.sections[0].header = "root";
+	INI_Parser::WriteFile(stemFile, stemComponent.Source);
+}
+
+void ProjectManager::SaveNode(HierarchyNode::NodeID nodeID, INI_File& file, HierarchyNode::NodeID rootID) {
+	SectionView& section = file.sections.emplace_back();
+	HierarchyNode& node = m_HierarchyPanel.m_Hierarchy[nodeID];
+
+	section.attributes.emplace_back("id", nodeID - rootID);
+	if (node.ParentID != -1)
+		section.attributes.emplace_back("parent", node.ParentID - rootID);
+
+	if (node.entity.HasComponent<ExtStemComponent>())
+	{
+		ExtStemComponent& extStemComponent = node.entity.GetComponent<ExtStemComponent>();
+		section.properties.push_back(SectionView::KV_Multi{ "src", section.allProperties.size(), 1 });
+		section.allProperties.emplace_back(std::filesystem::relative(extStemComponent.Source, s_CurrentProjectFolderPath).string());
+		section.header = "extstem";
+		section.attributes.emplace_back("name", node.entity.GetComponent<TagComponent>().Name);
+		return;
+	}
+	
+	section.header = "stem";
+	SaveEntity(node, section);
+	section.attributes.emplace_back("name", node.entity.GetComponent<TagComponent>().Name);
+
+	HierarchyNode::NodeID childID = node.FirstChildID;
+	while (childID != -1)
+	{
+		SaveNode(childID, file, rootID);
+		childID = m_HierarchyPanel.m_Hierarchy[childID].NextSiblingID;
+	}
+}
+
+void ProjectManager::SaveEntity(const HierarchyNode& node, SectionView& section)
+{
+	if (node.nodeType == NodeType::Script)
+	{
+		section.attributes.emplace_back("type", "script");
+		SaveComponent<ScriptComponent>(node.entity, section);
+	}
+	else if (node.nodeType == NodeType::Sprite)
+	{
+		section.attributes.emplace_back("type", "sprite");
+		SaveComponent<TransformComponent>(node.entity, section);
+		SaveComponent<RenderQuadComponent>(node.entity, section);
+	}
+	else
+	{
+		section.attributes.emplace_back("type", "node");
+	}
+}
+
+template<>
+void ProjectManager::SaveComponent<TransformComponent>(const Entity& entity, SectionView& section)
+{
+	TransformComponent& transform = entity.GetComponent<TransformComponent>();
+	section.properties.push_back(SectionView::KV_Multi{ "position", section.allProperties.size(), 2 });
+	section.allProperties.emplace_back(transform.Position.x);
+	section.allProperties.emplace_back(transform.Position.y);
+
+	section.properties.push_back(SectionView::KV_Multi{ "scale", section.allProperties.size(), 2 });
+	section.allProperties.emplace_back(transform.Scale.x);
+	section.allProperties.emplace_back(transform.Scale.y);
+
+	section.properties.push_back(SectionView::KV_Multi{ "rotation", section.allProperties.size(), 1 });
+	section.allProperties.emplace_back(transform.Rotation);
+}
+
+template<>
+void ProjectManager::SaveComponent<RenderQuadComponent>(const Entity& entity, SectionView& section)
+{
+	RenderQuadComponent& transform = entity.GetComponent<RenderQuadComponent>();
+	section.properties.push_back(SectionView::KV_Multi{ "size", section.allProperties.size(), 2 });
+	section.allProperties.emplace_back(transform.Size.x);
+	section.allProperties.emplace_back(transform.Size.y);
+
+	section.properties.push_back(SectionView::KV_Multi{ "current_texture", section.allProperties.size(), 1 });
+	section.allProperties.emplace_back(transform.CurrentTexture);
+
+	section.properties.push_back(SectionView::KV_Multi{ "textures", section.allProperties.size(), transform.Textures.size() });
+	for (size_t i = 0; i < transform.Textures.size(); i++)
+	{
+		Texture& texture = Application::Get().GetResourceManager().Textures.Get(transform.Textures[i]);
+		std::filesystem::path relpath = std::filesystem::relative(std::filesystem::absolute(texture.getFilePath()), s_CurrentProjectFolderPath);
+		section.allProperties.emplace_back(relpath.string());
+	}
+}
+
+template<>
+void ProjectManager::SaveComponent<ScriptComponent>(const Entity& entity, SectionView& section)
+{
+	ScriptComponent& script = entity.GetComponent<ScriptComponent>();
+	section.properties.push_back(SectionView::KV_Multi{ "src", section.allProperties.size(), 1 });
+	std::filesystem::path relpath = std::filesystem::relative(std::filesystem::absolute(script.FilePath), s_CurrentProjectFolderPath);
+	section.allProperties.emplace_back(relpath.string());
+}
+
+void ProjectManager::UnloadProject()
+{
+	m_HierarchyPanel.Clear();
+
+	Application::Get().GetCurrentScene().reset(); // Reset the current scene to avoid dangling pointers
+	m_AllScenes.Clear();
+	s_CurrentProjectPath.clear();
+	s_CurrentProjectFolderPath.clear();
+}
+
+void ProjectManager::ShowMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New")) {
+				std::cout << "New" << '\n';
+				m_ProjectManagerPanel.Open(ProjectManagerPanel::State::ProjectCreation);
+			}
+			if (ImGui::MenuItem("Open")) {
+				std::cout << "Open" << '\n';
+				FileIO::FileSelect::open('PRJ');
+			}
+			if (ImGui::MenuItem("Save", "Ctrl+S")) { SaveProject(); }
+			if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) { std::cout << "Save As" << '\n'; }
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Cut", "Ctrl+X")) { s_ProjectManager.UnloadProject(); }
+			if (ImGui::MenuItem("Copy", "Ctrl+C")) { std::cout << "Copy" << '\n'; }
+			if (ImGui::MenuItem("Paste", "Ctrl+V")) { std::cout << "Paste" << '\n'; }
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Options"))
+		{
+			if (ImGui::MenuItem("Quit")) { Application::Get().Close(); }
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
+	if (FileIO::FileSelect::isSuccess && FileIO::FileSelect::selectedTag == 'PRJ')
+	{
+		UnloadProject();
+		LoadProject(FileIO::FileSelect::selectedPaths[0]);
+		FileIO::FileSelect::isSuccess = false;
+	}
+}
+
+void ProjectManager::ShowStemBar()
+{
+	ImGuiWindowFlags sceneTabBarFlags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs;
+
+	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetTextLineHeight() * 0.7f);
+	ImGui::BeginTabBar("SceneTabBar", sceneTabBarFlags);
+
+	for (const auto& [id, scene] : m_AllScenes.GetResources())
+	{
+		Entity entity = scene->GetRootEntity();
+		StemComponent& stemComponent = entity.GetComponent<StemComponent>();
+		std::string name = entity.GetComponent<TagComponent>().Name + "##" + std::to_string((uint64_t)id);
+
+		bool open = true;
+		if (ImGui::BeginTabItem(name.c_str(), &open))
+		{
+			m_CurrentStemRootNodeID = stemComponent.nodeID;
+			if (Application::Get().GetCurrentScene()->GetID() != id)
+				Application::Get().SetCurrentScene(m_AllScenes.Get(id));
+			ImGui::EndTabItem();
+		}
+
+		if (!open)
+			m_HierarchyPanel.DeleteStem(stemComponent.nodeID);
+		else if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer >= 1.0f)
+			ImGui::SetTooltip(stemComponent.Source.string().c_str());
+	}
+	ImGui::EndTabBar();
 }
 
 void ProjectManager::InitPanels()
 {
-	Application::Get().GetImGuiLayer().AddWindow([](bool& isOpen) {
-		m_HierarchyPanel.Render(isOpen);
+	Application::Get().GetImGuiLayer().SetDockSpace([&](bool& isOpen) {
+		ShowMenuBar();
+		float menuBarHeight = ImGui::GetFrameHeight();
+
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos + ImVec2(0, menuBarHeight));
+		ImGui::SetNextWindowSize(viewport->Size - ImVec2(0, menuBarHeight));
+		ImGui::SetNextWindowViewport(viewport->ID);
+
+		ImGuiWindowFlags hostWindowFlags =
+			ImGuiWindowFlags_NoTitleBar |
+			ImGuiWindowFlags_NoCollapse |
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoNavFocus |
+			ImGuiWindowFlags_NoBringToFrontOnFocus |
+			ImGuiWindowFlags_NoBackground;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+
+		ImGui::Begin("DockSpaceHost", nullptr, hostWindowFlags);
+
+		ImGui::PopStyleVar(3);
+
+		// Dockspace ID
+		ImGuiID dockspaceID = ImGui::GetID("YeastemDockSpace");
+
+		ShowStemBar();
+
+		ImGui::SetNextWindowDockID(dockspaceID, ImGuiCond_FirstUseEver);
+		ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+
+		ImGui::End();
+	}, false);
+
+	Application::Get().GetImGuiLayer().AddWindow([&](bool& isOpen) {
+		m_HierarchyPanel.Render(isOpen, m_CurrentStemRootNodeID);
 	}, true);
-	Application::Get().GetImGuiLayer().AddWindow([](bool& isOpen) {
+	Application::Get().GetImGuiLayer().AddWindow([&](bool& isOpen) {
 		PropertyPanel::Render(isOpen, m_HierarchyPanel);
 	}, true);
-	Application::Get().GetImGuiLayer().AddWindow([](bool& isOpen) {
+	Application::Get().GetImGuiLayer().AddWindow([&](bool& isOpen) {
 		m_HierarchyPanel.nodeSelectPanel.Render(isOpen);
 	}, false);
-
-	Application::Get().GetImGuiLayer().AddWindow([](bool& isOpen) {
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("New")) {
-					std::cout << "New" << '\n';
-				}
-				if (ImGui::MenuItem("Open")) {
-					std::cout << "Open" << '\n';
-					
-					//LoadProject();
-				}
-				if (ImGui::MenuItem("Save", "Ctrl+S")) { std::cout << "Save" << '\n'; }
-				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) { std::cout << "Save As" << '\n'; }
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Cut", "Ctrl+X")) { std::cout << "Cut" << '\n'; }
-				if (ImGui::MenuItem("Copy", "Ctrl+C")) { std::cout << "Copy" << '\n'; }
-				if (ImGui::MenuItem("Paste", "Ctrl+V")) { std::cout << "Paste" << '\n'; }
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Options"))
-			{
-				if (ImGui::MenuItem("Quit")) { Application::Get().Close(); }
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-		}
+	Application::Get().GetImGuiLayer().AddWindow([&](bool& isOpen) {
+		m_ProjectManagerPanel.Render(isOpen);
 	}, false);
 
-	Application::Get().GetImGuiLayer().AddWindow([](bool& isVisible) {
-		Scene& currentScene = Application::Get().GetCurrentScene();
-		EventHandler& eventHandler = currentScene.GetEventHandler();
-		static ImVec2 prevSceneSize{ 0, 0 };
+	Application::Get().GetImGuiLayer().AddWindow([&](bool& isVisible) {
+		Ref<Scene>& currentScene = Application::Get().GetCurrentScene();
+		EventHandler& eventHandler = Application::Get().GetEventHandler();
 
 		ImGuiWindowFlags flags = 0;
 		flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+		flags |= ImGuiWindowFlags_NoTitleBar;
+		flags |= ImGuiWindowFlags_NoCollapse;
+		flags |= ImGuiWindowFlags_NoScrollbar;
 		//flags |= ImGuiWindowFlags_NoBackground;
+
+		// Render Scene
+		{
+			YEASTEM_ScopedProfiler("SCENE: Render");
+			currentScene->Render(Application::Get().GetResourceManager());
+		}
 
 		ImGui::Begin("Stage", &isVisible, flags);
 
 		ImVec2 windowSize = ImGui::GetWindowSize();
 		windowSize.y -= 35; // Menubar
 
-		if (!currentScene.DoesFrameBufferExist())
-			currentScene.CreateFrameBuffer((uint32_t)windowSize.x, (uint32_t)windowSize.y);
+		if (!currentScene->DoesFrameBufferExist())
+			currentScene->CreateFrameBuffer((uint32_t)windowSize.x, (uint32_t)windowSize.y);
 
-		uint32_t glColourAttachmentId = currentScene.GetFrameBufferColourAttachmentID();
+		uint32_t glColourAttachmentId = currentScene->GetFrameBufferColourAttachmentID();
 		ImGui::Image((ImTextureID)(void*)(uintptr_t)glColourAttachmentId, windowSize);
 		ImGui::End();
 
-		if (windowSize != prevSceneSize)
+		if (windowSize.x != currentScene->SceneSize.x || windowSize.y != currentScene->SceneSize.y)
 		{
-			currentScene.RecreateFrameBuffer((uint32_t)windowSize.x, (uint32_t)windowSize.y);
+			currentScene->RecreateFrameBuffer((uint32_t)windowSize.x, (uint32_t)windowSize.y);
 			Renderer::OnWindowResize();
-			prevSceneSize = windowSize;
 		}
 
 		static bool wasRunningHeld = true, wasResetHeld = true;
-		currentScene.IsRunning ^= eventHandler.IsKeyDown(SDLK_H) && !wasRunningHeld;
-		currentScene.IsReset ^= eventHandler.IsKeyDown(SDLK_J) && !wasResetHeld;
+		currentScene->IsRunning ^= eventHandler.IsKeyDown(SDLK_H) && !wasRunningHeld;
+		bool IsReset = eventHandler.IsKeyDown(SDLK_J) && !wasResetHeld;
 		wasRunningHeld = eventHandler.IsKeyDown(SDLK_H);
 		wasResetHeld = eventHandler.IsKeyDown(SDLK_J);
 
-		currentScene.SceneSize = Vector2i{ windowSize.x, windowSize.y };
+		if (IsReset)
+			currentScene->ResetScripts();
+
+		currentScene->SceneSize = Vector2i{ windowSize.x, windowSize.y };
 	}, false);
 
 	Application::Get().GetImGuiLayer().AddWindow([&](bool& isOpen) {
 		ShowStatisticsPanel(isOpen, -1);
 	}, false);
+
+	Application::Get().GetImGuiLayer().AddWindow([&](bool& isOpen) {
+		m_FileSystemPanel.Render(isOpen);
+	}, true);
 }
 
 

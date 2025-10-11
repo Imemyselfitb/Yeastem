@@ -25,7 +25,9 @@ public:
 
 	void Unload(ObjectID objID) { m_Resources.erase(objID); }
 
+	std::unordered_map<ObjectID, ResourceType>& GetResources() { return m_Resources; }
 	ResourceType& Get(ObjectID objID) { return m_Resources.at(objID); }
+
 	bool Exists(ObjectID objID) { return m_Resources.find(objID) != m_Resources.end(); }
 	void Clear() { m_Resources.clear(); }
 

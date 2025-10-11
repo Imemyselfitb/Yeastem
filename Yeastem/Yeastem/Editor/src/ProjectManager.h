@@ -5,73 +5,81 @@
 #include "Panels/SceneHierarchy.h"
 #include "Panels/Statistics.h"
 #include "Panels/Properties.h"
+#include "Panels/ProjectManagerPanel.h"
+#include "Panels/FileSystem.h"
+
+#include "Components.h"
+#include "INIFile.h"
+
+#include <filesystem>
 
 YEASTEM_BEGIN
-
-struct SectionView
-{
-	struct KV
-	{
-		std::string_view key;
-		std::string_view value;
-	};
-
-	struct KV_Multi
-	{
-		std::string_view key;
-		size_t values_start{ 0 };
-		size_t values_count{ 0 };
-	};
-
-	std::string_view header;
-	std::vector<KV> attributes;
-
-	std::vector<KV_Multi> properties; // Can have multiple values [list]
-	std::vector<std::string_view> allProperties; // All values, stored in order of appearance
-
-	std::string_view getAttribute(std::string_view key) const;
-	const KV_Multi* getProperty(std::string_view key) const;
-};
-
-struct INI_File
-{
-	std::string file; // Will be referenced in SectionView
-	std::vector<SectionView> sections;
-
-	const SectionView* getSection(std::string_view name, uint32_t appearanceIdx = 0);
-};
-
-class INI_Parser
-{
-public:
-	static void ReadFile(INI_File& outData, const char* projectPath, const char* folderPath);
-	static void Print(const INI_File& data);
-
-private:
-	// Helper/Utils functions
-	static std::string_view Trim(std::string_view str);
-	static void SplitPropertiesList(std::vector<std::string_view>& result, std::string_view s);
-};
 
 class ProjectManager
 {
 public:
-	static void InitPanels();
+	void InitPanels();
 
-	static void LoadProject(const char* projectPath, const char* folderPath);
-	static void LoadStem(const char* stemFilePath, const char* folderPath, const char* stemPath, HierarchyNode::NodeID stemID);
-	static void LoadEntity(HierarchyNode& node, const SectionView& section, int parentID, const char* folderPath);
+	static ProjectManager& Get();
 
-	template<typename Component> static void LoadComponent(Entity& entity, const SectionView& section, const char* folderPath)
-	{ YEASTEM_ERROR("LOAD COMPONENT NOT IMPLEMENTED"); }
-	template<> static void LoadComponent<TransformComponent>(Entity& entity, const SectionView& section, const char* folderPath);
-	template<> static void LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section, const char* folderPath);
-	template<> static void LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section, const char* folderPath);
-	
-	void SaveProject(const char* projectPath, const char* folderPath);
+	void LoadProject(const std::filesystem::path& projectPath);
+	ObjectID LoadStem(
+		const std::filesystem::path& stemFilePath, const std::string& stemPath, 
+		HierarchyNode::NodeID stemID = -1, ObjectID sceneID = -1
+	);
+
+	static std::filesystem::path& ProjectPath() { return s_CurrentProjectPath; }
+	static std::filesystem::path& ProjectFolderPath() { return s_CurrentProjectFolderPath; }
+
+	void UnloadProject();
+
+	void SaveProject();
+	void SaveStem(const Entity& entity);
+
+	void CreateProject(const std::filesystem::path& projectPath);
 
 private:
-	inline static HierarchyPanel m_HierarchyPanel;
+	struct Config {
+		std::filesystem::path CurrentOpenStemFilePath;
+		std::vector<std::filesystem::path> OpenStemFilePaths;
+	} m_Config;
+
+private:
+	void LoadEntity(HierarchyNode& node, const SectionView& section, int parentID);
+
+	template<typename Component> void LoadComponent(Entity& entity, const SectionView& section)
+	{ YEASTEM_ERROR("LOAD COMPONENT NOT IMPLEMENTED"); }
+	template<> void LoadComponent<TransformComponent>(Entity& entity, const SectionView& section);
+	template<> void LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section);
+	template<> void LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section);
+	
+private:
+	void SaveNode(HierarchyNode::NodeID nodeID, INI_File& file, HierarchyNode::NodeID rootID);
+	void SaveEntity(const HierarchyNode& node, SectionView& section);
+	
+	template<typename Component> void SaveComponent(const Entity& entity, SectionView& section)
+	{ YEASTEM_ERROR("LOAD COMPONENT NOT IMPLEMENTED"); }
+	template<> void SaveComponent<TransformComponent>(const Entity& entity, SectionView& section);
+	template<> void SaveComponent<RenderQuadComponent>(const Entity& entity, SectionView& section);
+	template<> void SaveComponent<ScriptComponent>(const Entity& entity, SectionView& section);
+
+	void ShowMenuBar();
+	void ShowStemBar();
+
+	HierarchyPanel& GetHierarchyPanel() { return m_HierarchyPanel; }
+
+private:
+	HierarchyPanel m_HierarchyPanel;
+	FileSystemPanel m_FileSystemPanel;
+	ProjectManagerPanel m_ProjectManagerPanel;
+	HierarchyNode::NodeID m_CurrentStemRootNodeID = 0;
+
+private:
+	SingleResourceManager<Ref<Scene>> m_AllScenes;
+
+private:
+	inline static std::filesystem::path s_CurrentProjectPath;
+	inline static std::filesystem::path s_CurrentProjectFolderPath;
 };
 
 constexpr const char* PROJECT_ROOT_NODE_NAME = "Tree/";

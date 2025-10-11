@@ -43,6 +43,9 @@ public:
 		m_Scene->m_Registry.destroy(m_Entity);
 	}
 
+	Scene& GetScene() { return *m_Scene; }
+	const Scene& GetScene() const { return *m_Scene; }
+
 	operator bool() const { return (uint32_t)m_Entity != 0U; }
 	operator entt::entity&() { return m_Entity; }
 

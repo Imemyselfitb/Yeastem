@@ -5,6 +5,7 @@
 #include "OpenGL/Include.h"
 
 #include "Yeastem/LuaAPI/Lua.h"
+#include "Yeastem/Platforms/Windows/Window.h"
 
 YEASTEM_BEGIN
 
@@ -13,6 +14,15 @@ static Application s_Instance;
 Application& Application::Get()
 {
 	return s_Instance;
+}
+
+static void GLAPIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id,
+	GLenum severity, GLsizei length,
+	const GLchar* message, const void* userParam
+) {
+	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+		type, severity, message);
 }
 
 void Application::Init(const WindowInfoData& windowInfo)
@@ -28,18 +38,36 @@ void Application::Init(const WindowInfoData& windowInfo)
 	// Use a Depth size of 24
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
+#if defined(YST_PLATFORM_WINDOWS)
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+#endif
+
 	if (!SDL_Init(SDL_INIT_VIDEO))
 		YEASTEM_ERROR("SDL could not be initialized: " << SDL_GetError());
 
-	m_Window = SDL_CreateWindow(windowInfo.Title, windowInfo.Width, windowInfo.Height, windowInfo.Flags);
+	int flags = windowInfo.Flags | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_OPENGL;
+	m_Window = SDL_CreateWindow(windowInfo.Title, windowInfo.Size.x, windowInfo.Size.y, flags);
+	{
+		Vector2i windowLogicalSize;
+		SDL_GetWindowSize(m_Window, &windowLogicalSize.x, &windowLogicalSize.y);
+		Vector2i windowPixelSize;
+		SDL_GetWindowSizeInPixels(m_Window, &windowPixelSize.x, &windowPixelSize.y);
+
+		Vector2f scale = (Vector2f)windowPixelSize / (Vector2f)windowLogicalSize;
+		Vector2f newLogicalSize = (Vector2f)windowInfo.Size / scale.x;
+		SDL_SetWindowSize(m_Window, (int)newLogicalSize.x, (int)newLogicalSize.y);
+	}
+
 	m_Context = SDL_GL_CreateContext(m_Window);
 	SDL_GL_MakeCurrent(m_Window, m_Context);
-
 	gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 
 	s_Renderer = SDL_CreateRenderer(m_Window, nullptr);
 	m_ImGuiLayer.Init(m_Window, m_Context);
-	m_CurrentScene.Init(m_ResourceManager);
+
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(glDebugOutput, 0);
 }
 
 void Application::HandleEvents(SDL_Event& currentEvent)
@@ -56,7 +84,7 @@ void Application::HandleEvents(SDL_Event& currentEvent)
 			return;
 		}
 
-		m_CurrentScene.GetEventHandler().Dispatch(currentEvent);
+		m_EventHandler.Dispatch(currentEvent);
 	}
 }
 
@@ -65,15 +93,6 @@ int pseudo_rand()
 {
 	seed = (seed - 1) * (seed ^ 0x02468) * 3;
 	return seed;
-}
-
-void Application::RenderScene()
-{
-}
-
-void Application::UpdateScene()
-{
-	
 }
 
 void Application::Run()
@@ -88,9 +107,24 @@ void Application::Run()
 		YEASTEM_ClearProfiles();
 		YEASTEM_ScopedProfiler("APPLICATION: Frame");
 
-		glViewport(0, 0, (uint32_t)m_CurrentScene.SceneSize.x, (uint32_t)m_CurrentScene.SceneSize.y);
+		glViewport(0, 0, (uint32_t)m_CurrentScene->SceneSize.x, (uint32_t)m_CurrentScene->SceneSize.y);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ImGuiNextFrame();
+
+		static bool isFirstFrame = true;
+		if (isFirstFrame)
+		{
+			isFirstFrame = false;
+			GetWindowData();
+			for (auto& window : Yeastem::AllWindows)
+			{
+				std::cout << ">>>" << window.Title << "\n";
+				std::cout << "(" << window.Position << ")" << "\n";
+				std::cout << "(" << window.Size << ")" << "\n";
+			}
+		}
+
+		m_ImGuiLayer.UpdateDockSpace();
 
 		// Event Handling
 		{
@@ -110,19 +144,13 @@ void Application::Run()
 			m_AccumulatedTime += (uint8_t)deltaTime;
 			while (m_AccumulatedTime > frameDeltaTime)
 			{
-				m_CurrentScene.Update(frameDeltaTime / 1000.0f);
+				m_CurrentScene->Update(frameDeltaTime / 1000.0f);
 				m_AccumulatedTime -= frameDeltaTime;
 			}
 		}
 
 		// Update All Panels
 		m_ImGuiLayer.Update();
-
-		// Render Scene
-		{
-			YEASTEM_ScopedProfiler("SCENE: Render");
-			m_CurrentScene.Render(m_ResourceManager);
-		}
 
 		SDL_GL_SwapWindow(m_Window);
 		m_ImGuiLayer.BackupFrame();

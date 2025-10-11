@@ -12,8 +12,7 @@ YEASTEM_BEGIN
 struct WindowInfoData
 {
 	const char* Title = nullptr;
-	int Width = 0;
-	int Height = 0;
+	Vector2i Size = { 0, 0 };
 	int Flags = 0;
 };
 
@@ -28,20 +27,22 @@ public:
 	void Run();
 	void Close() { Get().m_IsRunning = false; }
 
-	void UpdateScene();
-	void RenderScene();
+	void SetCurrentScene(Ref<Scene>& scene) { m_CurrentScene = scene; }
 
 	ResourceManager& GetResourceManager() { return m_ResourceManager; }
 	ImGuiAPI& GetImGuiLayer() { return m_ImGuiLayer; }
-	Scene& GetCurrentScene() { return m_CurrentScene; }
+	Ref<Scene>& GetCurrentScene() { return m_CurrentScene; }
+	SDL_Window* GetWindow() { return m_Window; }
+	EventHandler& GetEventHandler() { return m_EventHandler; }
 
 private:
 	void HandleEvents(SDL_Event& m_events);
 
 private:
-	Scene m_CurrentScene;
+	Ref<Scene> m_CurrentScene;
 	ResourceManager m_ResourceManager;
 	ImGuiAPI m_ImGuiLayer;
+	EventHandler m_EventHandler;
 
 	SDL_Window* m_Window = nullptr;
 	SDL_Renderer* s_Renderer = nullptr;

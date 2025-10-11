@@ -24,6 +24,7 @@ public:
 	std::string GetNodeString(NodeType selected) const;
 
 	void ChangeType(Entity entity) const;
+	void ChangeType(Entity entity, NodeType from, NodeType to) const;
 	void RemoveComponents(Entity entity, uint32_t components) const;
 	void AddComponents(Entity entity, uint32_t components) const;
 

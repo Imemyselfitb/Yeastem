@@ -8,7 +8,7 @@ YEASTEM_BEGIN
 class LuaVector2
 {
 public:
-	static void Init(LuaState& state);
+	static void Init(lua_State* L);
 
 	static void InitVector(const Vector2f& v, lua_State* state);
 	static void UpdateVector(Vector2f& v, LuaState& state);

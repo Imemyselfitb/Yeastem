@@ -17,6 +17,8 @@ project "stb_image"
 		"include"
 	}
 
+	buildoptions { "/MP" }
+
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"

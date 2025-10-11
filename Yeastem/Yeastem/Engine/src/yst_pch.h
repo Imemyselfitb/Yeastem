@@ -1,5 +1,7 @@
 #pragma once	
 
+#define IMGUI_DEBUG_PARANOID
+
 #define APIENTRY
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
@@ -9,8 +11,9 @@
 #include <imgui_impl_opengl3.h>
 
 #include <string>
-#include <fstream>
 #include <sstream>
+#include <fstream>
+#include <filesystem>
 
 #include <utility>
 
@@ -22,5 +25,12 @@
 #include <functional>
 
 #include <iostream>
+
+#if defined(YST_PLATFORM_WINDOWS)
+#undef APIENTRY
+#include <windows.h>
+#undef max
+#undef min
+#endif
 
 #include "Macros.h"

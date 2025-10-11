@@ -45,17 +45,22 @@ void NodeSelectPanel::RenderButton(const char* label, NodeType type)
 	}
 }
 
-void NodeSelectPanel::ChangeType(Entity entity) const
+void NodeSelectPanel::ChangeType(Entity entity, NodeType from, NodeType to) const
 {
 	// Remove these
-	uint32_t oldComponents = (~(uint32_t)m_SelectedType) & (uint32_t)m_SelectedTypePrevious;
+	uint32_t oldComponents = (~(uint32_t)to) & (uint32_t)from;
 	if (oldComponents)
 		RemoveComponents(entity, oldComponents);
 
 	// Add these
-	uint32_t newComponents = (uint32_t)m_SelectedType & (~(uint32_t)m_SelectedTypePrevious);
+	uint32_t newComponents = (uint32_t)to & (~(uint32_t)from);
 	if (newComponents)
 		AddComponents(entity, newComponents);
+}
+
+void NodeSelectPanel::ChangeType(Entity entity) const
+{
+	ChangeType(entity, m_SelectedTypePrevious, m_SelectedType);
 }
 
 void NodeSelectPanel::RemoveComponents(Entity entity, uint32_t components) const

@@ -72,6 +72,7 @@ project "Yeastem Engine"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
+	buildoptions { "/MP" }
 
 	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
@@ -134,12 +135,15 @@ project "Yeastem Editor"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
+	buildoptions { "/MP" }
 
 	defines
 	{
 		"SDL_MAIN_HANDLED",
 		"SDL_STATIC"
 	}
+
+	postbuildcommands { "CALL " }
 
 	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
@@ -204,6 +208,7 @@ project "Yeastem Runtime"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
+	buildoptions { "/MP" }
 
 	filter "system:windows"
 		cppdialect "C++latest"
@@ -248,6 +253,9 @@ project "YSS Compiler"
 		"SDL_MAIN_HANDLED",
 		"SDL_STATIC"
 	}
+
+	ignoredefaultlibraries { "MSVCRT" }
+	buildoptions { "/MP" }
 
 	filter "system:windows"
 		cppdialect "C++latest"

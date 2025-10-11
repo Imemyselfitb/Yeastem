@@ -2,15 +2,16 @@
 
 #include "SceneHierarchy.h"
 
+#include "Components.h"
+
 #include <imgui.h>
 #include <string>
 
 YEASTEM_BEGIN
 
-void HierarchyPanel::Init(Scene& scene)
+void HierarchyPanel::Init()
 {
-	m_Hierarchy.emplace_back(scene.CreateEntity("", "Root"));
-	m_SelectedNodes.resize(m_MinSelectedNodeCount, SelectedNode{ (HierarchyNode::NodeID)(-1), true });
+	m_SelectedNodes.resize(m_MinSelectedNodeCount, SelectedNode{ InvalidID, true });
 	m_SelectedNodesCount = 0;
 }
 
@@ -21,7 +22,6 @@ void HierarchyPanel::ClearSelectedNodes()
 		if (m_SelectedNodes[i].IsTombstone == false)
 		{
 			m_Hierarchy[m_SelectedNodes[i].ID].IsSelected = false;
-			m_Hierarchy[m_SelectedNodes[i].ID].IsTombstone = true;
 			m_SelectedNodes[i].IsTombstone = true;
 		}
 	}
@@ -60,13 +60,13 @@ void HierarchyPanel::AddSelectedNode(HierarchyNode::NodeID nodeID)
 
 void HierarchyPanel::AddSelectedNodeChildren(HierarchyNode::NodeID nodeID)
 {
-	if (nodeID == -1)
+	if (nodeID == InvalidID)
 		return;
 
 	AddSelectedNode(nodeID);
 
 	HierarchyNode::NodeID childID = m_Hierarchy[nodeID].FirstChildID;
-	while (childID != -1)
+	while (childID != InvalidID)
 	{
 		AddSelectedNodeChildren(childID);
 		childID = m_Hierarchy[childID].NextSiblingID;
@@ -78,7 +78,7 @@ void HierarchyPanel::AddSelectedNodeRange(HierarchyNode::NodeID startID, Hierarc
 	HierarchyNode::NodeID parentA = startID;
 	uint32_t depthA = 0;
 	std::vector<HierarchyNode::NodeID> hierarchyA;
-	while (parentA != -1)
+	while (parentA != InvalidID)
 	{
 		hierarchyA.push_back(parentA);
 		parentA = m_Hierarchy[parentA].ParentID;
@@ -87,7 +87,7 @@ void HierarchyPanel::AddSelectedNodeRange(HierarchyNode::NodeID startID, Hierarc
 	HierarchyNode::NodeID parentB = endID;
 	uint32_t depthB = 0;
 	std::vector<HierarchyNode::NodeID> hierarchyB;
-	while (parentB != -1)
+	while (parentB != InvalidID)
 	{
 		hierarchyB.push_back(parentB);
 		parentB = m_Hierarchy[parentB].ParentID;
@@ -103,7 +103,7 @@ void HierarchyPanel::AddSelectedNodeRange(HierarchyNode::NodeID startID, Hierarc
 
 		bool eitherFound = false;
 		HierarchyNode::NodeID childID = m_Hierarchy[hierarchyA[i + 1]].FirstChildID;
-		while (childID != -1)
+		while (childID != InvalidID)
 		{
 			if (childID == hierarchyA[i] || childID == hierarchyB[j])
 			{
@@ -118,7 +118,7 @@ void HierarchyPanel::AddSelectedNodeRange(HierarchyNode::NodeID startID, Hierarc
 				for (uint32_t k = 1; k < i; k++)
 				{
 					HierarchyNode::NodeID nodeID = aFoundFirst ? hierarchyA[k] : hierarchyB[k];
-					while (nodeID != -1)
+					while (nodeID != InvalidID)
 					{
 						AddSelectedNode(nodeID);
 						nodeID = m_Hierarchy[nodeID].NextSiblingID;
@@ -137,7 +137,7 @@ void HierarchyPanel::AddSelectedNodeRange(HierarchyNode::NodeID startID, Hierarc
 		HierarchyNode::NodeID nodeID = aFoundFirst ? hierarchyA[k] : hierarchyB[k];
 		HierarchyNode::NodeID parentID = m_Hierarchy[nodeID].ParentID;
 		HierarchyNode::NodeID siblingID = m_Hierarchy[parentID].FirstChildID;
-		while (siblingID != -1)
+		while (siblingID != InvalidID)
 		{
 			if (siblingID == nodeID)
 				break; // Break out of while loop
@@ -161,7 +161,7 @@ void HierarchyPanel::RemoveSelectedNode(HierarchyNode::NodeID nodeID)
 			m_SelectedNodesCount--;
 
 			if (m_LastSelectedNodeID == nodeID)
-				m_LastSelectedNodeID = -1;
+				m_LastSelectedNodeID = InvalidID;
 		}
 	}
 }
@@ -177,13 +177,13 @@ bool HierarchyPanel::IsNodeSelected(HierarchyNode::NodeID nodeID)
 	return false;
 }
 
-void HierarchyPanel::Render(bool& isOpened)
+void HierarchyPanel::Render(bool& isOpened, HierarchyNode::NodeID nodeID)
 {
 	ImGui::SetNextWindowSize(ImVec2(300, 200));
 	if (ImGui::Begin("Scene Hierarchy", &isOpened))
 	{
-		HierarchyNode::NodeID node = m_Hierarchy[0].FirstChildID;
-		RenderNode(0);
+		if (nodeID < m_Hierarchy.size() && !m_Hierarchy[nodeID].IsTombstone)
+			RenderNode(nodeID);
 	}
 	ImGui::End();
 }
@@ -194,7 +194,12 @@ void HierarchyPanel::OnNodeClicked(HierarchyNode::NodeID nodeID, const char* nod
 {
 	if (m_SelectedNodesCount > 0)
 	{
-		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+		if (ImGui::IsKeyDown(ImGuiKey_LeftShift))
+		{
+			AddSelectedNodeRange(m_LastSelectedNodeID, nodeID);
+			return;
+		}
+		else if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
 		{
 			if (IsNodeSelected(nodeID))
 				RemoveSelectedNode(nodeID);
@@ -203,12 +208,6 @@ void HierarchyPanel::OnNodeClicked(HierarchyNode::NodeID nodeID, const char* nod
 				AddSelectedNode(nodeID);
 				m_LastSelectedNodeID = nodeID;
 			}
-
-			return;
-		}
-		else if (ImGui::IsKeyDown(ImGuiKey_LeftShift))
-		{
-			AddSelectedNodeRange(m_LastSelectedNodeID, nodeID);
 			return;
 		}
 	}
@@ -232,7 +231,9 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 	flags |= (node.IsSelected) * ImGuiTreeNodeFlags_Selected;
-	flags |= (node.FirstChildID == -1) * ImGuiTreeNodeFlags_Leaf;
+	flags |= (node.FirstChildID == InvalidID) * ImGuiTreeNodeFlags_Leaf;
+
+	ImGui::PushID(nodeID);
 
 	// Show Tree (Empty Name -> this will be filled in later, to allow renaming)
 	ImGui::SetNextItemOpen(node.IsExpanded);
@@ -254,10 +255,10 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 			std::string name = RenameBuffer;
 			AssignChildName(m_Hierarchy[node.ParentID], nodeID, name);
 			RenameNode(node, name);
-			m_RenamingNodeID = -1;
+			m_RenamingNodeID = InvalidID;
 		}
 		if (ImGui::IsKeyPressed(ImGuiKey_Escape))
-			m_RenamingNodeID = -1;
+			m_RenamingNodeID = InvalidID;
 	}
 	else
 	{
@@ -272,7 +273,16 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 		if (ImGui::BeginDragDropSource())
 		{
 			ImGui::SetDragDropPayload("DRAG_AND_DROP_NODE", &nodeID, sizeof(HierarchyNode::NodeID));
-			ImGui::Text("%s", tag.Name.c_str());
+
+			//ImGui::Text("%s", tag.Name.c_str());
+			for (int i = 0; i < m_SelectedNodes.size(); i++)
+			{
+				if (m_SelectedNodes[i].IsTombstone == false)
+				{
+					TagComponent& selectedTag = m_Hierarchy[m_SelectedNodes[i].ID].entity.GetComponent<TagComponent>();
+					ImGui::Text("%s", selectedTag.Name.c_str());
+				}
+			}
 			ImGui::EndDragDropSource();
 		}
 		if (ImGui::BeginDragDropTarget())
@@ -280,8 +290,13 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAG_AND_DROP_NODE");
 			if (payload)
 			{
-				HierarchyNode::NodeID draggedNode = *(HierarchyNode::NodeID*)payload->Data;
-				MoveNode(draggedNode, nodeID);
+				for (int i = 0; i < m_SelectedNodes.size(); i++)
+				{
+					if (m_SelectedNodes[i].IsTombstone == false)
+					{
+						MoveNode(m_SelectedNodes[i].ID, nodeID);
+					}
+				}
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -301,19 +316,19 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 
 					TagComponent& NodeParentTag = m_Hierarchy[m_LastSelectedNodeID].entity.GetComponent<TagComponent>();
 
-					Scene& currentScene = Application::Get().GetCurrentScene();
-					Entity newEntity = currentScene.CreateEntity(
+					Ref<Scene>& currentScene = Application::Get().GetCurrentScene();
+					Entity newEntity = currentScene->CreateEntity(
 						(NodeParentTag.NodePath + NodeParentTag.Name + '/').c_str(),
 						nodeSelectPanel.GetNodeString(selected).c_str(), m_Hierarchy[m_LastSelectedNodeID].entity
 					);
 
-					HierarchyNode::NodeID newEntityID = -1;
+					HierarchyNode::NodeID newEntityID = InvalidID;
 					AddNode(newEntity, m_LastSelectedNodeID, &newEntityID);
 
-					m_Hierarchy[newEntityID].nodeType = selected;
+					nodeSelectPanel.ChangeType(newEntity, m_Hierarchy[newEntityID].nodeType, selected);
 
 					ClearSelectedNodes();
-					AddSelectedNode(m_LastSelectedNodeID);
+					AddSelectedNode(newEntityID);
 
 					m_RenamingNodeID = newEntityID;
 					TagComponent& newTag = newEntity.GetComponent<TagComponent>();
@@ -359,13 +374,18 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 		}
 	}
 
+	ImGui::PopID();
+
 	// Show children if tree expanded
 	if (node.IsExpanded)
 	{
 		if (!treeModified)
 		{
+			if (nodeID != 0 && node.entity.HasComponent<ExtStemComponent>())
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+
 			HierarchyNode::NodeID childNodes = node.FirstChildID;
-			while (childNodes != -1)
+			while (childNodes != InvalidID)
 			{
 				if (!RenderNode(childNodes))
 				{
@@ -374,6 +394,9 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 				}
 				childNodes = m_Hierarchy[childNodes].NextSiblingID;
 			}
+
+			if (nodeID != 0 && node.entity.HasComponent<ExtStemComponent>())
+				ImGui::PopStyleColor();
 		}
 		ImGui::TreePop();
 	}
@@ -386,7 +409,7 @@ bool HierarchyPanel::AddNode(Entity entity, HierarchyNode::NodeID parentID, Hier
 	if (parentID >= m_Hierarchy.size())
 		return false;
 
-	HierarchyNode::NodeID newID = -1;
+	HierarchyNode::NodeID newID = InvalidID;
 
 	// Add Entity
 	if (m_TombstoneNodeCount == 0)
@@ -410,18 +433,48 @@ bool HierarchyPanel::AddNode(Entity entity, HierarchyNode::NodeID parentID, Hier
 
 	// Parent Node
 	HierarchyNode& parent = m_Hierarchy[parentID];
-	if (parent.FirstChildID == -1)
+	if (parent.FirstChildID == InvalidID)
 		parent.FirstChildID = newID;
 	else
 	{
 		HierarchyNode::NodeID lastSibling = parent.FirstChildID;
-		while (m_Hierarchy[lastSibling].NextSiblingID != -1)
+		while (m_Hierarchy[lastSibling].NextSiblingID != InvalidID)
 			lastSibling = m_Hierarchy[lastSibling].NextSiblingID;
 		m_Hierarchy[lastSibling].NextSiblingID = newID;
 	}
 
+	if (entity.HasComponent<ExtStemComponent>())
+		m_Hierarchy[newID].IsExpanded = false; // Default Close other Stems
+
 	if (idOut)
 		*idOut = newID;
+
+	return newID;
+}
+
+HierarchyNode::NodeID HierarchyPanel::AddStem(Entity entity)
+{
+	HierarchyNode::NodeID newID = InvalidID;
+
+	// Add Entity
+	if (m_TombstoneNodeCount == 0)
+	{
+		newID = (HierarchyNode::NodeID)m_Hierarchy.size();
+		m_Hierarchy.emplace_back(entity, InvalidID);
+	}
+	else
+	{
+		for (HierarchyNode::NodeID i = 0; i < m_Hierarchy.size(); i++)
+		{
+			if (m_Hierarchy[i].IsTombstone)
+			{
+				newID = i;
+				m_Hierarchy[i] = HierarchyNode(entity, InvalidID);
+				m_TombstoneNodeCount--;
+				break;
+			}
+		}
+	}
 
 	return newID;
 }
@@ -443,7 +496,7 @@ void HierarchyPanel::DeleteNode(HierarchyNode::NodeID nodeID)
 
 	// Delete all child nodes (recursively)
 	HierarchyNode::NodeID childNodes = node.FirstChildID;
-	while (childNodes != -1)
+	while (childNodes != InvalidID)
 	{
 		DeleteNode(childNodes);
 		childNodes = node.FirstChildID;
@@ -459,7 +512,33 @@ void HierarchyPanel::DeleteNode(HierarchyNode::NodeID nodeID)
 	// Deselect Node
 	RemoveSelectedNode(nodeID);
 	if (m_LastSelectedNodeID == nodeID)
-		m_LastSelectedNodeID = -1;
+		m_LastSelectedNodeID = InvalidID;
+}
+
+void HierarchyPanel::DeleteStem(HierarchyNode::NodeID nodeID)
+{
+	// Remove Node from Hierarchy
+	HierarchyNode& node = m_Hierarchy[nodeID];
+
+	// Delete all child nodes (recursively)
+	HierarchyNode::NodeID childNodes = node.FirstChildID;
+	while (childNodes != InvalidID)
+	{
+		DeleteNode(childNodes);
+		childNodes = node.FirstChildID;
+	}
+
+	// "Remove" from list - index can be reused
+	m_Hierarchy[nodeID].IsTombstone = true;
+	m_TombstoneNodeCount++;
+
+	// Destroy Entity
+	node.entity.Destroy();
+
+	// Deselect Node
+	RemoveSelectedNode(nodeID);
+	if (m_LastSelectedNodeID == nodeID)
+		m_LastSelectedNodeID = InvalidID;
 }
 
 void HierarchyPanel::MoveNode(HierarchyNode::NodeID nodeID, HierarchyNode::NodeID newParentID)
@@ -497,15 +576,15 @@ void HierarchyPanel::MoveNode(HierarchyNode::NodeID nodeID, HierarchyNode::NodeI
 
 	// Set new parent
 	node.ParentID = newParentID;
-	node.NextSiblingID = -1;
+	node.NextSiblingID = InvalidID;
 
 	// Adopt the node to new parent
-	if (newParent.FirstChildID == -1)
+	if (newParent.FirstChildID == InvalidID)
 		newParent.FirstChildID = nodeID;
 	else
 	{
 		HierarchyNode::NodeID lastSibling = newParent.FirstChildID;
-		while (m_Hierarchy[lastSibling].NextSiblingID != -1)
+		while (m_Hierarchy[lastSibling].NextSiblingID != InvalidID)
 			lastSibling = m_Hierarchy[lastSibling].NextSiblingID;
 		m_Hierarchy[lastSibling].NextSiblingID = nodeID;
 	}
@@ -550,26 +629,26 @@ void HierarchyPanel::RenameNode(HierarchyNode& node, const std::string& newName)
 HierarchyNode::NodeID HierarchyPanel::GetFirstSelectedNode()
 {
 	if (m_SelectedNodesCount < 1)
-		return -1;
+		return InvalidID;
 
 	for (uint32_t i = 0; i < m_SelectedNodes.size(); i++)
 		if (!m_SelectedNodes[i].IsTombstone && m_SelectedNodes[i].ID < m_Hierarchy.size())
 			return m_SelectedNodes[i].ID;
 
-	return -1;
+	return InvalidID;
 }
 
 void HierarchyPanel::UpdateChildPaths(HierarchyNode& node, const std::string& oldPath, const std::string& newPath)
 {
 	HierarchyNode::NodeID childID = node.FirstChildID;
 
-	while (childID != -1)
+	while (childID != InvalidID)
 	{
 		HierarchyNode& childNode = m_Hierarchy[childID];
 		TagComponent& childTag = childNode.entity.GetComponent<TagComponent>();
 
 		// Replace old path with new path in child's NodePath
-		YEASTEM_ASSERT(childTag.NodePath.find(oldPath) == std::string::npos, "Child node does not contain Node Path!");
+		YEASTEM_ASSERT(childTag.NodePath.find(oldPath) != std::string::npos, "Child node does not contain Node Path!");
 		childTag.NodePath = newPath + childTag.NodePath.substr(oldPath.length());
 
 		// Recursively update deeper levels
@@ -583,7 +662,7 @@ void HierarchyPanel::UpdateChildPaths(HierarchyNode& node, const std::string& ol
 HierarchyNode::NodeID HierarchyPanel::GetChildByName(HierarchyNode& node, const std::string& nodeName)
 {
 	HierarchyNode::NodeID childID = node.FirstChildID;
-	while (childID != -1)
+	while (childID != InvalidID)
 	{
 		HierarchyNode& childNode = m_Hierarchy[childID];
 		TagComponent& childTag = childNode.entity.GetComponent<TagComponent>();
@@ -593,7 +672,7 @@ HierarchyNode::NodeID HierarchyPanel::GetChildByName(HierarchyNode& node, const 
 		childID = childNode.NextSiblingID;
 	}
 
-	return -1;
+	return InvalidID;
 }
 
 int HierarchyPanel::GetNumericalSuffix(std::string& name, bool stripString = false)
@@ -641,7 +720,7 @@ void HierarchyPanel::AssignChildName(
 	
 	// Check if the name already exists in the parent node
 	HierarchyNode::NodeID childID = parent.FirstChildID;
-	while (childID != -1)
+	while (childID != InvalidID)
 	{
 		HierarchyNode& childNode = m_Hierarchy[childID];
 		TagComponent& childTag = childNode.entity.GetComponent<TagComponent>();
@@ -654,6 +733,18 @@ void HierarchyPanel::AssignChildName(
 	// If it's not found, append the extension to the node
 	if (numberExtension > 1 || forceNumberExtension)
 		searchChildName += std::to_string(numberExtension);
+}
+
+void HierarchyPanel::Clear()
+{
+	ClearSelectedNodes();
+	for (HierarchyNode::NodeID i = 0; i < m_Hierarchy.size(); i++)
+	{
+		if (!m_Hierarchy[i].IsTombstone)
+			m_Hierarchy[i].entity.Destroy();
+	}
+	m_Hierarchy.clear();
+	m_TombstoneNodeCount = 0;
 }
 
 YEASTEM_END

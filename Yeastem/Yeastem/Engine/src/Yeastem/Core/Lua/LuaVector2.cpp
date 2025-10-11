@@ -6,7 +6,7 @@
 
 YEASTEM_BEGIN
 
-void LuaVector2::Init(LuaState& L)
+void LuaVector2::Init(lua_State* L)
 {
 	lua_newtable(L);
 

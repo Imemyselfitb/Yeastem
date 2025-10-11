@@ -1,0 +1,34 @@
+[root id=0 type="node" name="Pong"]
+
+[stem id=1 parent=0 type="sprite" name="Paddle1"]
+position=114,250
+scale=1,1
+rotation=0
+size=40,200
+current_texture=0
+textures="Assets\Sprites\Paddle.png","Assets\Sprites\Ball.png"
+
+[stem id=2 parent=0 type="sprite" name="Paddle2"]
+position=850,250
+scale=1,1
+rotation=0
+size=40,200
+current_texture=0
+textures="Assets\Sprites\Paddle.png"
+
+[stem id=3 parent=0 type="sprite" name="Ball"]
+position=500,250
+scale=1,1
+rotation=0
+size=40,40
+current_texture=0
+textures="Assets\Sprites\Ball.png"
+
+[stem id=4 parent=0 type="script" name="RectCollisionModule"]
+src="Assets\Scripts\RectCollisionModule.lua"
+
+[stem id=5 parent=0 type="script" name="Panels"]
+src="Assets\Scripts\Panels.lua"
+
+[stem id=6 parent=0 type="script" name="Game"]
+src="Assets\Scripts\Game.lua"

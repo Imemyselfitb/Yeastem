@@ -3,4 +3,5 @@ Yeastem/bin/
 Yeastem/bin-int/
 **/bin-int/
 **/lib/
-/Yeastem/Yeastem/Editor/src/Core/OpenGL/RenderAPI/RendererAPI.cpp
+**/*#WEB/
+**/## PongTestExe/

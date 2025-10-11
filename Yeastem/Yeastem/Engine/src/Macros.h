@@ -9,6 +9,6 @@
 
 #define YEASTEM_ASSERT(condition, str)	if (!(condition)) YEASTEM_ERROR(str)
 
-#define YEASTEM_BIND_MEMBER_FUNCTION(func) [this](auto&&... args) -> decltype(auto) { return this->func(std::forward<decltype(args)>(args)...); }
-
 using ObjectID = uint64_t;
+
+template<typename t> using Ref = std::shared_ptr<t>;

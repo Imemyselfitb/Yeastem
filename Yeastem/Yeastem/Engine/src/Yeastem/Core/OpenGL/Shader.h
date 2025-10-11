@@ -6,7 +6,9 @@ class Shader
 {
 public:
 	Shader() {}
-	Shader(const char* VertFile, const char* FragFile) { AssignShaderFromFiles(VertFile, FragFile); }
+	Shader(const char* VertFile, const char* FragFile) { AssignShader(VertFile, FragFile); }
+	Shader(const std::filesystem::path& VertFile, const std::filesystem::path& FragFile)
+	{ AssignShaderFromFiles(VertFile.string().c_str(), FragFile.string().c_str()); }
 	~Shader() { DeleteShader(); }
 
 private:

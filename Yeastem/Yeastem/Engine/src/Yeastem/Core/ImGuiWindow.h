@@ -8,6 +8,7 @@ public:
 	using ShowFunction = std::function<void(bool&)>;
 
 public:
+	ImGuiWindow() {}
 	ImGuiWindow(ShowFunction showfunc, bool canClose = true) 
 		: m_Show_function(showfunc), m_canClose(canClose) {}
 	~ImGuiWindow() {}

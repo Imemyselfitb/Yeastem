@@ -21,6 +21,14 @@ void LuaScene::Init()
 	lua_newtable(m_LuaState);
 	lua_setglobal(m_LuaState, "Yeastem");
 
+	luaL_newmetatable(m_LuaState, "Tree_t");
+	lua_pushstring(m_LuaState, "__index");
+
+	lua_getglobal(m_LuaState, "Yeastem");
+	lua_pushstring(m_LuaState, "Tree");
+	lua_newtable(m_LuaState);
+	lua_settable(m_LuaState, -3);
+
 	LuaImguiPanel::Init(m_LuaState);
 	LuaVector2::Init(m_LuaState);
 
@@ -30,12 +38,12 @@ void LuaScene::Init()
 		if (lua_isnumber(L, -1))
 		{
 			uint32_t keyID = (uint32_t)lua_tonumber(L, -1);
-			lua_pushboolean(L, Application::Get().GetCurrentScene().m_EventHandler.IsKeyDown(keyID));
+			lua_pushboolean(L, Application::Get().GetEventHandler().IsKeyDown(keyID));
 		}
 		else if (lua_isstring(L, -1))
 		{
 			char key = std::tolower(lua_tostring(L, -1)[0]);
-			lua_pushboolean(L, Application::Get().GetCurrentScene().m_EventHandler.IsKeyDown(key));
+			lua_pushboolean(L, Application::Get().GetEventHandler().IsKeyDown(key));
 		}
 		return 1;
 	});

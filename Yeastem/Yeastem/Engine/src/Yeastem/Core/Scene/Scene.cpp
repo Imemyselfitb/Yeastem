@@ -12,8 +12,9 @@
 
 YEASTEM_BEGIN
 
-void Scene::Init(ResourceManager& resourceManager)
+void Scene::Init(ObjectID sceneID, ResourceManager& resourceManager)
 {
+	m_SceneID = sceneID;
 	Renderer::Init(resourceManager);
 	m_LuaScene.Init();
 }
@@ -23,6 +24,11 @@ Entity Scene::CreateEntity(const char* NodePath, const char* Name, entt::entity 
 	Entity entity{ m_Registry.create(), this };
 	entity.AddComponent<TagComponent>(NodePath, Name, Parent);
 	return entity;
+}
+
+Entity Scene::GetRootEntity()
+{
+	return Entity(m_RootEntity, this);
 }
 
 template<typename T>
@@ -107,6 +113,7 @@ void Scene::UpdateGlobalTransforms(entt::entity entity, TransformComponent& tran
 	{
 		transform.GlobalPosition = transform.Position;
 		transform.GlobalRotation = transform.Rotation;
+		transform.GlobalZLevel = transform.ZLevel;
 		transform.GlobalScale = transform.Scale;
 		transform.FrameUpdate = frameID;
 		return;
@@ -117,6 +124,7 @@ void Scene::UpdateGlobalTransforms(entt::entity entity, TransformComponent& tran
 
 	transform.GlobalPosition = parentTransform.TransformPoint(transform.Position);
 	transform.GlobalRotation = transform.Rotation + parentTransform.Rotation;
+	transform.GlobalZLevel = transform.ZLevel + parentTransform.ZLevel;
 	transform.GlobalScale = transform.Scale * parentTransform.Scale;
 	transform.FrameUpdate = frameID;
 }
@@ -135,14 +143,8 @@ void Scene::Update(float deltaTime)
 		TransformComponent& transform = m_Registry.get<TransformComponent>(entity);
 		UpdateGlobalTransforms(entity, transform, frameID);
 	}
-
-	if (IsReset)
-	{
-		m_ScriptsInitiated = false;
-		m_LuaScene.Recreate();
-		return;
-	}
-	else if (IsRunning)
+	
+	if (IsRunning)
 	{
 		SetScriptAllComponents<TransformComponent>();
 		SetScriptAllComponents<RenderQuadComponent>();
@@ -160,8 +162,6 @@ void Scene::Update(float deltaTime)
 		}
 
 		GetScriptAllComponents<TransformComponent>();
-
-		LuaImguiPanel::ShowAll(m_LuaScene.GetState());
 		CurrentTime += uint64_t(deltaTime * 1000.0f);
 	}
 }
@@ -195,7 +195,7 @@ void Scene::Render(ResourceManager& resourceManager)
 
 	entt::basic_group quadRenderables = m_Registry.group<RenderQuadComponent, TransformComponent>();
 	quadRenderables.sort<TransformComponent>([](const TransformComponent& a, const TransformComponent& b) {
-		return a.ZLevel < b.ZLevel;
+		return a.GlobalZLevel < b.GlobalZLevel;
 	});
 	for (entt::entity entity : quadRenderables)
 	{
@@ -207,6 +207,8 @@ void Scene::Render(ResourceManager& resourceManager)
 
 	if (m_FrameBuffer)
 		m_FrameBuffer->Unbind();
+
+	LuaImguiPanel::ShowAll(m_LuaScene.GetState());
 }
 
 

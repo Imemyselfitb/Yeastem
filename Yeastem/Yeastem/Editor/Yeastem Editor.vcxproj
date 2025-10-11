@@ -78,10 +78,11 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;SDL_STATIC;YST_PLATFORM_WINDOWS;YST_CONFIG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Dependancies\SDL3\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;$(SolutionDir)Dependancies\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Dependancies\SDL3\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -90,19 +91,23 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>CALL </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;SDL_STATIC;YST_PLATFORM_WINDOWS;YST_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Dependancies\SDL3\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;$(SolutionDir)Dependancies\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Dependancies\SDL3\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -112,19 +117,23 @@
       <OptimizeReferences>true</OptimizeReferences>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>CALL </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;SDL_STATIC;YST_PLATFORM_WINDOWS;YST_CONFIG_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Dependancies\SDL3\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;$(SolutionDir)Dependancies\glm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Yeastem\Editor\src;$(SolutionDir)Yeastem\Engine\src;$(SolutionDir)Dependancies\SDL3\include;$(SolutionDir)Dependancies\stb_image\include;$(SolutionDir)Dependancies\Lua\src;$(SolutionDir)Dependancies\Glad\include;$(SolutionDir)Dependancies\Glad\src;$(SolutionDir)Dependancies\EnTT\include;$(SolutionDir)Dependancies\ImGui\src;$(SolutionDir)Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -134,16 +143,27 @@
       <OptimizeReferences>true</OptimizeReferences>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>CALL </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components.h" />
+    <ClInclude Include="src\INIFile.h" />
+    <ClInclude Include="src\Panels\FileSystem.h" />
     <ClInclude Include="src\Panels\NodeSelect.h" />
+    <ClInclude Include="src\Panels\ProjectManagerPanel.h" />
     <ClInclude Include="src\Panels\Properties.h" />
     <ClInclude Include="src\Panels\SceneHierarchy.h" />
     <ClInclude Include="src\Panels\Statistics.h" />
     <ClInclude Include="src\ProjectManager.h" />
+    <ClInclude Include="src\Shaders\Shaders.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\INIFile.cpp" />
+    <ClCompile Include="src\Panels\FileSystem.cpp" />
     <ClCompile Include="src\Panels\NodeSelect.cpp" />
+    <ClCompile Include="src\Panels\ProjectManagerPanel.cpp" />
     <ClCompile Include="src\Panels\Properties.cpp" />
     <ClCompile Include="src\Panels\SceneHierarchy.cpp" />
     <ClCompile Include="src\Panels\Statistics.cpp" />

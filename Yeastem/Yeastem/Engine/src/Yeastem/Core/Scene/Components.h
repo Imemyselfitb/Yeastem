@@ -41,7 +41,8 @@ struct TransformComponent
 	Vector2f GlobalPosition{ 0.0f, 0.0f };
 	Vector2f GlobalScale{ 1.0f, 1.0f };
 	float GlobalRotation = 0.0f;
-	
+	float GlobalZLevel = 0.0f;
+
 	uint32_t FrameUpdate = 0;
 	
 	TransformComponent() = default;
@@ -71,10 +72,10 @@ struct RenderQuadComponent
 
 struct ScriptComponent
 {
-	std::string FilePath = "";
+	std::filesystem::path FilePath = "";
 
 	ScriptComponent() = default;
-	ScriptComponent(const char* filePath) :FilePath(filePath) {}
+	ScriptComponent(const std::filesystem::path& filePath) :FilePath(filePath) {}
 	ScriptComponent(const ScriptComponent&) = default;
 };
 

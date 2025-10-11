@@ -24,6 +24,8 @@ struct HierarchyNode
 		:entity(entityIn), ParentID(parentID), FirstChildID(-1), NextSiblingID(-1) {}
 };
 
+static constexpr HierarchyNode::NodeID InvalidID = -1;
+
 struct SelectedNode
 {
 	bool IsTombstone = false; // Has Been Deleted (so can be reused)
@@ -39,12 +41,15 @@ class HierarchyPanel
 public:
 	HierarchyPanel() = default;
 
-	void Init(Scene& scene);
-	void Render(bool& isWindowOpened);
+	void Init();
+	void Render(bool& isWindowOpened, HierarchyNode::NodeID nodeID = 0);
 	bool AddNode(Entity entity, HierarchyNode::NodeID parentID, HierarchyNode::NodeID* idOut = nullptr);
+	HierarchyNode::NodeID AddStem(Entity entity);
 	void DeleteNode(HierarchyNode::NodeID parentID);
+	void DeleteStem(HierarchyNode::NodeID parentID);
 	void MoveNode(HierarchyNode::NodeID nodeID, HierarchyNode::NodeID newParentID);
 	void RenameNode(HierarchyNode& node, const std::string& newName);
+	void Clear();
 
 	HierarchyNode::NodeID GetFirstSelectedNode();
 	HierarchyNode& GetNode(HierarchyNode::NodeID nodeID) { return m_Hierarchy[nodeID]; }

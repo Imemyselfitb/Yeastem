@@ -3,4 +3,5 @@ version=1.0
 
 [Application]
 name="Pong"
-start_stem="StartStem.ystem"
+start_stem="Stems/StartStem.ystem"
+config=".yeastem/project.cfg"

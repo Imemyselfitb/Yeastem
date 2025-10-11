@@ -5,6 +5,8 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui_internal.h>
 
+#include "ProjectManager.h"
+
 YEASTEM_BEGIN
 
 void PropertyPanel::Render(bool& isOpen, HierarchyPanel& hierarchyPanel)
@@ -12,6 +14,8 @@ void PropertyPanel::Render(bool& isOpen, HierarchyPanel& hierarchyPanel)
 	ImGui::SetNextWindowSize(ImVec2(300, 200));
 	if (ImGui::Begin("Properties", &isOpen))
 	{
+		SDL_SetWindowRelativeMouseMode(Application::Get().GetWindow(), false);
+
 		HierarchyNode::NodeID selectedNode = hierarchyPanel.GetFirstSelectedNode();
 		if (selectedNode != -1)
 		{
@@ -25,6 +29,10 @@ void PropertyPanel::Render(bool& isOpen, HierarchyPanel& hierarchyPanel)
 				RenderComponent<RenderQuadComponent>(entity);
 			if (entity.HasComponent<TagComponent>())
 				RenderComponent<TagComponent>(entity);
+		}
+		else
+		{
+			ImGui::Text("Select a Node to View its Properties");
 		}
 	}
 
@@ -54,11 +62,15 @@ static void RenderInt(const std::string& label, int& val, float columnWidth, int
 	ImGui::NextColumn();
 
 	if (min != max)
-		ImGui::DragInt("##x", &val, 1.0f, min, max);
+	{
+		ImGui::DragInt("##x", &val, 0.05f, min, max);
+	}
 	else
 	{
 		ImGui::BeginDisabled();
 		ImGui::DragInt("##x", &val, 0.0f, min, max);
+		if (ImGui::IsItemActive())
+			SDL_SetWindowRelativeMouseMode(Application::Get().GetWindow(), true);
 		ImGui::EndDisabled();
 	}
 
@@ -66,7 +78,7 @@ static void RenderInt(const std::string& label, int& val, float columnWidth, int
 	ImGui::Columns(1);
 }
 
-static void RenderVector2f(const std::string& label, Vector2f& vec, float columnWidth)
+static void RenderVector2f(const std::string& label, Vector2f& vec, float columnWidth, float speed = 1.0f)
 {
 	ImGui::PushID(label.c_str());
 
@@ -81,7 +93,7 @@ static void RenderVector2f(const std::string& label, Vector2f& vec, float column
 	ImGui::TextColored(ImVec4{ 1.0f, 0.0f, 0.0f, 1.0f }, "X");
 	ImGui::NextColumn();
 
-	ImGui::DragFloat("##x", &vec.x);
+	ImGui::DragFloat("##x", &vec.x, speed);
 	ImGui::NextColumn();
 
 	// Property Name (next line)
@@ -91,7 +103,7 @@ static void RenderVector2f(const std::string& label, Vector2f& vec, float column
 	ImGui::TextColored(ImVec4{ 0.0f, 1.0f, 0.0f, 1.0f }, "Y");
 	ImGui::NextColumn();
 
-	ImGui::DragFloat("##y", &vec.y);
+	ImGui::DragFloat("##y", &vec.y, speed);
 	ImGui::PopID();
 
 	ImGui::Columns(1);
@@ -104,7 +116,7 @@ template<> void PropertyPanel::RenderComponent<TransformComponent>(Entity& entit
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
 		RenderVector2f("Position", transform.Position, panelSize.x * 0.5f);
-		RenderVector2f("Scale", transform.Scale, panelSize.x * 0.5f);
+		RenderVector2f("Scale", transform.Scale, panelSize.x * 0.5f, 0.1f);
 
 		float rotation = transform.Rotation * 180.0f / 3.14159265359f;
 		RenderFloat("Rotation", rotation, panelSize.x * 0.5f);
@@ -116,6 +128,18 @@ template<> void PropertyPanel::RenderComponent<TransformComponent>(Entity& entit
 	}
 }
 
+static void OpenTextureFile(uint32_t texIndex, const char* currentPath = nullptr, bool createNew = false)
+{
+	SDL_DialogFileFilter textureOpenFileFilter[] = {
+		{ "Image Files", "png;jpg;jpeg;bmp" },
+		{ "PNG File (*.png)", "png" },
+		{ "JPEG File (*.jpg,*.jpeg)", "jpg;jpeg" },
+		{ "BMP File (*.bmp)", "bmp" },
+	};
+	uint64_t tag = ((uint64_t)'TX' << 48) + ((uint64_t)createNew << 32) + (uint64_t)texIndex;
+	FileIO::FileSelect::open(textureOpenFileFilter, 4, tag, createNew);
+}
+
 template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& entity)
 {
 	SingleResourceManager<Texture>& textureManager = Application::Get().GetResourceManager().Textures;
@@ -124,7 +148,7 @@ template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& enti
 	if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
-		RenderVector2f("Size", sprite.Size, panelSize.x * 0.5f);
+		RenderVector2f("Size", sprite.Size, panelSize.x * 0.5f, 0.1f);
 
 		ImGui::PushID("Textures");
 		ImGui::Columns(2, nullptr, false);
@@ -135,10 +159,12 @@ template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& enti
 		float padding = 5.0f;
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(padding, padding));
 
-		for (ObjectID textureID : sprite.Textures)
+		for (uint32_t i = 0; i < sprite.Textures.size(); i++)
 		{
-			Texture& currentTexture = textureManager.Get(textureID);
-			bool showTextureInfo = ImGui::TreeNodeEx(currentTexture.getFileName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+			Texture& currentTexture = textureManager.Get(sprite.Textures[i]);
+
+			std::filesystem::path textureRelPath = std::filesystem::relative(currentTexture.getFilePath(), ProjectManager::ProjectFolderPath());
+			bool showTextureInfo = ImGui::TreeNodeEx(textureRelPath.string().c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
 
 			ImVec2 nodeRectMin = ImGui::GetItemRectMin();
 			ImVec2 nodeRectMax = ImGui::GetItemRectMax();
@@ -148,13 +174,11 @@ template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& enti
 			if (ImGui::IsItemClicked())
 			{
 				if (ImGui::IsMouseDoubleClicked(0))
-				{
-					// TODO: MODIFY PATH
-				}
-				else
-				{
-					// TODO: SELECTED PROPERTIES
-				}
+					OpenTextureFile(i, currentTexture.getFilePath().string().c_str());
+			}
+			else if (ImGui::IsItemHovered())
+			{
+				ImGui::SetTooltip(currentTexture.getFilePath().string().c_str());
 			}
 
 			if (showTextureInfo)
@@ -183,6 +207,37 @@ template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& enti
 			ImGui::NextColumn();
 		}
 
+		// ADD NEW TEXTURE BUTTON
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 1.0f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 0.4f, 0.4f, 1.0f));
+			if (ImGui::Button("Add Texture", ImVec2(panelSize.x * 0.5f - padding * 2, 0)))
+				OpenTextureFile((uint32_t)sprite.Textures.size()-1, nullptr, true);
+			ImGui::PopStyleColor(3);
+		}
+
+		uint16_t tag = FileIO::FileSelect::selectedTag >> 48;
+		if (FileIO::FileSelect::isSuccess && tag == 'TX')
+		{
+			FileIO::FileSelect::isSuccess = false; // Reset success flag
+
+			uint32_t textureIdx = FileIO::FileSelect::selectedTag & 0xFFFFFFFF;
+			bool createNew = FileIO::FileSelect::selectedTag & 0x100000000;
+			SingleResourceManager<Texture>& textureManager = Application::Get().GetResourceManager().Textures;
+
+			for (const std::filesystem::path& file : FileIO::FileSelect::selectedPaths)
+			{
+				if (std::filesystem::exists(file))
+				{
+					if (createNew)
+						sprite.Textures.push_back(textureManager.Load(file));
+					else
+						sprite.Textures[textureIdx] = textureManager.Load(file);
+				}
+			}
+		}
+
 		ImGui::PopStyleVar();
 
 		ImGui::Columns(1);
@@ -204,8 +259,30 @@ template<> void PropertyPanel::RenderComponent<ScriptComponent>(Entity& entity)
 		ImGui::SetColumnWidth(0, panelSize.x * 0.5f);
 		ImGui::Text("Path");
 		ImGui::NextColumn();
-		ImGui::Text(script.FilePath.c_str());
+		std::filesystem::path textureRelPath = std::filesystem::relative(script.FilePath, ProjectManager::ProjectFolderPath());
+		ImGui::Text(textureRelPath.string().c_str());
+		if (ImGui::IsItemClicked())
+		{
+			if (ImGui::IsMouseDoubleClicked(0))
+			{
+				SDL_DialogFileFilter textureOpenFileFilter[] = {
+					{ "Lua File (*.lua)", "lua" },
+				};
+				FileIO::FileSelect::open(textureOpenFileFilter, 1, 'LUA');
+			}
+		}
 		ImGui::Columns(1);
+
+		if (FileIO::FileSelect::isSuccess && (FileIO::FileSelect::selectedTag == 'LUA'))
+		{
+			FileIO::FileSelect::isSuccess = false; // Reset success flag
+
+			const std::filesystem::path& file = FileIO::FileSelect::selectedPaths[0];
+			if (std::filesystem::exists(file))
+			{
+				script.FilePath = file;
+			}
+		}
 	}
 }
 

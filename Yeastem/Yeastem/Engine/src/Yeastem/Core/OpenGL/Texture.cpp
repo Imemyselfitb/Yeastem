@@ -4,19 +4,21 @@
 
 #include <stb_image.h>
 
+#include "Yeastem/Core/Application.h"
+
 YEASTEM_BEGIN
 
-void Texture::LoadTexture(const std::string& path)
+void Texture::LoadTexture(const std::filesystem::path& path)
 {
 	if (!s_InitialisedSettings)
 		InitSettings();
 
 	// stbi_set_flip_vertically_on_load(1);
-	stbi_uc* data = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 0);
+	stbi_uc* data = stbi_load(path.string().c_str(), &m_Width, &m_Height, &m_BPP, 0);
 
 	if (!data)
 	{
-		YEASTEM_ERROR("Texture `" << path << "` could not load! - " << stbi_failure_reason());
+		YEASTEM_ERROR("Texture " << path << " could not load! - " << stbi_failure_reason());
 		return;
 	}
 
@@ -43,6 +45,7 @@ void Texture::LoadTexture(const std::string& path)
 	m_Initialized = true;
 	m_FilePath = path;
 
+	printf("GL_VERSION: %s\n", glGetString(GL_VERSION));
 	glGenTextures(1, &m_glID);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_glID);
@@ -94,7 +97,7 @@ void Texture::Unbind()
 
 Texture::~Texture()
 {
-	std::cout << "Yestem: Graphics: Texture `" << m_FilePath << "` Deleted!" << std::endl;
+	std::cout << "Yestem: Graphics: Texture " << m_FilePath << " Deleted!" << std::endl;
 	glDeleteTextures(1, &m_glID);
 }
 

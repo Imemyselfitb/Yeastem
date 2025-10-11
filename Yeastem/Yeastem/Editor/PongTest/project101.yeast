@@ -1,0 +1,7 @@
+[Yeastem]
+version=1.0
+
+[Application]
+name="Pong"
+start_stem="Stems/Pong.ystem"
+config=".yeastem/project101.cfg"

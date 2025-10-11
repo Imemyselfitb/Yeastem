@@ -6,13 +6,13 @@ class Texture
 {
 public:
 	Texture() {}
-	Texture(const std::string& path) { 
+	Texture(const std::filesystem::path& path) {
 		LoadTexture(path);
 	}
 
 	~Texture();
 
-	void LoadTexture(const std::string& path);
+	void LoadTexture(const std::filesystem::path& path);
 
 	void Bind(uint32_t slot = 0U);
 	void Unbind();
@@ -21,7 +21,7 @@ public:
 	inline uint32_t getHeight() const { return m_Height; }
 	inline uint32_t getOpenGlID() const { return m_glID; }
 	inline bool isInitialised() const { return m_Initialized; }
-	inline const std::string& getFileName() const { return m_FilePath; }
+	inline const std::filesystem::path& getFilePath() const { return m_FilePath; }
 
 	inline bool isBound() const { return m_BoundSlot > 0; }
 	inline uint32_t getBoundSlot() const { return m_BoundSlot - 1; }
@@ -35,7 +35,7 @@ private:
 	uint8_t m_BoundSlot = 0;
 
 	bool m_Initialized = false;
-	std::string m_FilePath;
+	std::filesystem::path m_FilePath;
 	int m_Width = 0, m_Height = 0, m_BPP = 0;
 
 private:

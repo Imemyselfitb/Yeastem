@@ -4,9 +4,20 @@
     <Filter Include="Panels">
       <UniqueIdentifier>{A80D95C9-94AF-BF9F-7D6A-D3F369AB46F0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{EFAC8DF2-5B8C-0C8E-64A4-9764D00273EF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components.h" />
+    <ClInclude Include="src\INIFile.h" />
+    <ClInclude Include="src\Panels\FileSystem.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
     <ClInclude Include="src\Panels\NodeSelect.h">
+      <Filter>Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Panels\ProjectManagerPanel.h">
       <Filter>Panels</Filter>
     </ClInclude>
     <ClInclude Include="src\Panels\Properties.h">
@@ -19,9 +30,19 @@
       <Filter>Panels</Filter>
     </ClInclude>
     <ClInclude Include="src\ProjectManager.h" />
+    <ClInclude Include="src\Shaders\Shaders.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\INIFile.cpp" />
+    <ClCompile Include="src\Panels\FileSystem.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
     <ClCompile Include="src\Panels\NodeSelect.cpp">
+      <Filter>Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Panels\ProjectManagerPanel.cpp">
       <Filter>Panels</Filter>
     </ClCompile>
     <ClCompile Include="src\Panels\Properties.cpp">
