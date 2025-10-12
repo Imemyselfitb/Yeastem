@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-PCH = ../../yst_pch.h
+PCH = ../Engineyst_pch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
 INCLUDES += -I"$(SolutionDir)Yeastem/Engine/src" -I"$(SolutionDir)Dependancies/SDL3/include" -I"$(SolutionDir)Dependancies/stb_image/include" -I"$(SolutionDir)Dependancies/Lua/src" -I"$(SolutionDir)Dependancies/Glad/include" -I"$(SolutionDir)Dependancies/Glad/src" -I"$(SolutionDir)Dependancies/EnTT/include" -I"$(SolutionDir)Dependancies/ImGui/src" -I"$(SolutionDir)Dependancies/ImGui/src/backends"
@@ -39,8 +39,8 @@ TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YeastemEngine
 TARGET = $(TARGETDIR)/libYeastemEngine.a
 OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YeastemEngine
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20 /MP
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20
 LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib/x64/Debug/libstb_image.a ../../Dependancies/Glad/lib/x64/Debug/libGlad.a ../../Dependancies/Lua/lib/x64/Debug/libLua.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
 LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib/x64/Debug/libstb_image.a ../../Dependancies/Glad/lib/x64/Debug/libGlad.a ../../Dependancies/Lua/lib/x64/Debug/libLua.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
@@ -50,8 +50,8 @@ TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YeastemEngine
 TARGET = $(TARGETDIR)/libYeastemEngine.a
 OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YeastemEngine
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_RELEASE
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
 LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib/x64/Release/libstb_image.a ../../Dependancies/Glad/lib/x64/Release/libGlad.a ../../Dependancies/Lua/lib/x64/Release/libLua.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
 LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib/x64/Release/libstb_image.a ../../Dependancies/Glad/lib/x64/Release/libGlad.a ../../Dependancies/Lua/lib/x64/Release/libLua.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
@@ -61,8 +61,8 @@ TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YeastemEngine
 TARGET = $(TARGETDIR)/libYeastemEngine.a
 OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YeastemEngine
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DIST
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
 LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib/x64/Dist/libstb_image.a ../../Dependancies/Glad/lib/x64/Dist/libGlad.a ../../Dependancies/Lua/lib/x64/Dist/libLua.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
 LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib/x64/Dist/libstb_image.a ../../Dependancies/Glad/lib/x64/Dist/libGlad.a ../../Dependancies/Lua/lib/x64/Dist/libLua.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s

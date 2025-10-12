@@ -34,14 +34,9 @@ project "YeastemEngine"
 	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "yst_pch.h"
 	pchsource (EngineLocation .. "/src/yst_pch.cpp")
 
-	defines
-	{
-		"SDL_MAIN_HANDLED",
-		"SDL_STATIC"
-	}
+	defines { "SDL_MAIN_HANDLED", "SDL_STATIC" }
 
 	files
 	{
@@ -72,18 +67,20 @@ project "YeastemEngine"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
-	buildoptions { "/MP" }
 
 	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
 		defines "YST_PLATFORM_WINDOWS"
+		buildoptions { "/MP" }
+		pchheader "yst_pch.h"
 
 	filter "system:linux"
 		cppdialect "C++latest"
 		staticruntime "On"
 		defines "YST_PLATFORM_LINUX"
+		pchheader (EngineLocation .. "yst_pch.h")
 
 	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
 	filter "configurations:Debug"
@@ -135,7 +132,6 @@ project "YeastemEditor"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
-	buildoptions { "/MP" }
 
 	defines
 	{
@@ -150,6 +146,7 @@ project "YeastemEditor"
 		cppdialect "C++latest"
 		staticruntime "On"
 		defines "YST_PLATFORM_WINDOWS"
+		buildoptions { "/MP" }
 
 	filter "system:linux"
 		cppdialect "C++latest"
@@ -208,11 +205,11 @@ project "YeastemRuntime"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
-	buildoptions { "/MP" }
 
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
+		buildoptions { "/MP" }
 
 	filter "configurations:Debug"
 		defines "YST_DEBUG"
