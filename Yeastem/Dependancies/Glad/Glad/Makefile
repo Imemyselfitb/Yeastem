@@ -24,7 +24,7 @@ INCLUDES += -I../include
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -std=c++17 /MP
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 /MP
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
 LIBS +=
 LDDEPS +=
@@ -39,17 +39,17 @@ endef
 
 ifeq ($(config),debug)
 TARGETDIR = ../lib/x64/Debug
-TARGET = $(TARGETDIR)/Glad.lib
+TARGET = $(TARGETDIR)/libGlad.a
 OBJDIR = ../bin-int/Debug
 
 else ifeq ($(config),release)
 TARGETDIR = ../lib/x64/Release
-TARGET = $(TARGETDIR)/Glad.lib
+TARGET = $(TARGETDIR)/libGlad.a
 OBJDIR = ../bin-int/Release
 
 else ifeq ($(config),dist)
 TARGETDIR = ../lib/x64/Dist
-TARGET = $(TARGETDIR)/Glad.lib
+TARGET = $(TARGETDIR)/libGlad.a
 OBJDIR = ../bin-int/Dist
 
 endif

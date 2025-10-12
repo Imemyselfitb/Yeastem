@@ -34,37 +34,37 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-windows-x86_64/Yeastem Editor
-TARGET = $(TARGETDIR)/Yeastem Editor.exe
-OBJDIR = $(SolutionDir)bin-int/Debug-windows-x86_64/Yeastem Editor
-DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_WINDOWS -DYST_CONFIG_DEBUG
+TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/Yeastem Editor
+TARGET = $(TARGETDIR)/Yeastem Editor
+OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/Yeastem Editor
+DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20 /MP
-LIBS += $(SolutionDir)bin/Debug-windows-x86_64/Yeastem Engine/Yeastem Engine.lib ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/ImGui/lib/x64/Debug/ImGui.lib
-LDDEPS += $(SolutionDir)bin/Debug-windows-x86_64/Yeastem\ Engine/Yeastem\ Engine.lib ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/ImGui/lib/x64/Debug/ImGui.lib
+LIBS += $(SolutionDir)bin/Debug-linux-x86_64/Yeastem Engine/libYeastem Engine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
+LDDEPS += $(SolutionDir)bin/Debug-linux-x86_64/Yeastem\ Engine/libYeastem\ Engine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-windows-x86_64/Yeastem Editor
-TARGET = $(TARGETDIR)/Yeastem Editor.exe
-OBJDIR = $(SolutionDir)bin-int/Release-windows-x86_64/Yeastem Editor
-DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_WINDOWS -DYST_CONFIG_RELEASE
+TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/Yeastem Editor
+TARGET = $(TARGETDIR)/Yeastem Editor
+OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/Yeastem Editor
+DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
-LIBS += $(SolutionDir)bin/Release-windows-x86_64/Yeastem Engine/Yeastem Engine.lib ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/ImGui/lib/x64/Release/ImGui.lib
-LDDEPS += $(SolutionDir)bin/Release-windows-x86_64/Yeastem\ Engine/Yeastem\ Engine.lib ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/ImGui/lib/x64/Release/ImGui.lib
+LIBS += $(SolutionDir)bin/Release-linux-x86_64/Yeastem Engine/libYeastem Engine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
+LDDEPS += $(SolutionDir)bin/Release-linux-x86_64/Yeastem\ Engine/libYeastem\ Engine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-windows-x86_64/Yeastem Editor
-TARGET = $(TARGETDIR)/Yeastem Editor.exe
-OBJDIR = $(SolutionDir)bin-int/Dist-windows-x86_64/Yeastem Editor
-DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_WINDOWS -DYST_CONFIG_DIST
+TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/Yeastem Editor
+TARGET = $(TARGETDIR)/Yeastem Editor
+OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/Yeastem Editor
+DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
-LIBS += $(SolutionDir)bin/Dist-windows-x86_64/Yeastem Engine/Yeastem Engine.lib ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/ImGui/lib/x64/Dist/ImGui.lib
-LDDEPS += $(SolutionDir)bin/Dist-windows-x86_64/Yeastem\ Engine/Yeastem\ Engine.lib ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/ImGui/lib/x64/Dist/ImGui.lib
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -mwindows -s
+LIBS += $(SolutionDir)bin/Dist-linux-x86_64/Yeastem Engine/libYeastem Engine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
+LDDEPS += $(SolutionDir)bin/Dist-linux-x86_64/Yeastem\ Engine/libYeastem\ Engine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif
 

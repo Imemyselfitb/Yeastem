@@ -34,30 +34,30 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-windows-x86_64/YSS Compiler
-TARGET = $(TARGETDIR)/YSS Compiler.exe
-OBJDIR = $(SolutionDir)bin-int/Debug-windows-x86_64/YSS Compiler
+TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YSS Compiler
+TARGET = $(TARGETDIR)/YSS Compiler
+OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YSS Compiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20 /MP
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-windows-x86_64/YSS Compiler
-TARGET = $(TARGETDIR)/YSS Compiler.exe
-OBJDIR = $(SolutionDir)bin-int/Release-windows-x86_64/YSS Compiler
+TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YSS Compiler
+TARGET = $(TARGETDIR)/YSS Compiler
+OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YSS Compiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-windows-x86_64/YSS Compiler
-TARGET = $(TARGETDIR)/YSS Compiler.exe
-OBJDIR = $(SolutionDir)bin-int/Dist-windows-x86_64/YSS Compiler
+TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YSS Compiler
+TARGET = $(TARGETDIR)/YSS Compiler
+OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YSS Compiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif

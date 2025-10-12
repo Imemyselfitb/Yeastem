@@ -32,36 +32,36 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-windows-x86_64/Yeastem Runtime
-TARGET = $(TARGETDIR)/Yeastem Runtime.exe
-OBJDIR = $(SolutionDir)bin-int/Debug-windows-x86_64/Yeastem Runtime
+TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/Yeastem Runtime
+TARGET = $(TARGETDIR)/Yeastem Runtime
+OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/Yeastem Runtime
 DEFINES += -DYST_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20 /MP
-LIBS += ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/Glad/lib/x64/Debug/Glad.lib
-LDDEPS += ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/Glad/lib/x64/Debug/Glad.lib
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
+LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/Debug/libGlad.a
+LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/Debug/libGlad.a
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Debug -L../../Dependancies/Glad/lib/x64/Debug -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-windows-x86_64/Yeastem Runtime
-TARGET = $(TARGETDIR)/Yeastem Runtime.exe
-OBJDIR = $(SolutionDir)bin-int/Release-windows-x86_64/Yeastem Runtime
+TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/Yeastem Runtime
+TARGET = $(TARGETDIR)/Yeastem Runtime
+OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/Yeastem Runtime
 DEFINES += -DYST_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
-LIBS += ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/Glad/lib/x64/Release/Glad.lib
-LDDEPS += ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/Glad/lib/x64/Release/Glad.lib
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
+LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/Release/libGlad.a
+LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/Release/libGlad.a
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Release -L../../Dependancies/Glad/lib/x64/Release -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-windows-x86_64/Yeastem Runtime
-TARGET = $(TARGETDIR)/Yeastem Runtime.exe
-OBJDIR = $(SolutionDir)bin-int/Dist-windows-x86_64/Yeastem Runtime
+TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/Yeastem Runtime
+TARGET = $(TARGETDIR)/Yeastem Runtime
+OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/Yeastem Runtime
 DEFINES += -DYST_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
-LIBS += ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/Glad/lib/x64/Dist/Glad.lib
-LDDEPS += ../../Dependancies/SDL3/lib/SDL3.lib ../../Dependancies/Glad/lib/x64/Dist/Glad.lib
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
+LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/Dist/libGlad.a
+LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/Dist/libGlad.a
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Dist -L../../Dependancies/Glad/lib/x64/Dist -L/usr/lib64 -m64 -s
 
 endif
