@@ -22,7 +22,7 @@ void Scene::Init(ObjectID sceneID, ResourceManager& resourceManager)
 Entity Scene::CreateEntity(const char* NodePath, const char* Name, entt::entity Parent)
 {
 	Entity entity{ m_Registry.create(), this };
-	entity.AddComponent<TagComponent>(NodePath, Name, Parent);
+	entity.template AddComponent<TagComponent>(NodePath, Name, Parent);
 	return entity;
 }
 
@@ -42,22 +42,22 @@ void Scene::SetScriptAllComponents()
 {
 	if constexpr (IsEnttGroupOwnable<Component>)
 	{
-		entt::basic_group group = m_Registry.group<Component>(entt::get<TagComponent>);
+		entt::basic_group group = m_Registry.template group<Component>(entt::template get<TagComponent>);
 		for (entt::entity entity : group)
 		{
-			Component& component = group.get<Component>(entity);
-			TagComponent& tag = group.get<TagComponent>(entity);
+			Component& component = group.template get<Component>(entity);
+			TagComponent& tag = group.template get<TagComponent>(entity);
 
 			m_LuaScene.SetComponent(component, tag);
 		}
 	}
 	else
 	{
-		entt::basic_group group = m_Registry.group<>(entt::get<Component, TagComponent>);
+		entt::basic_group group = m_Registry.template group<>(entt::get<Component, TagComponent>);
 		for (entt::entity entity : group)
 		{
-			Component& component = m_Registry.get<Component>(entity);
-			TagComponent& tag = m_Registry.get<TagComponent>(entity);
+			Component& component = m_Registry.template get<Component>(entity);
+			TagComponent& tag = m_Registry.template get<TagComponent>(entity);
 
 			m_LuaScene.SetComponent(component, tag);
 		}
@@ -67,11 +67,11 @@ void Scene::SetScriptAllComponents()
 template<typename Component>
 void Scene::GetScriptAllComponents()
 {
-	entt::basic_group group = m_Registry.group<>(entt::get<Component, TagComponent>);
+	entt::basic_group group = m_Registry.template group<>(entt::template get<Component, TagComponent>);
 	for (entt::entity entity : group)
 	{
-		Component& component = m_Registry.get<Component>(entity);
-		TagComponent& tag = m_Registry.get<TagComponent>(entity);
+		Component& component = m_Registry.template get<Component>(entity);
+		TagComponent& tag = m_Registry.template get<TagComponent>(entity);
 
 		m_LuaScene.GetComponent(component, tag);
 	}
@@ -80,11 +80,11 @@ void Scene::GetScriptAllComponents()
 void Scene::InitScripts()
 {
 	m_ScriptsInitiated = true;
-	entt::basic_group scriptGroup = m_Registry.group<ScriptComponent>(entt::get<TagComponent>);
+	entt::basic_group scriptGroup = m_Registry.template group<ScriptComponent>(entt::template get<TagComponent>);
 	for (entt::entity entity : scriptGroup)
 	{
-		ScriptComponent& script = scriptGroup.get<ScriptComponent>(entity);
-		TagComponent& tag = scriptGroup.get<TagComponent>(entity);
+		ScriptComponent& script = scriptGroup.template get<ScriptComponent>(entity);
+		TagComponent& tag = scriptGroup.template get<TagComponent>(entity);
 
 		m_LuaScene.ExecuteScript(script, tag);
 	}
@@ -105,11 +105,11 @@ void Scene::UpdateGlobalTransforms(entt::entity entity, TransformComponent& tran
 	if (transform.FrameUpdate == frameID)
 		return;
 
-	TagComponent& tag = m_Registry.get<TagComponent>(entity);
+	TagComponent& tag = m_Registry.template get<TagComponent>(entity);
 	
 	if (tag.Parent == entt::null || 
 		!m_Registry.valid(tag.Parent) || 
-		!m_Registry.any_of<TransformComponent>(tag.Parent))
+		!m_Registry.template any_of<TransformComponent>(tag.Parent))
 	{
 		transform.GlobalPosition = transform.Position;
 		transform.GlobalRotation = transform.Rotation;
@@ -119,7 +119,7 @@ void Scene::UpdateGlobalTransforms(entt::entity entity, TransformComponent& tran
 		return;
 	}
 	
-	TransformComponent& parentTransform = m_Registry.get<TransformComponent>(tag.Parent);
+	TransformComponent& parentTransform = m_Registry.template get<TransformComponent>(tag.Parent);
 	UpdateGlobalTransforms(tag.Parent, parentTransform, frameID);
 
 	transform.GlobalPosition = parentTransform.TransformPoint(transform.Position);
@@ -137,10 +137,10 @@ void Scene::Update(float deltaTime)
 	static uint32_t frameID = 0;
 	frameID++;
 
-	entt::basic_view transforms = m_Registry.view<TransformComponent, TagComponent>();
+	entt::basic_view transforms = m_Registry.template view<TransformComponent, TagComponent>();
 	for (entt::entity entity : transforms)
 	{
-		TransformComponent& transform = m_Registry.get<TransformComponent>(entity);
+		TransformComponent& transform = m_Registry.template get<TransformComponent>(entity);
 		UpdateGlobalTransforms(entity, transform, frameID);
 	}
 	
@@ -154,10 +154,10 @@ void Scene::Update(float deltaTime)
 
 		m_LuaScene.UpdateWindow(SceneSize);
 		
-		entt::basic_group scriptGroup = m_Registry.group<ScriptComponent>(entt::get<TagComponent>);
+		entt::basic_group scriptGroup = m_Registry.template group<ScriptComponent>(entt::template get<TagComponent>);
 		for (entt::entity entity : scriptGroup)
 		{
-			TagComponent& tag = m_Registry.get<TagComponent>(entity);
+			TagComponent& tag = m_Registry.template get<TagComponent>(entity);
 			m_LuaScene.CallYeastemFunction(tag, "Update", deltaTime);
 		}
 
@@ -177,7 +177,7 @@ void Scene::RecreateFrameBuffer(uint32_t width, uint32_t height)
 
 void Scene::CreateFrameBuffer(uint32_t width, uint32_t height)
 {
-	m_FrameBuffer = std::make_unique<FrameBuffer>(width, height);
+	m_FrameBuffer = std::template make_unique<FrameBuffer>(width, height);
 }
 
 void Scene::Render(ResourceManager& resourceManager)
@@ -193,13 +193,13 @@ void Scene::Render(ResourceManager& resourceManager)
 
 	Renderer::BeginScene(resourceManager);
 
-	entt::basic_group quadRenderables = m_Registry.group<RenderQuadComponent, TransformComponent>();
-	quadRenderables.sort<TransformComponent>([](const TransformComponent& a, const TransformComponent& b) {
+	entt::basic_group quadRenderables = m_Registry.template group<RenderQuadComponent, TransformComponent>();
+	quadRenderables.template sort<TransformComponent>([](const TransformComponent& a, const TransformComponent& b) {
 		return a.GlobalZLevel < b.GlobalZLevel;
 	});
 	for (entt::entity entity : quadRenderables)
 	{
-		const auto& [quad, transform] = quadRenderables.get<RenderQuadComponent, TransformComponent>(entity);
+		const auto& [quad, transform] = quadRenderables.template get<RenderQuadComponent, TransformComponent>(entity);
 		Renderer::Submit(quad, transform, resourceManager, SceneSize);
 	}
 

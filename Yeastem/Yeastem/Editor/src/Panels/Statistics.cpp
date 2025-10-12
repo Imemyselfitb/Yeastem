@@ -16,7 +16,7 @@ void calculateFPS()
 	fps++;
 
 	std::chrono::time_point<std::chrono::steady_clock> currentTime = std::chrono::high_resolution_clock::now();
-	if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - oldTime) >= std::chrono::seconds{ 1 })
+	if (std::chrono::template duration_cast<std::chrono::seconds>(currentTime - oldTime) >= std::chrono::seconds{ 1 })
 	{
 		oldTime = currentTime;
 		FPS = fps;

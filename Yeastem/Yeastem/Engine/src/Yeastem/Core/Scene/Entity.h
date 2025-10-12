@@ -14,28 +14,28 @@ public:
 	template <typename Component>
 	bool HasComponent() const
 	{
-		return m_Scene->m_Registry.any_of<Component>(m_Entity);
+		return m_Scene->m_Registry.template any_of<Component>(m_Entity);
 	}
 
 	template <typename Component, typename... Args>
 	Component& AddComponent(Args... args)
 	{
 		YEASTEM_ASSERT("Entity already has Component!", !HasComponent<Component>());
-		return m_Scene->m_Registry.emplace<Component>(m_Entity, std::forward<Args>(args)...);
+		return m_Scene->m_Registry.template emplace<Component>(m_Entity, std::template forward<Args>(args)...);
 	}
 
 	template <typename Component>
 	Component& GetComponent() const
 	{
 		YEASTEM_ASSERT("Entity does not have Component!", HasComponent<Component>());
-		return m_Scene->m_Registry.get<Component>(m_Entity);
+		return m_Scene->m_Registry.template get<Component>(m_Entity);
 	}
 
 	template <typename Component>
 	void RemoveComponent()
 	{
 		YEASTEM_ASSERT("Entity does not have Component!", HasComponent<Component>());
-		m_Scene->m_Registry.remove<Component>(m_Entity);
+		m_Scene->m_Registry.template remove<Component>(m_Entity);
 	}
 
 	void Destroy()

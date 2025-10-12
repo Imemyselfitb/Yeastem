@@ -38,8 +38,8 @@ OBJDIR = ../../bin-int/Debug-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20
-LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a -lYeastem Engine
-LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
+LIBS += ../../bin/Debug-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
+LDDEPS += ../../bin/Debug-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
@@ -49,8 +49,8 @@ OBJDIR = ../../bin-int/Release-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
-LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a -lYeastem Engine
-LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
+LIBS += ../../bin/Release-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
+LDDEPS += ../../bin/Release-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
@@ -60,8 +60,8 @@ OBJDIR = ../../bin-int/Dist-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
-LIBS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a -lYeastem Engine
-LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
+LIBS += ../../bin/Dist-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
+LDDEPS += ../../bin/Dist-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif

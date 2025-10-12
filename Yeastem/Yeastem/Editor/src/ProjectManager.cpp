@@ -115,7 +115,7 @@ ObjectID ProjectManager::LoadStem(
 ) {
 	if (stemID == -1)
 	{
-		sceneID = m_AllScenes.Load(std::make_shared<Scene>(stemFilePath));
+		sceneID = m_AllScenes.Load(std::template make_shared<Scene>(stemFilePath));
 		Ref<Scene>& currentScene = m_AllScenes.Get(sceneID);
 		currentScene->Init(sceneID, Application::Get().GetResourceManager());
 
@@ -170,7 +170,7 @@ ObjectID ProjectManager::LoadStem(
 			}
 
 			std::string relativePath = (std::string)section.allProperties[src->values_start];
-			entity.AddComponent<ExtStemComponent>(relativePath);
+			entity.template AddComponent<ExtStemComponent>(relativePath);
 			m_HierarchyPanel.AddNode(entity, parentID);
 			LoadStem(s_CurrentProjectFolderPath / relativePath, stemPaths[thisID], parentID + thisID, sceneID);
 		}
@@ -178,19 +178,19 @@ ObjectID ProjectManager::LoadStem(
 		{
 			Entity stem = m_HierarchyPanel.GetNode(stemID).entity;
 
-			if (stem.HasComponent<ExtStemComponent>())
+			if (stem.template HasComponent<ExtStemComponent>())
 			{
-				ExtStemComponent& stemComponent = stem.GetComponent<ExtStemComponent>();
+				ExtStemComponent& stemComponent = stem.template GetComponent<ExtStemComponent>();
 				stemComponent.Source = std::filesystem::absolute(stemFilePath);
 			}
-			else if (!stem.HasComponent<StemComponent>())
+			else if (!stem.template HasComponent<StemComponent>())
 			{
-				StemComponent& stemComponent = stem.AddComponent<StemComponent>(stemFilePath);
+				StemComponent& stemComponent = stem.template AddComponent<StemComponent>(stemFilePath);
 				stemComponent.nodeID = stemID;
 				stemComponent.Source = std::filesystem::absolute(stemFilePath);
 				stemComponent.SceneID = currentScene->GetID();
 
-				TagComponent& tag = stem.GetComponent<TagComponent>();
+				TagComponent& tag = stem.template GetComponent<TagComponent>();
 				tag.Name = (std::string)section.getAttribute("name");
 				tag.NodePath = stemPaths[0];
 				stemPaths[0] = tag.NodePath + tag.Name + '/';
@@ -223,7 +223,7 @@ void ProjectManager::LoadEntity(
 template<>
 void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const SectionView& section)
 {
-	TransformComponent& transform = entity.AddComponent<TransformComponent>();
+	TransformComponent& transform = entity.template AddComponent<TransformComponent>();
 
 	const SectionView::KV_Multi* pos = section.getProperty("position");
 	if (pos)
@@ -253,7 +253,7 @@ void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const Sec
 template<>
 void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section)
 {
-	RenderQuadComponent& renderQuad = entity.AddComponent<RenderQuadComponent>();
+	RenderQuadComponent& renderQuad = entity.template AddComponent<RenderQuadComponent>();
 
 	const SectionView::KV_Multi* current_texture = section.getProperty("current_texture");
 	if (current_texture)
@@ -288,7 +288,7 @@ void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const Se
 template<>
 void ProjectManager::LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section)
 {
-	ScriptComponent& script = entity.AddComponent<ScriptComponent>();
+	ScriptComponent& script = entity.template AddComponent<ScriptComponent>();
 
 	const SectionView::KV_Multi* src = section.getProperty("src");
 	if (src)
@@ -300,10 +300,10 @@ void ProjectManager::LoadComponent<ScriptComponent>(Entity& entity, const Sectio
 void ProjectManager::SaveProject()
 {
 	Ref<Scene>& currentScene = Application::Get().GetCurrentScene();
-	entt::basic_view stemView = currentScene->GetRegistry().view<StemComponent>();
+	entt::basic_view stemView = currentScene->GetRegistry().template view<StemComponent>();
 	for (entt::entity entity : stemView)
 	{
-		std::cout << "Saving Stem: " << currentScene->GetRegistry().get<TagComponent>(entity).Name << '\n';
+		std::cout << "Saving Stem: " << currentScene->GetRegistry().template get<TagComponent>(entity).Name << '\n';
 		SaveStem(Entity{ entity, currentScene.get() });
 	}
 }
@@ -311,7 +311,7 @@ void ProjectManager::SaveProject()
 void ProjectManager::SaveStem(const Entity& entity)
 {
 	INI_File stemFile;
-	StemComponent& stemComponent = entity.GetComponent<StemComponent>();
+	StemComponent& stemComponent = entity.template GetComponent<StemComponent>();
 	SaveNode(stemComponent.nodeID, stemFile, stemComponent.nodeID);
 	stemFile.sections[0].header = "root";
 	INI_Parser::WriteFile(stemFile, stemComponent.Source);
@@ -325,19 +325,19 @@ void ProjectManager::SaveNode(HierarchyNode::NodeID nodeID, INI_File& file, Hier
 	if (node.ParentID != -1)
 		section.attributes.emplace_back("parent", node.ParentID - rootID);
 
-	if (node.entity.HasComponent<ExtStemComponent>())
+	if (node.entity.template HasComponent<ExtStemComponent>())
 	{
-		ExtStemComponent& extStemComponent = node.entity.GetComponent<ExtStemComponent>();
+		ExtStemComponent& extStemComponent = node.entity.template GetComponent<ExtStemComponent>();
 		section.properties.push_back(SectionView::KV_Multi{ "src", section.allProperties.size(), 1 });
 		section.allProperties.emplace_back(std::filesystem::relative(extStemComponent.Source, s_CurrentProjectFolderPath).string());
 		section.header = "extstem";
-		section.attributes.emplace_back("name", node.entity.GetComponent<TagComponent>().Name);
+		section.attributes.emplace_back("name", node.entity.template GetComponent<TagComponent>().Name);
 		return;
 	}
 	
 	section.header = "stem";
 	SaveEntity(node, section);
-	section.attributes.emplace_back("name", node.entity.GetComponent<TagComponent>().Name);
+	section.attributes.emplace_back("name", node.entity.template GetComponent<TagComponent>().Name);
 
 	HierarchyNode::NodeID childID = node.FirstChildID;
 	while (childID != -1)
@@ -369,7 +369,7 @@ void ProjectManager::SaveEntity(const HierarchyNode& node, SectionView& section)
 template<>
 void ProjectManager::SaveComponent<TransformComponent>(const Entity& entity, SectionView& section)
 {
-	TransformComponent& transform = entity.GetComponent<TransformComponent>();
+	TransformComponent& transform = entity.template GetComponent<TransformComponent>();
 	section.properties.push_back(SectionView::KV_Multi{ "position", section.allProperties.size(), 2 });
 	section.allProperties.emplace_back(transform.Position.x);
 	section.allProperties.emplace_back(transform.Position.y);
@@ -385,7 +385,7 @@ void ProjectManager::SaveComponent<TransformComponent>(const Entity& entity, Sec
 template<>
 void ProjectManager::SaveComponent<RenderQuadComponent>(const Entity& entity, SectionView& section)
 {
-	RenderQuadComponent& transform = entity.GetComponent<RenderQuadComponent>();
+	RenderQuadComponent& transform = entity.template GetComponent<RenderQuadComponent>();
 	section.properties.push_back(SectionView::KV_Multi{ "size", section.allProperties.size(), 2 });
 	section.allProperties.emplace_back(transform.Size.x);
 	section.allProperties.emplace_back(transform.Size.y);
@@ -405,7 +405,7 @@ void ProjectManager::SaveComponent<RenderQuadComponent>(const Entity& entity, Se
 template<>
 void ProjectManager::SaveComponent<ScriptComponent>(const Entity& entity, SectionView& section)
 {
-	ScriptComponent& script = entity.GetComponent<ScriptComponent>();
+	ScriptComponent& script = entity.template GetComponent<ScriptComponent>();
 	section.properties.push_back(SectionView::KV_Multi{ "src", section.allProperties.size(), 1 });
 	std::filesystem::path relpath = std::filesystem::relative(std::filesystem::absolute(script.FilePath), s_CurrentProjectFolderPath);
 	section.allProperties.emplace_back(relpath.string());
@@ -472,8 +472,8 @@ void ProjectManager::ShowStemBar()
 	for (const auto& [id, scene] : m_AllScenes.GetResources())
 	{
 		Entity entity = scene->GetRootEntity();
-		StemComponent& stemComponent = entity.GetComponent<StemComponent>();
-		std::string name = entity.GetComponent<TagComponent>().Name + "##" + std::to_string((uint64_t)id);
+		StemComponent& stemComponent = entity.template GetComponent<StemComponent>();
+		std::string name = entity.template GetComponent<TagComponent>().Name + "##" + std::to_string((uint64_t)id);
 
 		bool open = true;
 		if (ImGui::BeginTabItem(name.c_str(), &open))

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yeastem Editor", "Yeastem\Editor\Yeastem Editor.vcxproj", "{A43A8714-9008-7B1A-799C-EB406509577F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YeastemEditor", "Yeastem\Editor\YeastemEditor.vcxproj", "{E47E121B-503F-8E51-197A-D7CE85F9D22D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
 EndProject
@@ -15,11 +15,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL3", "Dependancies\SDL3\S
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stb_image", "Dependancies\stb_image\stb_image\stb_image.vcxproj", "{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YSS Compiler", "Yeastem\Compiler\YSS Compiler.vcxproj", "{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YSSCompiler", "Yeastem\Compiler\YSSCompiler.vcxproj", "{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yeastem Engine", "Yeastem\Engine\Yeastem Engine.vcxproj", "{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YeastemEngine", "Yeastem\Engine\YeastemEngine.vcxproj", "{332CC61B-9FEC-4152-6827-8BCFD4A6862E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yeastem Runtime", "Yeastem\Runtime\Yeastem Runtime.vcxproj", "{61B825B6-CD43-937A-D654-166F425FEF7A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YeastemRuntime", "Yeastem\Runtime\YeastemRuntime.vcxproj", "{A184198E-8D52-0D94-76E6-7DBA6253E9F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,12 +28,12 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A43A8714-9008-7B1A-799C-EB406509577F}.Debug|x64.ActiveCfg = Debug|x64
-		{A43A8714-9008-7B1A-799C-EB406509577F}.Debug|x64.Build.0 = Debug|x64
-		{A43A8714-9008-7B1A-799C-EB406509577F}.Dist|x64.ActiveCfg = Dist|x64
-		{A43A8714-9008-7B1A-799C-EB406509577F}.Dist|x64.Build.0 = Dist|x64
-		{A43A8714-9008-7B1A-799C-EB406509577F}.Release|x64.ActiveCfg = Release|x64
-		{A43A8714-9008-7B1A-799C-EB406509577F}.Release|x64.Build.0 = Release|x64
+		{E47E121B-503F-8E51-197A-D7CE85F9D22D}.Debug|x64.ActiveCfg = Debug|x64
+		{E47E121B-503F-8E51-197A-D7CE85F9D22D}.Debug|x64.Build.0 = Debug|x64
+		{E47E121B-503F-8E51-197A-D7CE85F9D22D}.Dist|x64.ActiveCfg = Dist|x64
+		{E47E121B-503F-8E51-197A-D7CE85F9D22D}.Dist|x64.Build.0 = Dist|x64
+		{E47E121B-503F-8E51-197A-D7CE85F9D22D}.Release|x64.ActiveCfg = Release|x64
+		{E47E121B-503F-8E51-197A-D7CE85F9D22D}.Release|x64.Build.0 = Release|x64
 		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Debug|x64.ActiveCfg = Debug|x64
 		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Debug|x64.Build.0 = Debug|x64
 		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Dist|x64.ActiveCfg = Dist|x64
@@ -64,24 +64,24 @@ Global
 		{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}.Dist|x64.Build.0 = Dist|x64
 		{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}.Release|x64.ActiveCfg = Release|x64
 		{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}.Release|x64.Build.0 = Release|x64
-		{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}.Debug|x64.ActiveCfg = Debug|x64
-		{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}.Debug|x64.Build.0 = Debug|x64
-		{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}.Dist|x64.ActiveCfg = Dist|x64
-		{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}.Dist|x64.Build.0 = Dist|x64
-		{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}.Release|x64.ActiveCfg = Release|x64
-		{5FAD6BB5-4B10-FB59-F495-3310E0D7C6DC}.Release|x64.Build.0 = Release|x64
-		{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}.Debug|x64.ActiveCfg = Debug|x64
-		{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}.Debug|x64.Build.0 = Debug|x64
-		{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}.Dist|x64.ActiveCfg = Dist|x64
-		{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}.Dist|x64.Build.0 = Dist|x64
-		{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}.Release|x64.ActiveCfg = Release|x64
-		{F3E73A15-DFB5-2E1B-C849-9F41B4B60A80}.Release|x64.Build.0 = Release|x64
-		{61B825B6-CD43-937A-D654-166F425FEF7A}.Debug|x64.ActiveCfg = Debug|x64
-		{61B825B6-CD43-937A-D654-166F425FEF7A}.Debug|x64.Build.0 = Debug|x64
-		{61B825B6-CD43-937A-D654-166F425FEF7A}.Dist|x64.ActiveCfg = Dist|x64
-		{61B825B6-CD43-937A-D654-166F425FEF7A}.Dist|x64.Build.0 = Dist|x64
-		{61B825B6-CD43-937A-D654-166F425FEF7A}.Release|x64.ActiveCfg = Release|x64
-		{61B825B6-CD43-937A-D654-166F425FEF7A}.Release|x64.Build.0 = Release|x64
+		{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}.Debug|x64.ActiveCfg = Debug|x64
+		{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}.Debug|x64.Build.0 = Debug|x64
+		{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}.Dist|x64.ActiveCfg = Dist|x64
+		{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}.Dist|x64.Build.0 = Dist|x64
+		{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}.Release|x64.ActiveCfg = Release|x64
+		{BFFC8D98-2BB2-068E-B4A6-0065205BFD91}.Release|x64.Build.0 = Release|x64
+		{332CC61B-9FEC-4152-6827-8BCFD4A6862E}.Debug|x64.ActiveCfg = Debug|x64
+		{332CC61B-9FEC-4152-6827-8BCFD4A6862E}.Debug|x64.Build.0 = Debug|x64
+		{332CC61B-9FEC-4152-6827-8BCFD4A6862E}.Dist|x64.ActiveCfg = Dist|x64
+		{332CC61B-9FEC-4152-6827-8BCFD4A6862E}.Dist|x64.Build.0 = Dist|x64
+		{332CC61B-9FEC-4152-6827-8BCFD4A6862E}.Release|x64.ActiveCfg = Release|x64
+		{332CC61B-9FEC-4152-6827-8BCFD4A6862E}.Release|x64.Build.0 = Release|x64
+		{A184198E-8D52-0D94-76E6-7DBA6253E9F8}.Debug|x64.ActiveCfg = Debug|x64
+		{A184198E-8D52-0D94-76E6-7DBA6253E9F8}.Debug|x64.Build.0 = Debug|x64
+		{A184198E-8D52-0D94-76E6-7DBA6253E9F8}.Dist|x64.ActiveCfg = Dist|x64
+		{A184198E-8D52-0D94-76E6-7DBA6253E9F8}.Dist|x64.Build.0 = Dist|x64
+		{A184198E-8D52-0D94-76E6-7DBA6253E9F8}.Release|x64.ActiveCfg = Release|x64
+		{A184198E-8D52-0D94-76E6-7DBA6253E9F8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

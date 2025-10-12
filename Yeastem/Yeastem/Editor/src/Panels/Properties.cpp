@@ -21,13 +21,13 @@ void PropertyPanel::Render(bool& isOpen, HierarchyPanel& hierarchyPanel)
 		{
 			Entity entity = hierarchyPanel.GetNode(selectedNode).entity;
 
-			if (entity.HasComponent<TransformComponent>())
+			if (entity.template HasComponent<TransformComponent>())
 				RenderComponent<TransformComponent>(entity);
-			if (entity.HasComponent<ScriptComponent>())
+			if (entity.template HasComponent<ScriptComponent>())
 				RenderComponent<ScriptComponent>(entity);
-			if (entity.HasComponent<RenderQuadComponent>())
+			if (entity.template HasComponent<RenderQuadComponent>())
 				RenderComponent<RenderQuadComponent>(entity);
-			if (entity.HasComponent<TagComponent>())
+			if (entity.template HasComponent<TagComponent>())
 				RenderComponent<TagComponent>(entity);
 		}
 		else
@@ -111,7 +111,7 @@ static void RenderVector2f(const std::string& label, Vector2f& vec, float column
 
 template<> void PropertyPanel::RenderComponent<TransformComponent>(Entity& entity)
 {
-	TransformComponent& transform = entity.GetComponent<TransformComponent>();
+	TransformComponent& transform = entity.template GetComponent<TransformComponent>();
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
@@ -144,7 +144,7 @@ template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& enti
 {
 	SingleResourceManager<Texture>& textureManager = Application::Get().GetResourceManager().Textures;
 
-	RenderQuadComponent& sprite = entity.GetComponent<RenderQuadComponent>();
+	RenderQuadComponent& sprite = entity.template GetComponent<RenderQuadComponent>();
 	if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
@@ -251,7 +251,7 @@ template<> void PropertyPanel::RenderComponent<RenderQuadComponent>(Entity& enti
 
 template<> void PropertyPanel::RenderComponent<ScriptComponent>(Entity& entity)
 {
-	ScriptComponent& script = entity.GetComponent<ScriptComponent>();
+	ScriptComponent& script = entity.template GetComponent<ScriptComponent>();
 	if (ImGui::CollapsingHeader("Script", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();
@@ -288,7 +288,7 @@ template<> void PropertyPanel::RenderComponent<ScriptComponent>(Entity& entity)
 
 template<> void PropertyPanel::RenderComponent<TagComponent>(Entity& entity)
 {
-	TagComponent& tag = entity.GetComponent<TagComponent>();
+	TagComponent& tag = entity.template GetComponent<TagComponent>();
 	if (ImGui::CollapsingHeader("Tag", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImVec2 panelSize = ImGui::GetContentRegionAvail();

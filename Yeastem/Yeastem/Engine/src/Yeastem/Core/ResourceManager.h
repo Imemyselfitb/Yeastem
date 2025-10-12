@@ -16,9 +16,9 @@ public:
 	ObjectID Load(Args... args)
 	{
 		ObjectID objID = 0;
-		(..., hashCombine(objID, std::forward<Args>(args)));
+		(..., hashCombine(objID, std::template forward<Args>(args)));
 		if (!Exists(objID))
-			m_Resources.emplace(std::piecewise_construct, std::forward_as_tuple(objID), std::forward_as_tuple(std::forward<Args>(args)...));
+			m_Resources.emplace(std::piecewise_construct, std::forward_as_tuple(objID), std::forward_as_tuple(std::template forward<Args>(args)...));
 
 		return objID;
 	}
@@ -34,7 +34,7 @@ public:
 private:
 	template <typename T>
 	static void hashCombine(std::size_t& seed, const T& value) {
-		seed ^= (std::hash<T>()(value)) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		seed ^= (std::template hash<T>()(value)) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
 
 private:

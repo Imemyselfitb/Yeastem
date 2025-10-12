@@ -44,9 +44,9 @@ static RenderBatch<QuadVertex, 4> s_QuadData;
 void Renderer::Init(ResourceManager& resourceManager)
 {
 	VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
-	layout.Push<float>(1);
+	layout.template Push<float>(3);
+	layout.template Push<float>(2);
+	layout.template Push<float>(1);
 
 	s_QuadData.MaxVertices = 400;
 	s_QuadData.MaxIndices = 600;
@@ -80,10 +80,10 @@ void Renderer::Init(ResourceManager& resourceManager)
 	s_QuadData.DefaultTexturePositions[2] = { 1.0f, 1.0f };
 	s_QuadData.DefaultTexturePositions[3] = { 0.0f, 1.0f };
 
-	s_QuadData.VertexBufferPtr = std::make_unique<VertexBuffer>(nullptr, (uint32_t)(s_QuadData.MaxVertices * sizeof(QuadVertex)));
-	s_QuadData.IndexBufferPtr = std::make_unique<IndexBuffer>(nullptr, s_QuadData.MaxIndices);
+	s_QuadData.VertexBufferPtr = std::template make_unique<VertexBuffer>(nullptr, (uint32_t)(s_QuadData.MaxVertices * sizeof(QuadVertex)));
+	s_QuadData.IndexBufferPtr = std::template make_unique<IndexBuffer>(nullptr, s_QuadData.MaxIndices);
 
-	s_QuadData.LayoutPtr = std::make_shared<VertexArray>();
+	s_QuadData.LayoutPtr = std::template make_shared<VertexArray>();
 	s_QuadData.LayoutPtr->AddBuffer(*s_QuadData.VertexBufferPtr, layout);
 }
 

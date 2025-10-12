@@ -126,7 +126,7 @@ project "YeastemEditor"
 
 	links
 	{
-		"Yeastem Engine",
+		"YeastemEngine",
 		"SDL3",
 		"ImGui"
 	}

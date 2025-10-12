@@ -227,7 +227,7 @@ void HierarchyPanel::OnNodeClicked(HierarchyNode::NodeID nodeID, const char* nod
 bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 {
 	HierarchyNode& node = m_Hierarchy[nodeID];
-	TagComponent& tag = node.entity.GetComponent<TagComponent>();
+	TagComponent& tag = node.entity.template GetComponent<TagComponent>();
 
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 	flags |= (node.IsSelected) * ImGuiTreeNodeFlags_Selected;
@@ -279,7 +279,7 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 			{
 				if (m_SelectedNodes[i].IsTombstone == false)
 				{
-					TagComponent& selectedTag = m_Hierarchy[m_SelectedNodes[i].ID].entity.GetComponent<TagComponent>();
+					TagComponent& selectedTag = m_Hierarchy[m_SelectedNodes[i].ID].entity.template GetComponent<TagComponent>();
 					ImGui::Text("%s", selectedTag.Name.c_str());
 				}
 			}
@@ -314,7 +314,7 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 					if (selected == NodeType::None)
 						return;
 
-					TagComponent& NodeParentTag = m_Hierarchy[m_LastSelectedNodeID].entity.GetComponent<TagComponent>();
+					TagComponent& NodeParentTag = m_Hierarchy[m_LastSelectedNodeID].entity.template GetComponent<TagComponent>();
 
 					Ref<Scene>& currentScene = Application::Get().GetCurrentScene();
 					Entity newEntity = currentScene->CreateEntity(
@@ -331,7 +331,7 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 					AddSelectedNode(newEntityID);
 
 					m_RenamingNodeID = newEntityID;
-					TagComponent& newTag = newEntity.GetComponent<TagComponent>();
+					TagComponent& newTag = newEntity.template GetComponent<TagComponent>();
 					strncpy_s(RenameBuffer, newTag.Name.c_str(), sizeof(RenameBuffer) - 1);
 					RenameBuffer[sizeof(RenameBuffer) - 1] = '\0';
 				});
@@ -381,7 +381,7 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 	{
 		if (!treeModified)
 		{
-			if (nodeID != 0 && node.entity.HasComponent<ExtStemComponent>())
+			if (nodeID != 0 && node.entity.template HasComponent<ExtStemComponent>())
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
 
 			HierarchyNode::NodeID childNodes = node.FirstChildID;
@@ -395,7 +395,7 @@ bool HierarchyPanel::RenderNode(HierarchyNode::NodeID nodeID)
 				childNodes = m_Hierarchy[childNodes].NextSiblingID;
 			}
 
-			if (nodeID != 0 && node.entity.HasComponent<ExtStemComponent>())
+			if (nodeID != 0 && node.entity.template HasComponent<ExtStemComponent>())
 				ImGui::PopStyleColor();
 		}
 		ImGui::TreePop();
@@ -443,7 +443,7 @@ bool HierarchyPanel::AddNode(Entity entity, HierarchyNode::NodeID parentID, Hier
 		m_Hierarchy[lastSibling].NextSiblingID = newID;
 	}
 
-	if (entity.HasComponent<ExtStemComponent>())
+	if (entity.template HasComponent<ExtStemComponent>())
 		m_Hierarchy[newID].IsExpanded = false; // Default Close other Stems
 
 	if (idOut)
@@ -551,8 +551,8 @@ void HierarchyPanel::MoveNode(HierarchyNode::NodeID nodeID, HierarchyNode::NodeI
 	HierarchyNode& newParent = m_Hierarchy[newParentID];
 
 	// Change Node paths
-	TagComponent& tag = node.entity.GetComponent<TagComponent>();
-	TagComponent& newParentTag = newParent.entity.GetComponent<TagComponent>();
+	TagComponent& tag = node.entity.template GetComponent<TagComponent>();
+	TagComponent& newParentTag = newParent.entity.template GetComponent<TagComponent>();
 	std::string newPath = newParentTag.NodePath + newParentTag.Name + '/';
 	tag.NodePath = newPath;
 
@@ -593,12 +593,12 @@ void HierarchyPanel::MoveNode(HierarchyNode::NodeID nodeID, HierarchyNode::NodeI
 	UpdateChildPaths(node, oldPath, newPath);
 
 	// Update Global transforms (if applicable) of node
-	if (node.entity.HasComponent<TransformComponent>())
+	if (node.entity.template HasComponent<TransformComponent>())
 	{
-		TransformComponent& transform = node.entity.GetComponent<TransformComponent>();
-		if (newParent.entity.HasComponent<TransformComponent>())
+		TransformComponent& transform = node.entity.template GetComponent<TransformComponent>();
+		if (newParent.entity.template HasComponent<TransformComponent>())
 		{
-			TransformComponent& parentTransform = newParent.entity.GetComponent<TransformComponent>();
+			TransformComponent& parentTransform = newParent.entity.template GetComponent<TransformComponent>();
 			transform.Position = transform.GlobalPosition - parentTransform.GlobalPosition;
 			transform.Rotation = transform.GlobalRotation - parentTransform.GlobalRotation;
 			transform.Scale = transform.GlobalScale / parentTransform.GlobalScale;
@@ -613,7 +613,7 @@ void HierarchyPanel::MoveNode(HierarchyNode::NodeID nodeID, HierarchyNode::NodeI
 }
 
 void HierarchyPanel::RenameNode(HierarchyNode& node, const std::string& newName) {
-	TagComponent& tag = node.entity.GetComponent<TagComponent>();
+	TagComponent& tag = node.entity.template GetComponent<TagComponent>();
 
 	// Store old full path before renaming
 	std::string oldPath = tag.NodePath + tag.Name;
@@ -645,7 +645,7 @@ void HierarchyPanel::UpdateChildPaths(HierarchyNode& node, const std::string& ol
 	while (childID != InvalidID)
 	{
 		HierarchyNode& childNode = m_Hierarchy[childID];
-		TagComponent& childTag = childNode.entity.GetComponent<TagComponent>();
+		TagComponent& childTag = childNode.entity.template GetComponent<TagComponent>();
 
 		// Replace old path with new path in child's NodePath
 		YEASTEM_ASSERT(childTag.NodePath.find(oldPath) != std::string::npos, "Child node does not contain Node Path!");
@@ -665,7 +665,7 @@ HierarchyNode::NodeID HierarchyPanel::GetChildByName(HierarchyNode& node, const 
 	while (childID != InvalidID)
 	{
 		HierarchyNode& childNode = m_Hierarchy[childID];
-		TagComponent& childTag = childNode.entity.GetComponent<TagComponent>();
+		TagComponent& childTag = childNode.entity.template GetComponent<TagComponent>();
 		if (nodeName == childTag.Name)
 			return childID;
 		
@@ -723,7 +723,7 @@ void HierarchyPanel::AssignChildName(
 	while (childID != InvalidID)
 	{
 		HierarchyNode& childNode = m_Hierarchy[childID];
-		TagComponent& childTag = childNode.entity.GetComponent<TagComponent>();
+		TagComponent& childTag = childNode.entity.template GetComponent<TagComponent>();
 		if (name == childTag.Name && childID != searchChildID)
 			return AssignChildName(parent, searchChildID, searchChildName, numberExtension + 1, forceNumberExtension);
 		

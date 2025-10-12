@@ -66,21 +66,21 @@ void NodeSelectPanel::ChangeType(Entity entity) const
 void NodeSelectPanel::RemoveComponents(Entity entity, uint32_t components) const
 {
 	if (components & ComponentTypes::Transform)
-		entity.RemoveComponent<TransformComponent>();
+		entity.template RemoveComponent<TransformComponent>();
 	if (components & ComponentTypes::RenderQuad)
-		entity.RemoveComponent<RenderQuadComponent>();
+		entity.template RemoveComponent<RenderQuadComponent>();
 	if (components & ComponentTypes::Script)
-		entity.RemoveComponent<ScriptComponent>();
+		entity.template RemoveComponent<ScriptComponent>();
 }
 
 void NodeSelectPanel::AddComponents(Entity entity, uint32_t components) const
 {
 	if (components & ComponentTypes::Transform)
-		entity.AddComponent<TransformComponent>();
+		entity.template AddComponent<TransformComponent>();
 	if (components & ComponentTypes::RenderQuad)
-		entity.AddComponent<RenderQuadComponent>();
+		entity.template AddComponent<RenderQuadComponent>();
 	if (components & ComponentTypes::Script)
-		entity.AddComponent<ScriptComponent>();
+		entity.template AddComponent<ScriptComponent>();
 }
 
 void NodeSelectPanel::OpenPanel(CallbackFn onSelected, NodeType defaultPrevious)

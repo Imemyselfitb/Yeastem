@@ -98,6 +98,7 @@ GENERATED += $(OBJDIR)/Texture.o
 GENERATED += $(OBJDIR)/Vector2.o
 GENERATED += $(OBJDIR)/VertexArray.o
 GENERATED += $(OBJDIR)/VertexBuffer.o
+GENERATED += $(OBJDIR)/VertexBufferLayout.o
 GENERATED += $(OBJDIR)/Window.o
 GENERATED += $(OBJDIR)/yst_pch.o
 OBJECTS += $(OBJDIR)/Application.o
@@ -119,6 +120,7 @@ OBJECTS += $(OBJDIR)/Texture.o
 OBJECTS += $(OBJDIR)/Vector2.o
 OBJECTS += $(OBJDIR)/VertexArray.o
 OBJECTS += $(OBJDIR)/VertexBuffer.o
+OBJECTS += $(OBJDIR)/VertexBufferLayout.o
 OBJECTS += $(OBJDIR)/Window.o
 OBJECTS += $(OBJDIR)/yst_pch.o
 
@@ -212,6 +214,9 @@ $(OBJDIR)/VertexArray.o: src/Yeastem/Core/OpenGL/Buffers/VertexArray.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/VertexBuffer.o: src/Yeastem/Core/OpenGL/Buffers/VertexBuffer.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/VertexBufferLayout.o: src/Yeastem/Core/OpenGL/Buffers/VertexBufferLayout.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Renderer.o: src/Yeastem/Core/OpenGL/Renderer.cpp
