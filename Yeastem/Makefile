@@ -14,10 +14,10 @@ ifeq ($(config),debug)
   SDL3_config = debug
   ImGui_config = debug
   stb_image_config = debug
-  Yeastem_Engine_config = debug
-  Yeastem_Editor_config = debug
-  Yeastem_Runtime_config = debug
-  YSS_Compiler_config = debug
+  YeastemEngine_config = debug
+  YeastemEditor_config = debug
+  YeastemRuntime_config = debug
+  YSSCompiler_config = debug
 
 else ifeq ($(config),release)
   Lua_config = release
@@ -25,10 +25,10 @@ else ifeq ($(config),release)
   SDL3_config = release
   ImGui_config = release
   stb_image_config = release
-  Yeastem_Engine_config = release
-  Yeastem_Editor_config = release
-  Yeastem_Runtime_config = release
-  YSS_Compiler_config = release
+  YeastemEngine_config = release
+  YeastemEditor_config = release
+  YeastemRuntime_config = release
+  YSSCompiler_config = release
 
 else ifeq ($(config),dist)
   Lua_config = dist
@@ -36,16 +36,16 @@ else ifeq ($(config),dist)
   SDL3_config = dist
   ImGui_config = dist
   stb_image_config = dist
-  Yeastem_Engine_config = dist
-  Yeastem_Editor_config = dist
-  Yeastem_Runtime_config = dist
-  YSS_Compiler_config = dist
+  YeastemEngine_config = dist
+  YeastemEditor_config = dist
+  YeastemRuntime_config = dist
+  YSSCompiler_config = dist
 
 else
   $(error "invalid configuration $(config)")
 endif
 
-PROJECTS := Lua Glad SDL3 ImGui stb_image Yeastem\ Engine Yeastem\ Editor Yeastem\ Runtime YSS\ Compiler
+PROJECTS := Lua Glad SDL3 ImGui stb_image YeastemEngine YeastemEditor YeastemRuntime YSSCompiler
 
 .PHONY: all clean help $(PROJECTS) Dependencies
 
@@ -83,28 +83,28 @@ ifneq (,$(stb_image_config))
 	@${MAKE} --no-print-directory -C Dependancies/stb_image/stb_image -f Makefile config=$(stb_image_config)
 endif
 
-Yeastem\ Engine: SDL3 stb_image Glad Lua ImGui
-ifneq (,$(Yeastem_Engine_config))
-	@echo "==== Building Yeastem Engine ($(Yeastem_Engine_config)) ===="
-	@${MAKE} --no-print-directory -C Yeastem/Engine -f Makefile config=$(Yeastem_Engine_config)
+YeastemEngine: SDL3 stb_image Glad Lua ImGui
+ifneq (,$(YeastemEngine_config))
+	@echo "==== Building YeastemEngine ($(YeastemEngine_config)) ===="
+	@${MAKE} --no-print-directory -C Yeastem/Engine -f Makefile config=$(YeastemEngine_config)
 endif
 
-Yeastem\ Editor: Yeastem\ Engine SDL3 ImGui
-ifneq (,$(Yeastem_Editor_config))
-	@echo "==== Building Yeastem Editor ($(Yeastem_Editor_config)) ===="
-	@${MAKE} --no-print-directory -C Yeastem/Editor -f Makefile config=$(Yeastem_Editor_config)
+YeastemEditor: SDL3 ImGui
+ifneq (,$(YeastemEditor_config))
+	@echo "==== Building YeastemEditor ($(YeastemEditor_config)) ===="
+	@${MAKE} --no-print-directory -C Yeastem/Editor -f Makefile config=$(YeastemEditor_config)
 endif
 
-Yeastem\ Runtime: SDL3 Glad
-ifneq (,$(Yeastem_Runtime_config))
-	@echo "==== Building Yeastem Runtime ($(Yeastem_Runtime_config)) ===="
-	@${MAKE} --no-print-directory -C Yeastem/Runtime -f Makefile config=$(Yeastem_Runtime_config)
+YeastemRuntime: SDL3 Glad
+ifneq (,$(YeastemRuntime_config))
+	@echo "==== Building YeastemRuntime ($(YeastemRuntime_config)) ===="
+	@${MAKE} --no-print-directory -C Yeastem/Runtime -f Makefile config=$(YeastemRuntime_config)
 endif
 
-YSS\ Compiler:
-ifneq (,$(YSS_Compiler_config))
-	@echo "==== Building YSS Compiler ($(YSS_Compiler_config)) ===="
-	@${MAKE} --no-print-directory -C Yeastem/Compiler -f Makefile config=$(YSS_Compiler_config)
+YSSCompiler:
+ifneq (,$(YSSCompiler_config))
+	@echo "==== Building YSSCompiler ($(YSSCompiler_config)) ===="
+	@${MAKE} --no-print-directory -C Yeastem/Compiler -f Makefile config=$(YSSCompiler_config)
 endif
 
 clean:
@@ -134,9 +134,9 @@ help:
 	@echo "   SDL3"
 	@echo "   ImGui"
 	@echo "   stb_image"
-	@echo "   Yeastem Engine"
-	@echo "   Yeastem Editor"
-	@echo "   Yeastem Runtime"
-	@echo "   YSS Compiler"
+	@echo "   YeastemEngine"
+	@echo "   YeastemEditor"
+	@echo "   YeastemRuntime"
+	@echo "   YSSCompiler"
 	@echo ""
 	@echo "For more information, see https://github.com/premake/premake-core/wiki"

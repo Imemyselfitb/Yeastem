@@ -34,30 +34,30 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YSS Compiler
-TARGET = $(TARGETDIR)/YSS Compiler
-OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YSS Compiler
+TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YSSCompiler
+TARGET = $(TARGETDIR)/YSSCompiler
+OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YSSCompiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_DEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YSS Compiler
-TARGET = $(TARGETDIR)/YSS Compiler
-OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YSS Compiler
+TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YSSCompiler
+TARGET = $(TARGETDIR)/YSSCompiler
+OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YSSCompiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_RELEASE
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YSS Compiler
-TARGET = $(TARGETDIR)/YSS Compiler
-OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YSS Compiler
+TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YSSCompiler
+TARGET = $(TARGETDIR)/YSSCompiler
+OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YSSCompiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_DIST
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif
@@ -87,7 +87,7 @@ all: $(TARGET)
 
 $(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking YSS Compiler
+	@echo Linking YSSCompiler
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -108,7 +108,7 @@ else
 endif
 
 clean:
-	@echo Cleaning YSS Compiler
+	@echo Cleaning YSSCompiler
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(GENERATED)

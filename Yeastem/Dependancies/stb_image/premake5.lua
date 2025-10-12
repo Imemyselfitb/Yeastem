@@ -5,6 +5,11 @@ project "stb_image"
 
 	targetdir "lib/x64/%{cfg.buildcfg}/"
 	objdir "bin-int/"
+	
+	cppdialect "C++17"
+	staticruntime "On"
+	systemversion "latest"
+	optimize "On"
 
 	files
 	{
@@ -17,10 +22,5 @@ project "stb_image"
 		"include"
 	}
 
-	buildoptions { "/MP" }
-
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
-		optimize "On"
+		buildoptions { "/MP" }

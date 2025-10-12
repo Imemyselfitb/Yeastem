@@ -8,7 +8,7 @@ workspace "Yeastem"
 		"Dist"
 	}
 
-	startproject "Yeastem Editor"
+	startproject "YeastemEditor"
 
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
@@ -26,7 +26,7 @@ include "Dependancies"
 
 EngineLocation = "Yeastem/Engine"
 
-project "Yeastem Engine"
+project "YeastemEngine"
 	kind "StaticLib"
 	language "C++"
 	location (EngineLocation)
@@ -98,7 +98,7 @@ project "Yeastem Engine"
 		defines "YST_CONFIG_DIST"
 		optimize "On"
 
-project "Yeastem Editor"
+project "YeastemEditor"
 	local m_Location = "Yeastem/Editor"
 	location ( m_Location )
 
@@ -172,7 +172,7 @@ project "Yeastem Editor"
 		defines "YST_CONFIG_DIST"
 		optimize "On"
 
-project "Yeastem Runtime"
+project "YeastemRuntime"
 	local m_Location = "Yeastem/Runtime"
 	location ( m_Location)
 	kind "ConsoleApp"
@@ -226,7 +226,7 @@ project "Yeastem Runtime"
 		defines "YST_DIST"
 		optimize "On"
 
-project "YSS Compiler"
+project "YSSCompiler"
 	local m_Location = "Yeastem/Compiler"
 	location ( m_Location )
 
@@ -255,11 +255,11 @@ project "YSS Compiler"
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }
-	buildoptions { "/MP" }
 
 	filter "system:windows"
 		cppdialect "C++latest"
 		staticruntime "On"
+		buildoptions { "/MP" }
 
 	filter "configurations:Debug"
 		defines "YST_DEBUG"

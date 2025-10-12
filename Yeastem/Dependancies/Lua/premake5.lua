@@ -8,6 +8,11 @@ project "Lua"
 	targetdir "lib/x64/%{cfg.buildcfg}/"
 	objdir "bin-int/"
 
+	cppdialect "C++17"
+	staticruntime "On"
+	systemversion "latest"
+	optimize "On"
+
 	files
 	{
 		"src/*.h",
@@ -20,11 +25,6 @@ project "Lua"
 		"src/lua.h", 
 		"src/luac.c"
 	}
-
-	buildoptions { "/MP" }
 	
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
-		optimize "On"
+		buildoptions { "/MP" }

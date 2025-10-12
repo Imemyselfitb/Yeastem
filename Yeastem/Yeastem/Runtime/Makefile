@@ -32,9 +32,9 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/Yeastem Runtime
-TARGET = $(TARGETDIR)/Yeastem Runtime
-OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/Yeastem Runtime
+TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YeastemRuntime
+TARGET = $(TARGETDIR)/YeastemRuntime
+OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YeastemRuntime
 DEFINES += -DYST_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
@@ -43,9 +43,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Debug -L../../Dependancies/Glad/lib/x64/Debug -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/Yeastem Runtime
-TARGET = $(TARGETDIR)/Yeastem Runtime
-OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/Yeastem Runtime
+TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YeastemRuntime
+TARGET = $(TARGETDIR)/YeastemRuntime
+OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YeastemRuntime
 DEFINES += -DYST_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
@@ -54,9 +54,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Release -L../../Dependancies/Glad/lib/x64/Release -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/Yeastem Runtime
-TARGET = $(TARGETDIR)/Yeastem Runtime
-OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/Yeastem Runtime
+TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YeastemRuntime
+TARGET = $(TARGETDIR)/YeastemRuntime
+OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YeastemRuntime
 DEFINES += -DYST_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
@@ -89,7 +89,7 @@ all: $(TARGET)
 
 $(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking Yeastem Runtime
+	@echo Linking YeastemRuntime
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -110,7 +110,7 @@ else
 endif
 
 clean:
-	@echo Cleaning Yeastem Runtime
+	@echo Cleaning YeastemRuntime
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(GENERATED)

@@ -6,6 +6,10 @@ project "Glad"
 	targetdir "lib/x64/%{cfg.buildcfg}/"
 	objdir "bin-int/"
 
+	cppdialect "C++17"
+	staticruntime "On"
+	systemversion "latest"
+
 	files
 	{
 		"src/glad.c"
@@ -16,9 +20,6 @@ project "Glad"
 		"include"
 	}
 
-	buildoptions { "/MP" }
-
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
+		buildoptions { "/MP" }
+

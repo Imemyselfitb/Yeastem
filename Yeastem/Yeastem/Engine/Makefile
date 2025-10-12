@@ -35,9 +35,9 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/Yeastem Engine
-TARGET = $(TARGETDIR)/libYeastem Engine.a
-OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/Yeastem Engine
+TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YeastemEngine
+TARGET = $(TARGETDIR)/libYeastemEngine.a
+OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YeastemEngine
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20 /MP
@@ -46,9 +46,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/Yeastem Engine
-TARGET = $(TARGETDIR)/libYeastem Engine.a
-OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/Yeastem Engine
+TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YeastemEngine
+TARGET = $(TARGETDIR)/libYeastemEngine.a
+OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YeastemEngine
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
@@ -57,9 +57,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/stb_image/lib
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/Yeastem Engine
-TARGET = $(TARGETDIR)/libYeastem Engine.a
-OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/Yeastem Engine
+TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YeastemEngine
+TARGET = $(TARGETDIR)/libYeastemEngine.a
+OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YeastemEngine
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 /MP
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20 /MP
@@ -130,7 +130,7 @@ all: $(TARGET)
 
 $(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking Yeastem Engine
+	@echo Linking YeastemEngine
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -151,7 +151,7 @@ else
 endif
 
 clean:
-	@echo Cleaning Yeastem Engine
+	@echo Cleaning YeastemEngine
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(GENERATED)
