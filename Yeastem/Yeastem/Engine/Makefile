@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-PCH = ../Engineyst_pch.h
+PCH = src/yst_pch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
 INCLUDES += -I"$(SolutionDir)Yeastem/Engine/src" -I"$(SolutionDir)Dependancies/SDL3/include" -I"$(SolutionDir)Dependancies/stb_image/include" -I"$(SolutionDir)Dependancies/Lua/src" -I"$(SolutionDir)Dependancies/Glad/include" -I"$(SolutionDir)Dependancies/Glad/src" -I"$(SolutionDir)Dependancies/EnTT/include" -I"$(SolutionDir)Dependancies/ImGui/src" -I"$(SolutionDir)Dependancies/ImGui/src/backends"

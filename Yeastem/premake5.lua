@@ -80,7 +80,7 @@ project "YeastemEngine"
 		cppdialect "C++latest"
 		staticruntime "On"
 		defines "YST_PLATFORM_LINUX"
-		pchheader (EngineLocation .. "yst_pch.h")
+		pchheader (EngineLocation .. "/src/yst_pch.h")
 
 	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
 	filter "configurations:Debug"
