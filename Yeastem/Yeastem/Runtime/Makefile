@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -I"$(SolutionDir)Yeastem/Runtime/src" -I"$(SolutionDir)Dependancies/SDL3/include" -I"$(SolutionDir)Dependancies/Glad/include" -I"$(SolutionDir)Dependancies/Glad/src"
+INCLUDES += -Isrc -I../../Dependancies/SDL3/include -I../../Dependancies/Glad/include -I../../Dependancies/Glad/src
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -32,9 +32,9 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YeastemRuntime
+TARGETDIR = ../../bin/Debug-linux-x86_64/YeastemRuntime
 TARGET = $(TARGETDIR)/YeastemRuntime
-OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YeastemRuntime
+OBJDIR = ../../bin-int/Debug-linux-x86_64/YeastemRuntime
 DEFINES += -DYST_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g
@@ -43,9 +43,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Debug -L../../Dependancies/Glad/lib/x64/Debug -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YeastemRuntime
+TARGETDIR = ../../bin/Release-linux-x86_64/YeastemRuntime
 TARGET = $(TARGETDIR)/YeastemRuntime
-OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YeastemRuntime
+OBJDIR = ../../bin-int/Release-linux-x86_64/YeastemRuntime
 DEFINES += -DYST_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2
@@ -54,9 +54,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/Glad/lib/x64/
 ALL_LDFLAGS += $(LDFLAGS) -L../../Dependancies/SDL3/lib/x64/Release -L../../Dependancies/Glad/lib/x64/Release -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YeastemRuntime
+TARGETDIR = ../../bin/Dist-linux-x86_64/YeastemRuntime
 TARGET = $(TARGETDIR)/YeastemRuntime
-OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YeastemRuntime
+OBJDIR = ../../bin-int/Dist-linux-x86_64/YeastemRuntime
 DEFINES += -DYST_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2

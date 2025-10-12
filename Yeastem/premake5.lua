@@ -31,8 +31,8 @@ project "YeastemEngine"
 	language "C++"
 	location (EngineLocation)
 
-	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchsource (EngineLocation .. "/src/yst_pch.cpp")
 
@@ -46,15 +46,15 @@ project "YeastemEngine"
 
 	includedirs
 	{
-		"$(SolutionDir)" .. EngineLocation .. "/src", 
-		"$(SolutionDir)%{IncludeDir.SDL3}", 
-		"$(SolutionDir)%{IncludeDir.stb_image}", 
-		"$(SolutionDir)%{IncludeDir.Lua}", 
-		"$(SolutionDir)%{IncludeDir.Glad}", 
-		"$(SolutionDir)Dependancies/Glad/src", 
-		"$(SolutionDir)%{IncludeDir.EnTT}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
+		EngineLocation .. "/src", 
+		"%{IncludeDir.SDL3}", 
+		"%{IncludeDir.stb_image}", 
+		"%{IncludeDir.Lua}", 
+		"%{IncludeDir.Glad}", 
+		"Dependancies/Glad/src", 
+		"%{IncludeDir.EnTT}", 
+		"%{IncludeDir.ImGui}", 
+		"%{IncludeDir.ImGui}/backends"
 	}
 
 	links
@@ -101,8 +101,8 @@ project "YeastemEditor"
 
 	language "C++"
 
-	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -112,16 +112,16 @@ project "YeastemEditor"
 
 	includedirs
 	{
-		"$(SolutionDir)" .. m_Location .. "/src",
-		"$(SolutionDir)" .. EngineLocation .. "/src",
-		"$(SolutionDir)%{IncludeDir.SDL3}", 
-		"$(SolutionDir)%{IncludeDir.stb_image}", 
-		"$(SolutionDir)%{IncludeDir.Lua}", 
-		"$(SolutionDir)%{IncludeDir.Glad}", 
-		"$(SolutionDir)Dependancies/Glad/src", 
-		"$(SolutionDir)%{IncludeDir.EnTT}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}", 
-		"$(SolutionDir)%{IncludeDir.ImGui}/backends"
+		m_Location .. "/src",
+		EngineLocation .. "/src",
+		"%{IncludeDir.SDL3}", 
+		"%{IncludeDir.stb_image}", 
+		"%{IncludeDir.Lua}", 
+		"%{IncludeDir.Glad}", 
+		"Dependancies/Glad/src", 
+		"%{IncludeDir.EnTT}", 
+		"%{IncludeDir.ImGui}", 
+		"%{IncludeDir.ImGui}/backends"
 	}
 
 	links
@@ -138,8 +138,6 @@ project "YeastemEditor"
 		"SDL_MAIN_HANDLED",
 		"SDL_STATIC"
 	}
-
-	postbuildcommands { "CALL " }
 
 	----- ----- ----- ----- ----- ----- OS's ----- ----- ----- ----- ----- ----- 
 	filter "system:windows"
@@ -175,8 +173,8 @@ project "YeastemRuntime"
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -186,10 +184,10 @@ project "YeastemRuntime"
 
 	includedirs
 	{
-		"$(SolutionDir)" .. m_Location .. "/src", 
-		"$(SolutionDir)%{IncludeDir.SDL3}", 
-		"$(SolutionDir)%{IncludeDir.Glad}", 
-		"$(SolutionDir)Dependancies/Glad/src"
+		m_Location .. "/src", 
+		"%{IncludeDir.SDL3}", 
+		"%{IncludeDir.Glad}", 
+		"Dependancies/Glad/src"
 	}
 
 	libdirs
@@ -230,8 +228,8 @@ project "YSSCompiler"
 	kind "ConsoleApp"
 	language "C++"
 
-	targetdir ("$(SolutionDir)bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("$(SolutionDir)bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -242,7 +240,7 @@ project "YSSCompiler"
 
 	includedirs
 	{
-		"$(SolutionDir)" .. m_Location .. "/src", 
+		m_Location .. "/src", 
 	}
 
 	defines

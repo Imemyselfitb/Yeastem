@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -I"$(SolutionDir)Yeastem/Compiler/src"
+INCLUDES += -Isrc
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -34,27 +34,27 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YSSCompiler
+TARGETDIR = ../../bin/Debug-linux-x86_64/YSSCompiler
 TARGET = $(TARGETDIR)/YSSCompiler
-OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YSSCompiler
+OBJDIR = ../../bin-int/Debug-linux-x86_64/YSSCompiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YSSCompiler
+TARGETDIR = ../../bin/Release-linux-x86_64/YSSCompiler
 TARGET = $(TARGETDIR)/YSSCompiler
-OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YSSCompiler
+OBJDIR = ../../bin-int/Release-linux-x86_64/YSSCompiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YSSCompiler
+TARGETDIR = ../../bin/Dist-linux-x86_64/YSSCompiler
 TARGET = $(TARGETDIR)/YSSCompiler
-OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YSSCompiler
+OBJDIR = ../../bin-int/Dist-linux-x86_64/YSSCompiler
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2

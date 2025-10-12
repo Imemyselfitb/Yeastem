@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -I"$(SolutionDir)Yeastem/Editor/src" -I"$(SolutionDir)Yeastem/Engine/src" -I"$(SolutionDir)Dependancies/SDL3/include" -I"$(SolutionDir)Dependancies/stb_image/include" -I"$(SolutionDir)Dependancies/Lua/src" -I"$(SolutionDir)Dependancies/Glad/include" -I"$(SolutionDir)Dependancies/Glad/src" -I"$(SolutionDir)Dependancies/EnTT/include" -I"$(SolutionDir)Dependancies/ImGui/src" -I"$(SolutionDir)Dependancies/ImGui/src/backends"
+INCLUDES += -Isrc -I../Engine/src -I../../Dependancies/SDL3/include -I../../Dependancies/stb_image/include -I../../Dependancies/Lua/src -I../../Dependancies/Glad/include -I../../Dependancies/Glad/src -I../../Dependancies/EnTT/include -I../../Dependancies/ImGui/src -I../../Dependancies/ImGui/src/backends
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -29,14 +29,12 @@ endef
 define PRELINKCMDS
 endef
 define POSTBUILDCMDS
-	@echo Running postbuild commands
-	CALL 
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = $(SolutionDir)bin/Debug-linux-x86_64/YeastemEditor
+TARGETDIR = ../../bin/Debug-linux-x86_64/YeastemEditor
 TARGET = $(TARGETDIR)/YeastemEditor
-OBJDIR = $(SolutionDir)bin-int/Debug-linux-x86_64/YeastemEditor
+OBJDIR = ../../bin-int/Debug-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20
@@ -45,9 +43,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
-TARGETDIR = $(SolutionDir)bin/Release-linux-x86_64/YeastemEditor
+TARGETDIR = ../../bin/Release-linux-x86_64/YeastemEditor
 TARGET = $(TARGETDIR)/YeastemEditor
-OBJDIR = $(SolutionDir)bin-int/Release-linux-x86_64/YeastemEditor
+OBJDIR = ../../bin-int/Release-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
@@ -56,9 +54,9 @@ LDDEPS += ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
-TARGETDIR = $(SolutionDir)bin/Dist-linux-x86_64/YeastemEditor
+TARGETDIR = ../../bin/Dist-linux-x86_64/YeastemEditor
 TARGET = $(TARGETDIR)/YeastemEditor
-OBJDIR = $(SolutionDir)bin-int/Dist-linux-x86_64/YeastemEditor
+OBJDIR = ../../bin-int/Dist-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
