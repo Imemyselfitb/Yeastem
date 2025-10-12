@@ -51,21 +51,4 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_glID);
 }
 
-uint32_t GetSizeOfGLType(uint32_t type)
-{
-	switch (type)
-	{
-	case GL_FLOAT: return 4;
-	case GL_UNSIGNED_INT: return 4;
-	case GL_UNSIGNED_SHORT: return 2;
-	case GL_UNSIGNED_BYTE: return 1;
-	case GL_INT: return 4;
-	case GL_SHORT: return 2;
-	case GL_BYTE: return 1;
-	};
-
-	YEASTEM_WARNING("OpenGL Type " << type << " not supported. ");
-	return 0;
-}
-
 YEASTEM_END

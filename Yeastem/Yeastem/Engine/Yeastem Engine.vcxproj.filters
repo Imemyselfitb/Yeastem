@@ -189,5 +189,6 @@
       <Filter>Yeastem\Platforms\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\yst_pch.cpp" />
+    <ClCompile Include="src\Yeastem\Core\OpenGL\Buffers\VertexBufferLayout.cpp" />
   </ItemGroup>
 </Project>

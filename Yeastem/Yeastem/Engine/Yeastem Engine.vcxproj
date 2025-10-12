@@ -180,6 +180,7 @@
     <ClCompile Include="src\Yeastem\Core\OpenGL\Buffers\IndexBuffer.cpp" />
     <ClCompile Include="src\Yeastem\Core\OpenGL\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\Yeastem\Core\OpenGL\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\Yeastem\Core\OpenGL\Buffers\VertexBufferLayout.cpp" />
     <ClCompile Include="src\Yeastem\Core\OpenGL\Renderer.cpp" />
     <ClCompile Include="src\Yeastem\Core\OpenGL\Shader.cpp" />
     <ClCompile Include="src\Yeastem\Core\OpenGL\Texture.cpp" />
