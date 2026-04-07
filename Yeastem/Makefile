@@ -89,7 +89,7 @@ ifneq (,$(YeastemEngine_config))
 	@${MAKE} --no-print-directory -C Yeastem/Engine -f Makefile config=$(YeastemEngine_config)
 endif
 
-YeastemEditor: YeastemEngine SDL3 ImGui
+YeastemEditor: YeastemEngine SDL3 ImGui stb_image Glad Lua
 ifneq (,$(YeastemEditor_config))
 	@echo "==== Building YeastemEditor ($(YeastemEditor_config)) ===="
 	@${MAKE} --no-print-directory -C Yeastem/Editor -f Makefile config=$(YeastemEditor_config)

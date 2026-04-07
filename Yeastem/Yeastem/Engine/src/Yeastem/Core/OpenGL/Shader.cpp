@@ -4,6 +4,8 @@
 
 #include "Yeastem/FileIO/FileIO.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 YEASTEM_BEGIN
 
 void Shader::Bind() const
@@ -83,8 +85,6 @@ uint32_t Shader::CreateShader(const char* vertexShader, const char* fragmentShad
 	glDeleteShader(vert);
 	glDeleteShader(frag);
 
-	glUseProgram(0);
-
 	return program;
 }
 uint32_t Shader::CreateShaderFromFiles(const char* vert, const char* frag)
@@ -95,70 +95,78 @@ uint32_t Shader::CreateShaderFromFiles(const char* vert, const char* frag)
 	);
 }
 
+void Shader::InitiateUniformBindings()
+{
+	m_UniformBindings[ShaderParams::ViewProjectionMatrix] = GetUniformLocation("u_ViewProjectionMatrix");
+	m_UniformBindings[ShaderParams::Textures] = GetUniformLocation("u_Textures");
+}
+
 void Shader::AssignShader(const char* vertexShader, const char* fragmentShader)
 {
 	DeleteShader();
 	m_Shader = CreateShader(vertexShader, fragmentShader);
+	InitiateUniformBindings();
 }
 void Shader::AssignShaderFromFiles(const char* vertexShader, const char* fragmentShader)
 {
 	DeleteShader();
 	m_Shader = CreateShaderFromFiles(vertexShader, fragmentShader);
+	InitiateUniformBindings();
 }
 
-int Shader::GetUniformLocation(const char* name)
+GLint Shader::GetUniformLocation(std::string_view name) const
 {
-	if (m_UniformsCache.find(name) != m_UniformsCache.end())
-		return m_UniformsCache[name];
-	
-	int location = glGetUniformLocation(m_Shader, name);
+	Bind();
+	GLint location = glGetUniformLocation(m_Shader, name.data());
 	if (location == -1)
-	{
-		YEASTEM_WARNING("uniform `" << name << "` does not exist! ");
-	}
+		YEASTEM_WARNING("Uniform `" << name << "` does not exist! ");
 
-	m_UniformsCache[name] = location;
-	return location;
+	return { location };
 }
 
-void Shader::SetUniform1f(const char* name, float v0)
-{
-	Bind();
-	int loc = GetUniformLocation(name);
-	if (loc != -1) glUniform1f(loc, v0);
-	Unbind();
-}
+static const char* uniformNames[] = {
+	"u_ViewProjectionMatrix",
+	"u_Textures",
+};
 
-void Shader::SetUniform1i(const char* name, int v0)
-{
-	Bind();
-	int loc = GetUniformLocation(name);
-	if (loc != -1) glUniform1i(loc, v0);
-	Unbind();
-}
+#define getUniformBinding(uniform) \
+	if (m_UniformBindings.find(uniform) == m_UniformBindings.end()) { YEASTEM_ERROR("Uniform `" << uniformNames[uniform] << "` binding does not exist!"); return; } \
+	Bind(); GLint location = m_UniformBindings.at(uniform);
 
-void Shader::SetUniform1iv(const char* name, GLsizei count, const int* value)
+void Shader::SetUniformInt(ShaderParams uniform, int v0) const
 {
-	Bind();
-	int loc = GetUniformLocation(name);
-	if (loc != -1) glUniform1iv(loc, count, value);
-	Unbind();
+	getUniformBinding(uniform);
+	if (location != -1) glUniform1i(location, v0);
 }
-
-void Shader::SetUniform4f(const char* name, float v0, float v1, float v2, float v3)
+void Shader::SetUniformIntArray(ShaderParams uniform, GLsizei count, const int* value) const
 {
-	Bind();
-	int loc = GetUniformLocation(name);
-	if (loc != -1) glUniform4f(loc, v0, v1, v2, v3);
-	Unbind();
+	getUniformBinding(uniform);
+	if (location != -1) glUniform1iv(location, count, value);
 }
-
-void Shader::SetUniform4i(const char* name, int v0, int v1, int v2, int v3)
+void Shader::SetUniformFloat(ShaderParams uniform, float v0) const
 {
-	Bind();
-	int loc = GetUniformLocation(name);
-	if (loc != -1) glUniform4i(loc, v0, v1, v2, v3);
-	Unbind();
+	getUniformBinding(uniform);
+	if (location != -1) glUniform1f(location, v0);
+}
+void Shader::SetUniformFloat2(ShaderParams uniform, const glm::vec2& value) const
+{
+	getUniformBinding(uniform);
+	if (location != -1) glUniform2f(location, value.x, value.y);
+}
+void Shader::SetUniformFloat3(ShaderParams uniform, const glm::vec3& value) const
+{
+	getUniformBinding(uniform);
+	if (location != -1) glUniform3f(location, value.x, value.y, value.z);
+}
+void Shader::SetUniformFloat4(ShaderParams uniform, const glm::vec4& value) const
+{
+	getUniformBinding(uniform);
+	if (location != -1) glUniform4f(location, value.x, value.y, value.z, value.w);
+}
+void Shader::SetUniformMat4(ShaderParams uniform, const glm::mat4& mat4) const
+{
+	getUniformBinding(uniform);
+	if (location != -1) glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
 }
 
 YEASTEM_END

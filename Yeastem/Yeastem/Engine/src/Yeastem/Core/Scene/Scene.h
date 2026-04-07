@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Yeastem/Core/OpenGL/Include.h"
-#include "Yeastem/LuaAPI/Lua.h"
 #include "Profiling.h"
 #include "Events.h"
 
+#include "Yeastem/LuaAPI/Lua.h"
 #include "LuaScene.h"
 
 #include <entt.hpp>
@@ -44,7 +44,7 @@ public:
 	bool IsRunning = false;
 
 	uint64_t CurrentTime = 0;
-	Vector2i SceneSize;
+	Vector2i SceneSize{};
 
 private:
 	void InitScripts();
@@ -52,9 +52,9 @@ private:
 	void UpdateGlobalTransforms(entt::entity entity, TransformComponent& transform, uint32_t frameID);
 
 	template<typename Component>
-	void SetScriptAllComponents();
+	void UpdateComponentsFromScript();
 	template<typename Component>
-	void GetScriptAllComponents();
+	void SetComponentsToScript();
 
 private:
 	LuaScene m_LuaScene;

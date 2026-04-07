@@ -14,8 +14,8 @@ struct Windows
     }
 
     std::string Title;
-    Vector2i Position;
-    Vector2i Size;
+    Vector2i Position{};
+    Vector2i Size{};
 };
 
 inline std::vector<Windows> AllWindows;

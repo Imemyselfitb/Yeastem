@@ -3,8 +3,6 @@
 // Only compile if within windows
 #ifdef YST_PLATFORM_WINDOWS
 
-#include "Yeastem/Core/Math/Vector2.h"
-
 #include "Window.h"
 
 #undef APIENTRY

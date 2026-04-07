@@ -78,7 +78,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;SDL_STATIC;YST_PLATFORM_WINDOWS;YST_CONFIG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Engine\src;..\..\Dependancies\SDL3\include;..\..\Dependancies\stb_image\include;..\..\Dependancies\Lua\src;..\..\Dependancies\Glad\include;..\..\Dependancies\Glad\src;..\..\Dependancies\EnTT\include;..\..\Dependancies\ImGui\src;..\..\Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Engine\src;..\..\Dependancies\SDL3\include;..\..\Dependancies\stb_image\include;..\..\Dependancies\Lua\src;..\..\Dependancies\Glad\include;..\..\Dependancies\Glad\src;..\..\Dependancies\glm\include;..\..\Dependancies\EnTT\include;..\..\Dependancies\ImGui\src;..\..\Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;SDL_STATIC;YST_PLATFORM_WINDOWS;YST_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Engine\src;..\..\Dependancies\SDL3\include;..\..\Dependancies\stb_image\include;..\..\Dependancies\Lua\src;..\..\Dependancies\Glad\include;..\..\Dependancies\Glad\src;..\..\Dependancies\EnTT\include;..\..\Dependancies\ImGui\src;..\..\Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Engine\src;..\..\Dependancies\SDL3\include;..\..\Dependancies\stb_image\include;..\..\Dependancies\Lua\src;..\..\Dependancies\Glad\include;..\..\Dependancies\Glad\src;..\..\Dependancies\glm\include;..\..\Dependancies\EnTT\include;..\..\Dependancies\ImGui\src;..\..\Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -120,7 +120,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SDL_MAIN_HANDLED;SDL_STATIC;YST_PLATFORM_WINDOWS;YST_CONFIG_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;..\Engine\src;..\..\Dependancies\SDL3\include;..\..\Dependancies\stb_image\include;..\..\Dependancies\Lua\src;..\..\Dependancies\Glad\include;..\..\Dependancies\Glad\src;..\..\Dependancies\EnTT\include;..\..\Dependancies\ImGui\src;..\..\Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Engine\src;..\..\Dependancies\SDL3\include;..\..\Dependancies\stb_image\include;..\..\Dependancies\Lua\src;..\..\Dependancies\Glad\include;..\..\Dependancies\Glad\src;..\..\Dependancies\glm\include;..\..\Dependancies\EnTT\include;..\..\Dependancies\ImGui\src;..\..\Dependancies\ImGui\src\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -162,6 +162,10 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\Shaders\Quad.frag" />
+    <None Include="src\Shaders\Quad.vert" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Engine\YeastemEngine.vcxproj">
       <Project>{332CC61B-9FEC-4152-6827-8BCFD4A6862E}</Project>
     </ProjectReference>
@@ -170,6 +174,15 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Dependancies\ImGui\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dependancies\stb_image\stb_image\stb_image.vcxproj">
+      <Project>{3096E6B0-9C00-9B27-E53E-4CCD51E8787C}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dependancies\Glad\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Dependancies\Lua\Lua\Lua.vcxproj">
+      <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

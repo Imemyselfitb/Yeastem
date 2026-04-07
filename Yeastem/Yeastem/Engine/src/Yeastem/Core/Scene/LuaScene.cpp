@@ -96,11 +96,15 @@ void LuaScene::getStem(TransformComponent& transform)
 
 void LuaScene::addStem(const RenderQuadComponent& render)
 {
-	lua_pushnumber(m_LuaState, render.Size.x);
-	lua_setfield(m_LuaState, -2, "width");
+	LuaVector2::InitVector(render.Size, m_LuaState);
+	lua_setfield(m_LuaState, -2, "size");
+}
 
-	lua_pushnumber(m_LuaState, render.Size.y);
-	lua_setfield(m_LuaState, -2, "height");
+void LuaScene::getStem(RenderQuadComponent& render)
+{
+	lua_getfield(m_LuaState, -1, "size");
+	LuaVector2::UpdateVector(render.Size, m_LuaState);
+	lua_pop(m_LuaState, 1);
 }
 
 void LuaScene::PrintGlobal(const char* gobal)
@@ -136,7 +140,7 @@ void LuaScene::AttachNativeFunction(NativeFunction nativeFunction, const char* f
 	m_LuaState.AddNativeFunction(nativeFunction, functionName);
 }
 
-void LuaScene::ExecuteScript(ScriptComponent& scriptComponent, TagComponent& tagComponent)
+void LuaScene::ExecuteScript(const ScriptComponent& scriptComponent, const TagComponent& tagComponent)
 {
 	if (!FileIO::checkIfExists(scriptComponent.FilePath)) return;
 	m_LuaState.ExecuteScript(scriptComponent, tagComponent);

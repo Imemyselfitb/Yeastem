@@ -9,6 +9,10 @@
 
 #define YEASTEM_ASSERT(condition, str)	if (!(condition)) YEASTEM_ERROR(str)
 
+#ifndef YST_PLATFORM_WINDOWS
+#define strncpy_s(dest, src, count) strncpy(dest, src, count)
+#endif
+
 using ObjectID = uint64_t;
 
 template<typename t> using Ref = std::shared_ptr<t>;

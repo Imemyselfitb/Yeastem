@@ -111,7 +111,7 @@ void Application::Run()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ImGuiNextFrame();
 
-		static bool isFirstFrame = true;
+		/***static bool isFirstFrame = true;
 		if (isFirstFrame)
 		{
 			isFirstFrame = false;
@@ -122,7 +122,7 @@ void Application::Run()
 				std::cout << "(" << window.Position << ")" << "\n";
 				std::cout << "(" << window.Size << ")" << "\n";
 			}
-		}
+		}**/
 
 		m_ImGuiLayer.UpdateDockSpace();
 

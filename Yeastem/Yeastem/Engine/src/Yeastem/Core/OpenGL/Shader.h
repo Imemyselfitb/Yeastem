@@ -2,6 +2,14 @@
 
 YEASTEM_BEGIN
 
+enum ShaderParams {
+	// Vertex
+	ViewProjectionMatrix = 0,
+
+	// Fragment
+	Textures,
+};
+
 class Shader
 {
 public:
@@ -10,9 +18,6 @@ public:
 	Shader(const std::filesystem::path& VertFile, const std::filesystem::path& FragFile)
 	{ AssignShaderFromFiles(VertFile.string().c_str(), FragFile.string().c_str()); }
 	~Shader() { DeleteShader(); }
-
-private:
-	static uint32_t CompileShader(uint32_t type, const char* source);
 
 public:
 	static uint32_t CreateShader(const char* vertexShader, const char* fragmentShader);
@@ -31,16 +36,23 @@ public:
 	operator uint32_t() const { return m_Shader; }
 
 public:
-	int GetUniformLocation(const char*);
-
-	void SetUniform1f(const char*, float);
-	void SetUniform1i(const char*, int);
-	void SetUniform1iv(const char*, GLsizei count, const int* value);
-	void SetUniform4f(const char*, float, float, float, float);
-	void SetUniform4i(const char*, int, int, int, int);
+	void SetUniformInt(ShaderParams, int value) const;
+	void SetUniformIntArray(ShaderParams, GLsizei count, const int* values) const;
+	void SetUniformFloat(ShaderParams, float value) const;
+	void SetUniformFloat2(ShaderParams, const glm::vec2& value) const;
+	void SetUniformFloat3(ShaderParams, const glm::vec3& value) const;
+	void SetUniformFloat4(ShaderParams, const glm::vec4& value) const;
+	void SetUniformMat4(ShaderParams, const glm::mat4& value) const;
 
 private:
-	std::unordered_map<const char*, int> m_UniformsCache;
+	static uint32_t CompileShader(uint32_t type, const char* source);
+
+private:
+	GLint GetUniformLocation(std::string_view) const;
+	void InitiateUniformBindings();
+
+private:
+	std::unordered_map<ShaderParams, GLint> m_UniformBindings;
 	uint32_t m_Shader = NULL;
 };
 

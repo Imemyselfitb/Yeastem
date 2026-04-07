@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Yeastem/Core/Math/Vector2.h"
 #include "Yeastem/LuaAPI/LuaState.h"
 
 YEASTEM_BEGIN

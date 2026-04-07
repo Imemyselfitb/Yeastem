@@ -15,14 +15,14 @@ public:
 	LuaState& GetState() { return m_LuaState; }
 
 	void AttachNativeFunction(NativeFunction nativeFunction, const char* functionName);
-	void ExecuteScript(ScriptComponent& scriptComponent, TagComponent& tagComponent);
+	void ExecuteScript(const ScriptComponent& scriptComponent, const TagComponent& tagComponent);
 	void Recreate();
 
 	template<typename... Args>
-	void CallYeastemFunction(TagComponent& tagComponent, const char* functionName, Args... args);
+	void CallYeastemFunction(const TagComponent& tagComponent, const char* functionName, Args... args);
 
 	template<typename Component>
-	void SetComponent(const Component& component, const TagComponent& tag)
+	void SetComponentToScript(const Component& component, const TagComponent& tag)
 	{
 		int hierachyLevel = m_LuaState.SetupObjectTree(tag);
 		addStem(component);
@@ -30,7 +30,7 @@ public:
 	}
 
 	template<typename Component>
-	void GetComponent(Component& component, const TagComponent& tag)
+	void UpdateComponentFromScript(Component& component, const TagComponent& tag)
 	{
 		int hierachyLevel = m_LuaState.SetupObjectTree(tag);
 		getStem(component);
@@ -42,9 +42,12 @@ public:
 
 private:
 	void addKeyEnum(const char* keyName, uint32_t keyCode);
+
 	void addStem(const TransformComponent& transform);
-	void getStem(TransformComponent& transform);
 	void addStem(const RenderQuadComponent& render);
+
+	void getStem(TransformComponent& transform);
+	void getStem(RenderQuadComponent& render);
 
 private:
 	LuaState m_LuaState;
@@ -52,7 +55,7 @@ private:
 
 
 template<typename... Args>
-inline void LuaScene::CallYeastemFunction(TagComponent& tagComponent, const char* functionName, Args... args)
+inline void LuaScene::CallYeastemFunction(const TagComponent& tagComponent, const char* functionName, Args... args)
 {
 	lua_State* L = m_LuaState;
 

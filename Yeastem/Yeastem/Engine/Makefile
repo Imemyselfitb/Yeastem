@@ -22,7 +22,7 @@ RESCOMP = windres
 PCH = src/yst_pch.h
 PCH_PLACEHOLDER = $(OBJDIR)/$(notdir $(PCH))
 GCH = $(PCH_PLACEHOLDER).gch
-INCLUDES += -Isrc -I../../Dependancies/SDL3/include -I../../Dependancies/stb_image/include -I../../Dependancies/Lua/src -I../../Dependancies/Glad/include -I../../Dependancies/Glad/src -I../../Dependancies/EnTT/include -I../../Dependancies/ImGui/src -I../../Dependancies/ImGui/src/backends
+INCLUDES += -Isrc -I../../Dependancies/SDL3/include -I../../Dependancies/stb_image/include -I../../Dependancies/Lua/src -I../../Dependancies/Glad/include -I../../Dependancies/Glad/src -I../../Dependancies/glm/include -I../../Dependancies/EnTT/include -I../../Dependancies/ImGui/src -I../../Dependancies/ImGui/src/backends
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -89,13 +89,12 @@ GENERATED += $(OBJDIR)/LuaPanel.o
 GENERATED += $(OBJDIR)/LuaScene.o
 GENERATED += $(OBJDIR)/LuaState.o
 GENERATED += $(OBJDIR)/LuaVector2.o
-GENERATED += $(OBJDIR)/Point.o
+GENERATED += $(OBJDIR)/MathWrapper.o
 GENERATED += $(OBJDIR)/Profiling.o
 GENERATED += $(OBJDIR)/Renderer.o
 GENERATED += $(OBJDIR)/Scene.o
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/Texture.o
-GENERATED += $(OBJDIR)/Vector2.o
 GENERATED += $(OBJDIR)/VertexArray.o
 GENERATED += $(OBJDIR)/VertexBuffer.o
 GENERATED += $(OBJDIR)/VertexBufferLayout.o
@@ -111,13 +110,12 @@ OBJECTS += $(OBJDIR)/LuaPanel.o
 OBJECTS += $(OBJDIR)/LuaScene.o
 OBJECTS += $(OBJDIR)/LuaState.o
 OBJECTS += $(OBJDIR)/LuaVector2.o
-OBJECTS += $(OBJDIR)/Point.o
+OBJECTS += $(OBJDIR)/MathWrapper.o
 OBJECTS += $(OBJDIR)/Profiling.o
 OBJECTS += $(OBJDIR)/Renderer.o
 OBJECTS += $(OBJDIR)/Scene.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/Texture.o
-OBJECTS += $(OBJDIR)/Vector2.o
 OBJECTS += $(OBJDIR)/VertexArray.o
 OBJECTS += $(OBJDIR)/VertexBuffer.o
 OBJECTS += $(OBJDIR)/VertexBufferLayout.o
@@ -198,12 +196,6 @@ $(OBJDIR)/LuaPanel.o: src/Yeastem/Core/Lua/LuaPanel.cpp
 $(OBJDIR)/LuaVector2.o: src/Yeastem/Core/Lua/LuaVector2.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Point.o: src/Yeastem/Core/Math/Point.cpp
-	@echo "$(notdir $<)"
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Vector2.o: src/Yeastem/Core/Math/Vector2.cpp
-	@echo "$(notdir $<)"
-	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/FrameBuffer.o: src/Yeastem/Core/OpenGL/Buffers/FrameBuffer.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -244,6 +236,9 @@ $(OBJDIR)/FileReading.o: src/Yeastem/FileIO/FileReading.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/LuaState.o: src/Yeastem/LuaAPI/LuaState.cpp
+	@echo "$(notdir $<)"
+	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/MathWrapper.o: src/Yeastem/MathWrapper.cpp
 	@echo "$(notdir $<)"
 	$(SILENT) $(CXX) -include $(PCH_PLACEHOLDER) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Window.o: src/Yeastem/Platforms/Windows/Window.cpp

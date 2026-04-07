@@ -4,9 +4,12 @@
 
 YEASTEM_BEGIN
 
+template<typename>
+struct always_false : std::false_type {};
+
 template<typename T> void VertexBufferLayout::Push(uint32_t count) {
 	YEASTEM_ERROR("UNDEFINED VERTEX ARRAY TYPE!");
-	static_assert(false, "UNDEFINED VERTEX ARRAY TYPE!");
+	static_assert(always_false<T>::value, "UNDEFINED VERTEX ARRAY TYPE!");
 }
 template<> void VertexBufferLayout::Push<float>(uint32_t count) { PushType(count, GL_FLOAT, GL_FALSE); }
 template<> void VertexBufferLayout::Push<int>(uint32_t count) { PushType(count, GL_INT, GL_TRUE); }

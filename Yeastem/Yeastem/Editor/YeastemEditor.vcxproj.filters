@@ -57,4 +57,12 @@
     <ClCompile Include="src\ProjectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Shaders\Quad.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="src\Shaders\Quad.vert">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
 </Project>

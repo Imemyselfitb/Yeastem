@@ -19,7 +19,7 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -Isrc -I../Engine/src -I../../Dependancies/SDL3/include -I../../Dependancies/stb_image/include -I../../Dependancies/Lua/src -I../../Dependancies/Glad/include -I../../Dependancies/Glad/src -I../../Dependancies/EnTT/include -I../../Dependancies/ImGui/src -I../../Dependancies/ImGui/src/backends
+INCLUDES += -Isrc -I../Engine/src -I../../Dependancies/SDL3/include -I../../Dependancies/stb_image/include -I../../Dependancies/Lua/src -I../../Dependancies/Glad/include -I../../Dependancies/Glad/src -I../../Dependancies/glm/include -I../../Dependancies/EnTT/include -I../../Dependancies/ImGui/src -I../../Dependancies/ImGui/src/backends
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
@@ -38,8 +38,8 @@ OBJDIR = ../../bin-int/Debug-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20
-LIBS += ../../bin/Debug-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
-LDDEPS += ../../bin/Debug-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a
+LIBS += ../../bin/Debug-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a ../../Dependancies/stb_image/lib/x64/Debug/libstb_image.a ../../Dependancies/Glad/lib/x64/Debug/libGlad.a ../../Dependancies/Lua/lib/x64/Debug/libLua.a
+LDDEPS += ../../bin/Debug-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Debug/libImGui.a ../../Dependancies/stb_image/lib/x64/Debug/libstb_image.a ../../Dependancies/Glad/lib/x64/Debug/libGlad.a ../../Dependancies/Lua/lib/x64/Debug/libLua.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
@@ -49,8 +49,8 @@ OBJDIR = ../../bin-int/Release-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
-LIBS += ../../bin/Release-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
-LDDEPS += ../../bin/Release-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a
+LIBS += ../../bin/Release-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a ../../Dependancies/stb_image/lib/x64/Release/libstb_image.a ../../Dependancies/Glad/lib/x64/Release/libGlad.a ../../Dependancies/Lua/lib/x64/Release/libLua.a
+LDDEPS += ../../bin/Release-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Release/libImGui.a ../../Dependancies/stb_image/lib/x64/Release/libstb_image.a ../../Dependancies/Glad/lib/x64/Release/libGlad.a ../../Dependancies/Lua/lib/x64/Release/libLua.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 else ifeq ($(config),dist)
@@ -60,8 +60,8 @@ OBJDIR = ../../bin-int/Dist-linux-x86_64/YeastemEditor
 DEFINES += -DSDL_MAIN_HANDLED -DSDL_STATIC -DYST_PLATFORM_LINUX -DYST_CONFIG_DIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
-LIBS += ../../bin/Dist-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
-LDDEPS += ../../bin/Dist-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a
+LIBS += ../../bin/Dist-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a ../../Dependancies/stb_image/lib/x64/Dist/libstb_image.a ../../Dependancies/Glad/lib/x64/Dist/libGlad.a ../../Dependancies/Lua/lib/x64/Dist/libLua.a
+LDDEPS += ../../bin/Dist-linux-x86_64/YeastemEngine/libYeastemEngine.a ../../Dependancies/SDL3/lib/libSDL3.a ../../Dependancies/ImGui/lib/x64/Dist/libImGui.a ../../Dependancies/stb_image/lib/x64/Dist/libstb_image.a ../../Dependancies/Glad/lib/x64/Dist/libGlad.a ../../Dependancies/Lua/lib/x64/Dist/libLua.a
 ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif

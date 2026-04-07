@@ -114,7 +114,7 @@ int LuaVector2::__add(lua_State* L)
 	float y2 = (float)lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	LuaVector2::InitVector(Vector2(x1 + x2, y1 + y2), L);
+	LuaVector2::InitVector(Vector2f(x1 + x2, y1 + y2), L);
 
 	return 1;
 }
@@ -139,7 +139,7 @@ int LuaVector2::__sub(lua_State* L)
 	float y2 = (float)lua_tonumber(L, -1);
 	lua_pop(L, 1);
 
-	LuaVector2::InitVector(Vector2(x1 - x2, y1 - y2), L);
+	LuaVector2::InitVector(Vector2f(x1 - x2, y1 - y2), L);
 
 	return 1;
 }
@@ -164,7 +164,7 @@ int LuaVector2::__multiply(lua_State* L)
 		float y2 = (float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 
-		LuaVector2::InitVector(Vector2(x1 * x2, y1 * y2), L);
+		LuaVector2::InitVector(Vector2f(x1 * x2, y1 * y2), L);
 		return 1;
 	}
 
@@ -192,7 +192,7 @@ int LuaVector2::__multiply(lua_State* L)
 		float y1 = (float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		
-		LuaVector2::InitVector(Vector2(x1 * sf, y1 * sf), L);
+		LuaVector2::InitVector(Vector2f(x1 * sf, y1 * sf), L);
 	}
 
 	return 1;
@@ -218,7 +218,7 @@ int LuaVector2::__divide(lua_State* L)
 		float y2 = (float)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 
-		LuaVector2::InitVector(Vector2(x1 / x2, y1 / y2), L);
+		LuaVector2::InitVector(Vector2f(x1 / x2, y1 / y2), L);
 		return 1;
 	}
 
@@ -247,9 +247,9 @@ int LuaVector2::__divide(lua_State* L)
 		lua_pop(L, 1);
 
 		if(sfIdx == -1)
-			LuaVector2::InitVector(Vector2(x1 / sf, y1 / sf), L);
+			LuaVector2::InitVector(Vector2f(x1 / sf, y1 / sf), L);
 		else
-			LuaVector2::InitVector(Vector2(sf / x1, sf / y1), L);
+			LuaVector2::InitVector(Vector2f(sf / x1, sf / y1), L);
 	}
 
 	return 1;

@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "Texture.h"
 
-#include "Yeastem/Core/Math/Vector2.h"
 #include "Yeastem/Core/ResourceManager.h"
 #include "Yeastem/Core/Scene/Components.h"
 
@@ -33,7 +32,7 @@ public:
 public:
 	static void Init(ResourceManager& resourceManager);
 
-	static void BeginScene(ResourceManager& resourceManager);
+	static void BeginScene(ResourceManager& resourceManager, Vector2f renderArea);
 	static void EndScene(ResourceManager& resourceManager);
 
 	static uint32_t BindQuadTexture(Texture& curTexture, ObjectID curTextureID);

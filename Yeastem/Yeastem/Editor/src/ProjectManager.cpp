@@ -228,7 +228,7 @@ void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const Sec
 	const SectionView::KV_Multi* pos = section.getProperty("position");
 	if (pos)
 	{
-		transform.Position = Vector2{
+		transform.Position = Vector2f{
 			std::stof(((std::string)section.allProperties[pos->values_start]).c_str()),
 			std::stof(((std::string)section.allProperties[pos->values_start + 1]).c_str())
 		};
@@ -237,7 +237,7 @@ void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const Sec
 	const SectionView::KV_Multi* scale = section.getProperty("scale");
 	if (scale)
 	{
-		transform.Scale = Vector2{
+		transform.Scale = Vector2f{
 			std::stof(((std::string)section.allProperties[scale->values_start]).c_str()),
 			std::stof(((std::string)section.allProperties[scale->values_start + 1]).c_str())
 		};
@@ -278,7 +278,7 @@ void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const Se
 	const SectionView::KV_Multi* size = section.getProperty("size");
 	if (size)
 	{
-		renderQuad.Size = Vector2{
+		renderQuad.Size = Vector2f{
 			std::stof(((std::string)section.allProperties[size->values_start]).c_str()),
 			std::stof(((std::string)section.allProperties[size->values_start + 1]).c_str())
 		};
@@ -324,7 +324,7 @@ void ProjectManager::SaveNode(HierarchyNode::NodeID nodeID, INI_File& file, Hier
 	section.attributes.emplace_back("id", nodeID - rootID);
 	if (node.ParentID != -1)
 		section.attributes.emplace_back("parent", node.ParentID - rootID);
-
+	
 	if (node.entity.template HasComponent<ExtStemComponent>())
 	{
 		ExtStemComponent& extStemComponent = node.entity.template GetComponent<ExtStemComponent>();

@@ -10,9 +10,6 @@
     <Filter Include="Yeastem\Core\Lua">
       <UniqueIdentifier>{E65893B0-D251-B202-FB83-9787E7DB910E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Yeastem\Core\Math">
-      <UniqueIdentifier>{CEAFFEC2-3AC6-FC58-833D-887AEF92CDE0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Yeastem\Core\OpenGL">
       <UniqueIdentifier>{69851B83-D5E6-F890-5E54-3F43CAB42F50}</UniqueIdentifier>
     </Filter>
@@ -55,12 +52,6 @@
     </ClInclude>
     <ClInclude Include="src\Yeastem\Core\Lua\LuaVector2.h">
       <Filter>Yeastem\Core\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Yeastem\Core\Math\Point.h">
-      <Filter>Yeastem\Core\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Yeastem\Core\Math\Vector2.h">
-      <Filter>Yeastem\Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Yeastem\Core\OpenGL\Buffers\FrameBuffer.h">
       <Filter>Yeastem\Core\OpenGL\Buffers</Filter>
@@ -122,6 +113,9 @@
     <ClInclude Include="src\Yeastem\LuaAPI\LuaState.h">
       <Filter>Yeastem\LuaAPI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Yeastem\MathWrapper.h">
+      <Filter>Yeastem</Filter>
+    </ClInclude>
     <ClInclude Include="src\Yeastem\Platforms\Windows\Window.h">
       <Filter>Yeastem\Platforms\Windows</Filter>
     </ClInclude>
@@ -139,12 +133,6 @@
     </ClCompile>
     <ClCompile Include="src\Yeastem\Core\Lua\LuaVector2.cpp">
       <Filter>Yeastem\Core\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Yeastem\Core\Math\Point.cpp">
-      <Filter>Yeastem\Core\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Yeastem\Core\Math\Vector2.cpp">
-      <Filter>Yeastem\Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Yeastem\Core\OpenGL\Buffers\FrameBuffer.cpp">
       <Filter>Yeastem\Core\OpenGL\Buffers</Filter>
@@ -187,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="src\Yeastem\LuaAPI\LuaState.cpp">
       <Filter>Yeastem\LuaAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Yeastem\MathWrapper.cpp">
+      <Filter>Yeastem</Filter>
     </ClCompile>
     <ClCompile Include="src\Yeastem\Platforms\Windows\Window.cpp">
       <Filter>Yeastem\Platforms\Windows</Filter>

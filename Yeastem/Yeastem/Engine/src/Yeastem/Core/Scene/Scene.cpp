@@ -38,56 +38,32 @@ constexpr bool IsEnttGroupOwnable = \
 	std::is_trivially_destructible_v<T>;
 
 template<typename Component>
-void Scene::SetScriptAllComponents()
+void Scene::SetComponentsToScript()
 {
-	if constexpr (IsEnttGroupOwnable<Component>)
-	{
-		entt::basic_group group = m_Registry.template group<Component>(entt::template get<TagComponent>);
-		for (entt::entity entity : group)
-		{
-			Component& component = group.template get<Component>(entity);
-			TagComponent& tag = group.template get<TagComponent>(entity);
-
-			m_LuaScene.SetComponent(component, tag);
+	m_Registry.template view<Component, TagComponent>().each(
+		[this](const Component& component, const TagComponent& tag) -> void {
+			m_LuaScene.SetComponentToScript(component, tag);
 		}
-	}
-	else
-	{
-		entt::basic_group group = m_Registry.template group<>(entt::get<Component, TagComponent>);
-		for (entt::entity entity : group)
-		{
-			Component& component = m_Registry.template get<Component>(entity);
-			TagComponent& tag = m_Registry.template get<TagComponent>(entity);
-
-			m_LuaScene.SetComponent(component, tag);
-		}
-	}
+	);
 }
 
 template<typename Component>
-void Scene::GetScriptAllComponents()
+void Scene::UpdateComponentsFromScript()
 {
-	entt::basic_group group = m_Registry.template group<>(entt::template get<Component, TagComponent>);
-	for (entt::entity entity : group)
-	{
-		Component& component = m_Registry.template get<Component>(entity);
-		TagComponent& tag = m_Registry.template get<TagComponent>(entity);
-
-		m_LuaScene.GetComponent(component, tag);
-	}
+	m_Registry.template view<Component, TagComponent>().each(
+		[this](Component& component, const TagComponent& tag) -> void {
+			m_LuaScene.UpdateComponentFromScript(component, tag);
+		}
+	);
 }
 
 void Scene::InitScripts()
 {
 	m_ScriptsInitiated = true;
-	entt::basic_group scriptGroup = m_Registry.template group<ScriptComponent>(entt::template get<TagComponent>);
-	for (entt::entity entity : scriptGroup)
-	{
-		ScriptComponent& script = scriptGroup.template get<ScriptComponent>(entity);
-		TagComponent& tag = scriptGroup.template get<TagComponent>(entity);
-
+	entt::basic_view scriptGroup = m_Registry.template view<ScriptComponent, TagComponent>();
+	scriptGroup.each([this](const ScriptComponent& script, const TagComponent& tag) -> void {
 		m_LuaScene.ExecuteScript(script, tag);
-	}
+	});
 
 #if YST_CONFIG_DEBUG
 	m_LuaScene.PrintGlobal("Yeastem");
@@ -96,8 +72,8 @@ void Scene::InitScripts()
 
 void Scene::UpdateScriptObjects()
 {
-	SetScriptAllComponents<TransformComponent>();
-	SetScriptAllComponents<RenderQuadComponent>();
+	SetComponentsToScript<TransformComponent>();
+	SetComponentsToScript<RenderQuadComponent>();
 }
 
 void Scene::UpdateGlobalTransforms(entt::entity entity, TransformComponent& transform, uint32_t frameID)
@@ -146,22 +122,24 @@ void Scene::Update(float deltaTime)
 	
 	if (IsRunning)
 	{
-		SetScriptAllComponents<TransformComponent>();
-		SetScriptAllComponents<RenderQuadComponent>();
+		SetComponentsToScript<TransformComponent>();
+		SetComponentsToScript<RenderQuadComponent>();
 
 		if (!m_ScriptsInitiated)
 			InitScripts();
 
 		m_LuaScene.UpdateWindow(SceneSize);
 		
-		entt::basic_group scriptGroup = m_Registry.template group<ScriptComponent>(entt::template get<TagComponent>);
-		for (entt::entity entity : scriptGroup)
-		{
-			TagComponent& tag = m_Registry.template get<TagComponent>(entity);
-			m_LuaScene.CallYeastemFunction(tag, "Update", deltaTime);
-		}
+		m_Registry.template group<ScriptComponent>(entt::template get<TagComponent>).each(
+			[this, deltaTime](
+				const ScriptComponent& script, const TagComponent& tag
+			) -> void {
+				m_LuaScene.CallYeastemFunction(tag, "Update", deltaTime);
+			}
+		);
 
-		GetScriptAllComponents<TransformComponent>();
+		UpdateComponentsFromScript<TransformComponent>();
+		UpdateComponentsFromScript<RenderQuadComponent>();
 		CurrentTime += uint64_t(deltaTime * 1000.0f);
 	}
 }
@@ -191,17 +169,19 @@ void Scene::Render(ResourceManager& resourceManager)
 	glViewport(0, 0, (uint32_t)SceneSize.x, (uint32_t)SceneSize.y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	Renderer::BeginScene(resourceManager);
+	Renderer::BeginScene(resourceManager, SceneSize);
 
 	entt::basic_group quadRenderables = m_Registry.template group<RenderQuadComponent, TransformComponent>();
 	quadRenderables.template sort<TransformComponent>([](const TransformComponent& a, const TransformComponent& b) {
 		return a.GlobalZLevel < b.GlobalZLevel;
 	});
-	for (entt::entity entity : quadRenderables)
-	{
-		const auto& [quad, transform] = quadRenderables.template get<RenderQuadComponent, TransformComponent>(entity);
-		Renderer::Submit(quad, transform, resourceManager, SceneSize);
-	}
+	quadRenderables.each(
+		[&resourceManager, this](
+			const RenderQuadComponent& quad, const TransformComponent& transform
+		) -> void {
+			Renderer::Submit(quad, transform, resourceManager, SceneSize);
+		}
+	);
 
 	Renderer::EndScene(resourceManager);
 

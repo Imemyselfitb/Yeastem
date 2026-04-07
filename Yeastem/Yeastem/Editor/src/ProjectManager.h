@@ -49,9 +49,6 @@ private:
 
 	template<typename Component> void LoadComponent(Entity& entity, const SectionView& section)
 	{ YEASTEM_ERROR("LOAD COMPONENT NOT IMPLEMENTED"); }
-	template<> void LoadComponent<TransformComponent>(Entity& entity, const SectionView& section);
-	template<> void LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section);
-	template<> void LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section);
 	
 private:
 	void SaveNode(HierarchyNode::NodeID nodeID, INI_File& file, HierarchyNode::NodeID rootID);
@@ -59,9 +56,6 @@ private:
 	
 	template<typename Component> void SaveComponent(const Entity& entity, SectionView& section)
 	{ YEASTEM_ERROR("LOAD COMPONENT NOT IMPLEMENTED"); }
-	template<> void SaveComponent<TransformComponent>(const Entity& entity, SectionView& section);
-	template<> void SaveComponent<RenderQuadComponent>(const Entity& entity, SectionView& section);
-	template<> void SaveComponent<ScriptComponent>(const Entity& entity, SectionView& section);
 
 	void ShowMenuBar();
 	void ShowStemBar();
@@ -83,6 +77,14 @@ private:
 };
 
 constexpr const char* PROJECT_ROOT_NODE_NAME = "Tree/";
+
+template<> void ProjectManager::LoadComponent<TransformComponent>(Entity& entity, const SectionView& section);
+template<> void ProjectManager::LoadComponent<RenderQuadComponent>(Entity& entity, const SectionView& section);
+template<> void ProjectManager::LoadComponent<ScriptComponent>(Entity& entity, const SectionView& section);
+
+template<> void ProjectManager::SaveComponent<TransformComponent>(const Entity& entity, SectionView& section);
+template<> void ProjectManager::SaveComponent<RenderQuadComponent>(const Entity& entity, SectionView& section);
+template<> void ProjectManager::SaveComponent<ScriptComponent>(const Entity& entity, SectionView& section);
 
 YEASTEM_END
 

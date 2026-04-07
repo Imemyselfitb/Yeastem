@@ -44,6 +44,8 @@ int main(int argc, char* argv[])
 	windowData.Flags = SDL_WINDOW_RESIZABLE;
 	Application::Get().Init(windowData);
 
+	std::cout << "------------------------------------------" << std::endl;
+
 #if YEASTEM_COLOURLESS
 	MakeWindowTransparent(window, RGB(255, 0, 255));
 	SDL_SetWindowAlwaysOnTop(window, SDL_TRUE);
@@ -57,10 +59,12 @@ int main(int argc, char* argv[])
 		while (SDL_PollEvent(&currentEvent));
 		SDL_GL_SwapWindow(Application::Get().GetWindow());
 	}
-	
+
 	if (FileIO::FileSelect::isSuccess)
 	{
 		ProjectManager::Get().LoadProject(FileIO::FileSelect::selectedPaths[0]);
+		FileIO::FileSelect::isSuccess = false;
+
 		Application::Get().Run();
 	}
 

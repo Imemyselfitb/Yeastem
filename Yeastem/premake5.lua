@@ -21,6 +21,7 @@ IncludeDir["Glad"] = "Dependancies/Glad/include"
 IncludeDir["Lua"] = "Dependancies/Lua/src"
 IncludeDir["EnTT"] = "Dependancies/EnTT/include"
 IncludeDir["ImGui"] = "Dependancies/ImGui/src"
+IncludeDir["glm"] = "Dependancies/glm/include/"
 
 include "Dependancies"
 
@@ -47,11 +48,15 @@ project "YeastemEngine"
 	includedirs
 	{
 		EngineLocation .. "/src", 
+
 		"%{IncludeDir.SDL3}", 
 		"%{IncludeDir.stb_image}", 
 		"%{IncludeDir.Lua}", 
+
 		"%{IncludeDir.Glad}", 
 		"Dependancies/Glad/src", 
+		"%{IncludeDir.glm}", 
+
 		"%{IncludeDir.EnTT}", 
 		"%{IncludeDir.ImGui}", 
 		"%{IncludeDir.ImGui}/backends"
@@ -107,7 +112,9 @@ project "YeastemEditor"
 	files
 	{
 		m_Location .. "/src/**.h",
-		m_Location .. "/src/**.cpp"
+		m_Location .. "/src/**.cpp",
+		m_Location .. "/src/**.frag",
+		m_Location .. "/src/**.vert"
 	}
 
 	includedirs
@@ -117,8 +124,11 @@ project "YeastemEditor"
 		"%{IncludeDir.SDL3}", 
 		"%{IncludeDir.stb_image}", 
 		"%{IncludeDir.Lua}", 
+		
 		"%{IncludeDir.Glad}", 
 		"Dependancies/Glad/src", 
+		"%{IncludeDir.glm}",
+		
 		"%{IncludeDir.EnTT}", 
 		"%{IncludeDir.ImGui}", 
 		"%{IncludeDir.ImGui}/backends"
@@ -128,7 +138,12 @@ project "YeastemEditor"
 	{
 		"YeastemEngine",
 		"SDL3",
-		"ImGui"
+		"ImGui",
+		
+		-- Yeastem Engine's Dependancies
+		"stb_image", 
+		"Glad", 
+		"Lua", 
 	}
 
 	ignoredefaultlibraries { "MSVCRT" }

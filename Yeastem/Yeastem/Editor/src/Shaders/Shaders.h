@@ -11,7 +11,7 @@ To update the shader code, EITHER:
 
 namespace Yeastem {
 	namespace Shaders {
-		inline char Quad_FRAG[]="#version 330 core\n layout(location = 0) out vec4 glColour; in vec2 v_TexCoord; in float v_TexIndex; uniform sampler2D u_textures[16]; uniform float u_Time; void main() { vec4 col = texture(u_textures[int(v_TexIndex)], v_TexCoord); glColour = col; }";
-		inline char Quad_VERT[]="#version 330 core\n layout(location = 0) in vec3 position; layout(location = 1) in vec2 texCoord; layout(location = 2) in float texIndex; out vec2 v_TexCoord; out float v_TexIndex; void main() { gl_Position = vec4(position, 1.0); v_TexCoord = texCoord; v_TexIndex = texIndex; }";
+		inline char Quad_FRAG[]="#version 330 core\n layout(location = 0) out vec4 outColour; layout(location = 1) out vec4 outEntityID; in vec2 v_TexCoord; in float v_TexIndex; in vec4 v_EntityID; uniform sampler2D u_Textures[16]; uniform float u_Time; void main() { vec4 col = texture(u_Textures[int(v_TexIndex)], v_TexCoord); outColour = col; }";
+		inline char Quad_VERT[]="#version 330 core\n layout(location = 0) in vec3 position; layout(location = 1) in vec2 texCoord; layout(location = 2) in float texIndex; layout(location = 2) in vec4 entityID; uniform mat4 u_ViewProjectionMatrix; out vec2 v_TexCoord; out float v_TexIndex; out vec4 v_EntityID; void main() { gl_Position = u_ViewProjectionMatrix * vec4(position, 1.0); v_TexCoord = texCoord; v_TexIndex = texIndex; }";
 	}
 }

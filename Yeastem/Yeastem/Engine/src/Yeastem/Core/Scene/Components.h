@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Yeastem/Core/Math/Vector2.h"
 #include "Yeastem/Core/OpenGL/Buffers/IndexBuffer.h"
 
 #include <entt.hpp>
@@ -52,11 +51,11 @@ struct TransformComponent
 
 	Vector2f TransformPointLocal(const Vector2f& pos) const
 	{
-		return Position + (pos.RotateNew(Rotation) * Scale);
+		return Position + (pos.Rotated(Rotation) * Scale);
 	}
 	Vector2f TransformPoint(const Vector2f& pos) const
 	{
-		return GlobalPosition + (pos.RotateNew(GlobalRotation) * GlobalScale);
+		return GlobalPosition + (pos.Rotated(GlobalRotation) * GlobalScale);
 	}
 };
 

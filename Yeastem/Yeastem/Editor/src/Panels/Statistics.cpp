@@ -11,11 +11,11 @@ YEASTEM_BEGIN
 static uint32_t FPS = 0;
 void calculateFPS()
 {
-	static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
+	static auto oldTime = std::chrono::high_resolution_clock::now();
 	static uint32_t fps;
 	fps++;
 
-	std::chrono::time_point<std::chrono::steady_clock> currentTime = std::chrono::high_resolution_clock::now();
+	auto currentTime = std::chrono::high_resolution_clock::now();
 	if (std::chrono::template duration_cast<std::chrono::seconds>(currentTime - oldTime) >= std::chrono::seconds{ 1 })
 	{
 		oldTime = currentTime;

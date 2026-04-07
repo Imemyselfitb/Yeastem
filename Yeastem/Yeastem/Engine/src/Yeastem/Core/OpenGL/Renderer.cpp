@@ -8,6 +8,8 @@
 #include "Buffers/VertexBuffer.h"
 #include "Buffers/VertexArray.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 YEASTEM_BEGIN
 
 /// <summary>
@@ -40,9 +42,13 @@ struct RenderBatch
 };
 
 static RenderBatch<QuadVertex, 4> s_QuadData;
+static bool s_Initialised = false;
 
 void Renderer::Init(ResourceManager& resourceManager)
 {
+	if (s_Initialised) return;
+	s_Initialised = true;
+
 	VertexBufferLayout layout;
 	layout.template Push<float>(3);
 	layout.template Push<float>(2);
@@ -97,7 +103,7 @@ ObjectID Renderer::GetQuadShaderID()
 	return s_QuadData.ShaderResource;
 }
 
-void Renderer::BeginScene(ResourceManager& resourceManager)
+void Renderer::BeginScene(ResourceManager& resourceManager, Vector2f renderArea)
 {
 	s_QuadData.VertexProgressPtr = s_QuadData.VerticesArrayPtr;
 	s_QuadData.IndexCount = 0;
@@ -107,7 +113,9 @@ void Renderer::BeginScene(ResourceManager& resourceManager)
 	int textureUnits[16];
 	for (int i = 0; i < 16; ++i)
 		textureUnits[i] = i;
-	resourceManager.Shaders.Get(s_QuadData.ShaderResource).SetUniform1iv("u_textures", 16, textureUnits);
+
+	resourceManager.Shaders.Get(s_QuadData.ShaderResource).SetUniformIntArray(ShaderParams::Textures, 16, textureUnits);
+	resourceManager.Shaders.Get(s_QuadData.ShaderResource).SetUniformMat4(ShaderParams::ViewProjectionMatrix, glm::ortho(0.0f, renderArea.x, 0.0f, renderArea.y));
 }
 
 uint32_t Renderer::BindQuadTexture(Texture& curTexture, ObjectID curTextureID)
@@ -128,7 +136,7 @@ void Renderer::Submit(
 	if (s_QuadData.VertexCount >= 400 || s_QuadData.TextureCount >= 16)
 	{
 		EndScene(resourceManager);
-		BeginScene(resourceManager);
+		BeginScene(resourceManager, renderArea);
 	}
 
 	uint32_t boundTextureID = 0;
@@ -144,8 +152,8 @@ void Renderer::Submit(
 	for (int i = 0; i < 4; i++)
 	{
 		Vector2f pos = transform.TransformPoint(s_QuadData.DefaultVertexPositions[i] * renderable.Size);
-		pos /= renderArea * Vector2f(0.5f, 0.5f);
-		pos -= Vector2f(1.0f, 1.0f);
+		//pos = (pos / (renderArea * Vector2f(0.5f, 0.5f))) - Vector2f(1.0f, 1.0f);
+
 		s_QuadData.VertexProgressPtr->Position = pos;
 		s_QuadData.VertexProgressPtr->ZLevel = 0.0f - transform.ZLevel;
 		s_QuadData.VertexProgressPtr->Texture = s_QuadData.DefaultTexturePositions[i];
