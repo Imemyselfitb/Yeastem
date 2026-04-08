@@ -11,8 +11,6 @@ workspace "Yeastem"
 	startproject "YeastemEditor"
 
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
 -- include dirs relative to the root (solution) directory
 IncludeDir = {}
 IncludeDir["SDL3"] = "Dependancies/SDL3/include"
@@ -24,6 +22,8 @@ IncludeDir["ImGui"] = "Dependancies/ImGui/src"
 IncludeDir["glm"] = "Dependancies/glm/include/"
 
 include "Dependancies"
+
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 EngineLocation = "Yeastem/Engine"
 
@@ -160,11 +160,13 @@ project "YeastemEditor"
 		staticruntime "On"
 		defines "YST_PLATFORM_WINDOWS"
 		buildoptions { "/MP" }
+		links(SDL3_deps["windows"])
 
 	filter "system:linux"
 		cppdialect "C++latest"
 		staticruntime "On"
 		defines "YST_PLATFORM_LINUX"
+		links(SDL3_deps["linux"])
 
 	----- ----- ----- ----- ----- ----- CONFIG's ----- ----- ----- ----- ----- ----- 
 	filter "configurations:Debug"
